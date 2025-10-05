@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Urzistaff — Browse Assistants</title>
+  <meta name="description" content="Search, filter, and find your perfect virtual partner." />
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='100%' height='100%' rx='12' fill='%237F5AF0'/><text x='50%' y='54%' text-anchor='middle' font-size='34' font-family='Arial' fill='white'>UZ</text></svg>" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ----- Core Design Tokens (Dark Theme is Default) ----- */
+    :root {
+      --primary: #7F5AF0; --accent-1: #00C6CF; --accent-2: #F04E8A;
+      --bg: #0B0A10; --surface: #14131B; --elev: #1C1B22;
+      --text: #E5E7EB; --muted: #94A3B8; --border: #2B2A33;
+      --radius: 14px; --pill: 999px;
+      --shadow: 0 8px 40px rgba(0,0,0,0.4);
+      --ease-out: cubic-bezier(.22,1,.36,1);
+
+      /* Fluid spacing & type tokens */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: clamp(10px, 2vw, 16px);
+      --space-4: clamp(12px, 2.4vw, 20px);
+      --space-6: clamp(16px, 3vw, 24px);
+      --card-pad: var(--space-4);
+      --card-gap: var(--space-3);
+      --text-sm: clamp(12px, 1.2vw, 14px);
+      --text-md: clamp(14px, 1.4vw, 16px);
+      --text-lg: clamp(16px, 1.6vw, 20px);
+      --text-xl: clamp(24px, 4vw, 40px);
+    }
+
+    /* ----- Base & Animations ----- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: Inter, sans-serif;
+      background: var(--bg); color: var(--text);
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-4); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .reveal { opacity: 0; transform: translateY(20px); }
+    .reveal.in { opacity: 1; transform: none; transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+
+    /* ----- Browse Hero ----- */
+    .browse-hero {
+        position: relative; overflow: hidden; padding: 80px 0; text-align: center;
+    }
+    #constellation { position: absolute; inset: 0; z-index: 1; opacity: 0.8;}
+    .browse-hero-content { position: relative; z-index: 10; }
+    .browse-hero h1 {
+        font-family: "Space Grotesk", sans-serif; font-size: clamp(2.5rem, 5vw, 3.5rem);
+        margin: 0 auto 12px; max-width: 700px;
+    }
+    .browse-hero .gradient-text {
+        background: linear-gradient(120deg, var(--primary), var(--accent-1), var(--accent-2));
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .browse-hero p { max-width: 550px; margin: 0 auto 32px; color: var(--muted); font-size: 18px;}
+    .search-bar {
+        max-width: 960px; margin: 0 auto;
+        padding: 10px; border-radius: 18px;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
+          linear-gradient(120deg, rgba(127,90,240,.10), rgba(0,198,207,.08));
+        border: 1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 10px 30px rgba(0,0,0,.35);
+        backdrop-filter: saturate(140%) blur(8px);
+        display: grid; grid-template-columns: 1fr; gap: 10px;
+    }
+    .search-input-wrap { position: relative; display: flex; align-items: center; background: var(--elev); border: 1px solid var(--border); border-radius: var(--pill); }
+    .search-input-wrap:focus-within { outline: 2px solid color-mix(in oklab, var(--primary), white 25%); outline-offset: 2px; }
+    .search-icon { position: absolute; left: 14px; color: var(--muted); width: 20px; height: 20px; pointer-events: none; }
+    .clear-btn { position: absolute; right: 10px; display: none; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; }
+    .clear-btn:hover { color: var(--text); border-color: #444; background: rgba(255,255,255,0.04); }
+    .input {
+        width: 100%; padding: 14px 44px; border-radius: var(--pill); outline: none;
+        border: 0; background: transparent;
+        color: var(--text); transition: all .2s var(--ease-out); min-height: 52px;
+    }
+    .input::placeholder { color: color-mix(in oklab, var(--muted), #888 30%); }
+    .btn-primary { background: var(--primary); border: 1px solid var(--primary); color: white; border-radius: 10px; font-weight: 600; padding: 12px 24px; cursor: pointer; transition: transform .2s var(--ease-out); min-height: 44px; }
+    .btn-primary:hover { transform: scale(1.03); }
+    @media (min-width: 900px) { .search-bar { grid-template-columns: 1fr auto; align-items: center; padding: 12px; } }
+
+
+    /* ----- Categories Section ----- */
+    .categories-section { padding: 0 0 80px; text-align: center; position: relative; z-index: 10; }
+    .categories-section h2 { font-family: "Space Grotesk", sans-serif; font-size: 24px; margin-bottom: 24px; }
+    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+    .category-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 20px;
+        text-align: left; display: flex; align-items: center; gap: 12px;
+        color: var(--muted); font-weight: 600; transition: all .2s var(--ease-out);
+    }
+    .category-card:hover { transform: translateY(-4px); background: var(--elev); border-color: #444; color: var(--text); }
+    .category-card.active { background: var(--elev); border-color: color-mix(in oklab, var(--primary), #444 40%); color: var(--text); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary), transparent 60%) inset; }
+    .category-card span { font-size: 24px; } /* Emoji */
+
+    /* ----- Main Content Wrapper (Now dark) ----- */
+    .main-listings-area { padding: 48px 0; }
+
+    /* ----- Advanced Filters Bar (Dark styles) ----- */
+    .filters-bar { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+    .filter-group { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--pill); padding: 8px 10px; }
+    .filter-group legend, .filter-group .label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+    .filter-options { display: flex; flex-wrap: wrap; gap: 8px; }
+    label.chip { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+    label.chip input { position: absolute; opacity: 0; pointer-events: none; }
+    label.chip span { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--pill); min-height: 36px; color: var(--text); background: var(--elev); font-weight: 500; }
+    label.chip input:checked + span { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .filter-select { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--elev); color: var(--text); }
+    .rate { display: flex; align-items: center; gap: 10px; }
+    .rate input[type="range"] { width: 160px; }
+
+    /* ----- Listings (Dark styles) ----- */
+    .listings-container {
+        margin-top: var(--space-4);
+        display: grid; grid-template-columns: 1fr; gap: var(--card-gap);
+    }
+    .listing-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: var(--card-pad);
+        display: grid; grid-template-columns: auto 1fr; grid-template-areas: "avatar name" "avatar meta";
+        align-items: center; gap: var(--card-gap);
+        transition: all .2s var(--ease-out);
+        container-type: inline-size;
+    }
+    .listing-card:hover {
+        transform: translateY(-4px); box-shadow: var(--shadow);
+        border-color: #444;
+    }
+    .listing-card .avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+    .listing-card .name { font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: var(--text-lg); color: var(--text); }
+    .listing-card .headline { color: var(--muted); margin-top: -2px; }
+    .skills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .skill {
+        font-size: 12px; padding: 6px 10px; border-radius: var(--pill);
+        border: 1px solid var(--border); color: var(--muted); background: var(--elev);
+    }
+    .listing-meta { text-align: left; grid-area: meta; }
+    .listing-meta .price { font-size: 20px; font-weight: 700; color: var(--text); }
+    .listing-meta .rating { color: var(--muted); font-size: 14px; font-weight: 500; }
+
+    @media (min-width: 900px) {
+      .listing-card { grid-template-columns: auto 1fr auto; grid-template-areas: "avatar name meta"; }
+      .listing-meta { text-align: right; }
+    }
+
+    /* Container query tuning for very narrow cards */
+    @container (max-width: 380px) {
+      .listing-card .avatar { width: 40px; height: 40px; }
+      .listing-meta .price { font-size: 18px; }
+      .btn-primary { padding: 10px 16px; }
+    }
+
+    /* Focus styles */
+    :focus-visible { outline: 2px solid color-mix(in oklab, var(--primary), white 20%); outline-offset: 2px; }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal.in { transition: none !important; transform: none !important; }
+      #constellation { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="browse-hero">
+    <canvas id="constellation" aria-hidden="true"></canvas>
+    <div class="browse-hero-content reveal">
+      <h1>Find your <span class="gradient-text">dedicated partner</span> in productivity.</h1>
+      <p>We connect you with elite, pre-vetted virtual assistants who seamlessly integrate into your workflow.</p>
+      <form class="search-bar" role="search">
+          <label class="sr-only" for="q">Search</label>
+          <div class="search-input-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
+            <input id="q" name="q" class="input" type="search" placeholder="Search assistants by role, skills, location..." />
+            <button type="button" id="clearSearch" class="clear-btn" aria-label="Clear search">✕</button>
+          </div>
+          <button class="btn-primary" type="submit">Search</button>
+      </form>
+    </div>
+  </header>
+
+  <section class="categories-section reveal">
+    <div class="container">
+      <h2>Popular categories</h2>
+      <div class="category-grid">
+        <a href="#" class="category-card" data-category="reddit"><span>👽</span> Reddit</a>
+        <a href="#" class="category-card" data-category="instagram"><span>📸</span> Instagram</a>
+        <a href="#" class="category-card" data-category="x"><span>𝕏</span> X (Twitter)</a>
+        <a href="#" class="category-card" data-category="facebook"><span>📘</span> Facebook</a>
+        <a href="#" class="category-card" data-category="tiktok"><span>🎵</span> Tiktok</a>
+        <a href="#" class="category-card" data-category="threads"><span>🧵</span> Threads</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="main-listings-area" id="content">
+    <div class="container">
+      <div class="filters-bar reveal">
+        <!-- Age -->
+        <fieldset class="filter-group">
+          <legend>Age</legend>
+          <div class="filter-options">
+            <label class="chip"><input type="radio" name="age" value="18-20"><span>18-20</span></label>
+            <label class="chip"><input type="radio" name="age" value="20-25"><span>20-25</span></label>
+            <label class="chip"><input type="radio" name="age" value="25-30"><span>25-30</span></label>
+            <label class="chip"><input type="radio" name="age" value="30+"><span>30+</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Sex -->
+        <fieldset class="filter-group">
+          <legend>Sex</legend>
+          <div class="filter-options">
+            <label class="chip"><input type="radio" name="sex" value="male"><span>Male</span></label>
+            <label class="chip"><input type="radio" name="sex" value="female"><span>Female</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Device (checkboxes) -->
+        <fieldset class="filter-group">
+          <legend>Device</legend>
+          <div class="filter-options">
+            <label class="chip"><input type="checkbox" name="device" value="windows"><span>Windows</span></label>
+            <label class="chip"><input type="checkbox" name="device" value="macos"><span>MacOS</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Availability -->
+        <fieldset class="filter-group">
+          <legend>Availability</legend>
+          <div class="filter-options">
+            <label class="chip"><input type="radio" name="availability" value="full-time"><span>Full Time</span></label>
+            <label class="chip"><input type="radio" name="availability" value="part-time"><span>Part Time</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Location -->
+        <div class="filter-group">
+          <div class="label">Location</div>
+          <select class="filter-select" name="location" aria-label="Location">
+            <option selected>Every country</option>
+            <option>Afghanistan</option>
+            <option>Albania</option>
+            <option>Algeria</option>
+            <option>Andorra</option>
+            <option>Angola</option>
+            <option>Antigua and Barbuda</option>
+            <option>Argentina</option>
+            <option>Armenia</option>
+            <option>Australia</option>
+            <option>Austria</option>
+            <option>Azerbaijan</option>
+            <option>Bahamas</option>
+            <option>Bahrain</option>
+            <option>Bangladesh</option>
+            <option>Barbados</option>
+            <option>Belarus</option>
+            <option>Belgium</option>
+            <option>Belize</option>
+            <option>Benin</option>
+            <option>Bhutan</option>
+            <option>Bolivia</option>
+            <option>Bosnia and Herzegovina</option>
+            <option>Botswana</option>
+            <option>Brazil</option>
+            <option>Brunei</option>
+            <option>Bulgaria</option>
+            <option>Burkina Faso</option>
+            <option>Burundi</option>
+            <option>Cabo Verde</option>
+            <option>Cambodia</option>
+            <option>Cameroon</option>
+            <option>Canada</option>
+            <option>Central African Republic</option>
+            <option>Chad</option>
+            <option>Chile</option>
+            <option>China</option>
+            <option>Colombia</option>
+            <option>Comoros</option>
+            <option>Congo, Democratic Republic of the</option>
+            <option>Congo, Republic of the</option>
+            <option>Costa Rica</option>
+            <option>Côte d’Ivoire</option>
+            <option>Croatia</option>
+            <option>Cuba</option>
+            <option>Cyprus</option>
+            <option>Czechia</option>
+            <option>Denmark</option>
+            <option>Djibouti</option>
+            <option>Dominica</option>
+            <option>Dominican Republic</option>
+            <option>Ecuador</option>
+            <option>Egypt</option>
+            <option>El Salvador</option>
+            <option>Equatorial Guinea</option>
+            <option>Eritrea</option>
+            <option>Estonia</option>
+            <option>Eswatini</option>
+            <option>Ethiopia</option>
+            <option>Fiji</option>
+            <option>Finland</option>
+            <option>France</option>
+            <option>Gabon</option>
+            <option>Gambia</option>
+            <option>Georgia</option>
+            <option>Germany</option>
+            <option>Ghana</option>
+            <option>Greece</option>
+            <option>Grenada</option>
+            <option>Guatemala</option>
+            <option>Guinea</option>
+            <option>Guinea-Bissau</option>
+            <option>Guyana</option>
+            <option>Haiti</option>
+            <option>Honduras</option>
+            <option>Hungary</option>
+            <option>Iceland</option>
+            <option>India</option>
+            <option>Indonesia</option>
+            <option>Iran</option>
+            <option>Iraq</option>
+            <option>Ireland</option>
+            <option>Israel</option>
+            <option>Italy</option>
+            <option>Jamaica</option>
+            <option>Japan</option>
+            <option>Jordan</option>
+            <option>Kazakhstan</option>
+            <option>Kenya</option>
+            <option>Kiribati</option>
+            <option>Korea, North</option>
+            <option>Korea, South</option>
+            <option>Kuwait</option>
+            <option>Kyrgyzstan</option>
+            <option>Laos</option>
+            <option>Latvia</option>
+            <option>Lebanon</option>
+            <option>Lesotho</option>
+            <option>Liberia</option>
+            <option>Libya</option>
+            <option>Liechtenstein</option>
+            <option>Lithuania</option>
+            <option>Luxembourg</option>
+            <option>Madagascar</option>
+            <option>Malawi</option>
+            <option>Malaysia</option>
+            <option>Maldives</option>
+            <option>Mali</option>
+            <option>Malta</option>
+            <option>Marshall Islands</option>
+            <option>Mauritania</option>
+            <option>Mauritius</option>
+            <option>Mexico</option>
+            <option>Micronesia</option>
+            <option>Moldova</option>
+            <option>Monaco</option>
+            <option>Mongolia</option>
+            <option>Montenegro</option>
+            <option>Morocco</option>
+            <option>Mozambique</option>
+            <option>Myanmar</option>
+            <option>Namibia</option>
+            <option>Nauru</option>
+            <option>Nepal</option>
+            <option>Netherlands</option>
+            <option>New Zealand</option>
+            <option>Nicaragua</option>
+            <option>Niger</option>
+            <option>Nigeria</option>
+            <option>North Macedonia</option>
+            <option>Norway</option>
+            <option>Oman</option>
+            <option>Pakistan</option>
+            <option>Palau</option>
+            <option>Panama</option>
+            <option>Papua New Guinea</option>
+            <option>Paraguay</option>
+            <option>Peru</option>
+            <option>Philippines</option>
+            <option>Poland</option>
+            <option>Portugal</option>
+            <option>Qatar</option>
+            <option>Romania</option>
+            <option>Russia</option>
+            <option>Rwanda</option>
+            <option>Saint Kitts and Nevis</option>
+            <option>Saint Lucia</option>
+            <option>Saint Vincent and the Grenadines</option>
+            <option>Samoa</option>
+            <option>San Marino</option>
+            <option>Sao Tome and Principe</option>
+            <option>Saudi Arabia</option>
+            <option>Senegal</option>
+            <option>Serbia</option>
+            <option>Seychelles</option>
+            <option>Sierra Leone</option>
+            <option>Singapore</option>
+            <option>Slovakia</option>
+            <option>Slovenia</option>
+            <option>Solomon Islands</option>
+            <option>Somalia</option>
+            <option>South Africa</option>
+            <option>Spain</option>
+            <option>Sri Lanka</option>
+            <option>Sudan</option>
+            <option>South Sudan</option>
+            <option>Suriname</option>
+            <option>Sweden</option>
+            <option>Switzerland</option>
+            <option>Syria</option>
+            <option>Taiwan</option>
+            <option>Tajikistan</option>
+            <option>Tanzania</option>
+            <option>Thailand</option>
+            <option>Timor-Leste</option>
+            <option>Togo</option>
+            <option>Tonga</option>
+            <option>Trinidad and Tobago</option>
+            <option>Tunisia</option>
+            <option>Turkey</option>
+            <option>Turkmenistan</option>
+            <option>Tuvalu</option>
+            <option>Uganda</option>
+            <option>Ukraine</option>
+            <option>United Arab Emirates</option>
+            <option>United Kingdom</option>
+            <option>United States</option>
+            <option>Uruguay</option>
+            <option>Uzbekistan</option>
+            <option>Vanuatu</option>
+            <option>Vatican City</option>
+            <option>Venezuela</option>
+            <option>Vietnam</option>
+            <option>Yemen</option>
+            <option>Zambia</option>
+            <option>Zimbabwe</option>
+          </select>
+        </div>
+
+        <!-- Language -->
+        <fieldset class="filter-group">
+          <legend>Language</legend>
+          <div class="filter-options">
+            <label class="chip"><input type="radio" name="language" value="english"><span>English</span></label>
+            <label class="chip"><input type="radio" name="language" value="italian"><span>Italian</span></label>
+            <label class="chip"><input type="radio" name="language" value="spanish"><span>Spanish</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Hourly Rate -->
+        <div class="filter-group rate">
+          <div class="label">Hourly Rate</div>
+          <input type="range" min="0" max="100" value="50" step="1" id="rateRange" aria-label="Hourly Rate" />
+          <div id="rateValue">$50/hr</div>
+        </div>
+      </div>
+
+      <div class="listings-container reveal">
+        <!-- Listing 1 -->
+        <article class="listing-card" data-category="instagram" data-age="20-25" data-sex="female" data-device="windows" data-availability="full-time" data-location="United States" data-language="english" data-rate="12">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=128&h=128&fit=crop" alt="Alicia Lopez" class="avatar">
+          <div>
+            <div class="name">Alicia Lopez</div>
+            <div class="headline">Customer Support VA with 4+ years in SaaS.</div>
+            <div class="skills"><span class="skill">Zendesk</span><span class="skill">HubSpot</span><span class="skill">Live Chat</span></div>
+          </div>
+          <div class="listing-meta">
+            <div class="price">$12<span style="font-size:14px; color:var(--muted);">/hr</span></div>
+            <div class="rating">⭐ 4.9 (82 reviews)</div>
+          </div>
+        </article>
+
+        <!-- Listing 2 -->
+        <article class="listing-card" data-category="reddit" data-age="25-30" data-sex="male" data-device="windows,macos" data-availability="part-time" data-location="United Kingdom" data-language="english" data-rate="18">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=128&h=128&fit=crop" alt="James D." class="avatar">
+          <div>
+            <div class="name">James D.</div>
+            <div class="headline">General VA for research, scheduling, and inbox management.</div>
+            <div class="skills"><span class="skill">Google Suite</span><span class="skill">Notion</span><span class="skill">Excel</span></div>
+          </div>
+          <div class="listing-meta">
+            <div class="price">$18<span style="font-size:14px; color:var(--muted);">/hr</span></div>
+            <div class="rating">⭐ 4.8 (112 reviews)</div>
+          </div>
+        </article>
+        
+        <!-- Listing 3 -->
+        <article class="listing-card" data-category="tiktok" data-age="20-25" data-sex="female" data-device="windows" data-availability="full-time" data-location="Philippines" data-language="english" data-rate="9">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=128&h=128&fit=crop" alt="Sara M." class="avatar">
+          <div>
+            <div class="name">Sara M.</div>
+            <div class="headline">Data entry specialist with 70 wpm and CRM cleanup experience.</div>
+            <div class="skills"><span class="skill">Data Cleaning</span><span class="skill">CRM</span><span class="skill">Typing 70wpm</span></div>
+          </div>
+          <div class="listing-meta">
+            <div class="price">$9<span style="font-size:14px; color:var(--muted);">/hr</span></div>
+            <div class="rating">⭐ 5.0 (65 reviews)</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Make radio filters deselectable: clicking the selected option again will uncheck it
+    (function(){
+      const setupToggleableRadios = () => {
+        document.querySelectorAll('label.chip').forEach(label => {
+          const input = label.querySelector('input[type="radio"]');
+          if (!input) return;
+          // Track prior state on press
+          label.addEventListener('mousedown', () => {
+            label.dataset.wasChecked = input.checked ? 'true' : 'false';
+          });
+          // Toggle off if it was already selected
+          label.addEventListener('click', (e) => {
+            if (label.dataset.wasChecked === 'true') {
+              e.preventDefault();
+              input.checked = false;
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          });
+          // Keyboard support on the label
+          label.tabIndex = 0;
+          label.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && input.checked) {
+              e.preventDefault();
+              input.checked = false;
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          });
+        });
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupToggleableRadios);
+      } else {
+        setupToggleableRadios();
+      }
+    })();
+
+    // --- IntersectionObserver for reveals ---
+    const io_reveal = new IntersectionObserver(e => e.forEach(entry => entry.isIntersecting && entry.target.classList.add('in')), { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => io_reveal.observe(el));
+
+    // Hourly rate live display
+    (function(){
+      const range = document.getElementById('rateRange');
+      const out = document.getElementById('rateValue');
+      if (!range || !out) return;
+      const format = (v) => `$${v}/hr`;
+      const update = () => { out.textContent = format(range.value); };
+      range.addEventListener('input', update);
+      range.addEventListener('change', update);
+      update();
+    })();
+
+    // Combined multi-filter logic (categories + all other filters)
+    (function(){
+      const catCards = Array.from(document.querySelectorAll('.category-card'));
+      const listings = Array.from(document.querySelectorAll('.listing-card'));
+      const selectedCats = new Set();
+
+      const qs = (sel) => document.querySelector(sel);
+      const qsa = (sel) => Array.from(document.querySelectorAll(sel));
+
+      const getFilters = () => {
+        const age = qs('input[name="age"]:checked')?.value || '';
+        const sex = qs('input[name="sex"]:checked')?.value || '';
+        const availability = qs('input[name="availability"]:checked')?.value || '';
+        const location = (qs('select[name="location"]')?.value || '').trim();
+        const language = qs('input[name="language"]:checked')?.value || '';
+        const devices = new Set(qsa('input[name="device"]:checked').map(i => i.value.toLowerCase()));
+        const maxRate = parseFloat(qs('#rateRange')?.value || '100');
+        const q = (qs('#q')?.value || '').trim().toLowerCase();
+        return { age, sex, availability, location, language, devices, maxRate, q };
+      };
+
+      const match = (li, f) => {
+        // Keyword search (matches name, headline, skills, location text)
+        if (f.q) {
+          const hay = li.innerText.toLowerCase();
+          if (!hay.includes(f.q)) return false;
+        }
+        // Category (multi-select)
+        if (selectedCats.size) {
+          const cat = (li.getAttribute('data-category') || '').toLowerCase();
+          if (!selectedCats.has(cat)) return false;
+        }
+        // Age, Sex, Availability, Language exact matches if set
+        if (f.age && (li.getAttribute('data-age') || '') !== f.age) return false;
+        if (f.sex && (li.getAttribute('data-sex') || '') !== f.sex) return false;
+        if (f.availability && (li.getAttribute('data-availability') || '') !== f.availability) return false;
+        if (f.language && (li.getAttribute('data-language') || '') !== f.language) return false;
+        // Location (treat "Every country" or empty as no filter)
+        if (f.location && f.location !== 'Every country') {
+          if ((li.getAttribute('data-location') || '') !== f.location) return false;
+        }
+        // Devices: listing can contain comma-separated values; require any overlap
+        if (f.devices.size) {
+          const devCSV = (li.getAttribute('data-device') || '').toLowerCase();
+          const devs = new Set(devCSV.split(',').map(s => s.trim()).filter(Boolean));
+          let ok = false; for (const d of f.devices) { if (devs.has(d)) { ok = true; break; } }
+          if (!ok) return false;
+        }
+        // Hourly rate: include if listing rate <= selected max
+        const rate = parseFloat(li.getAttribute('data-rate') || '0');
+        if (!Number.isNaN(f.maxRate) && rate > f.maxRate) return false;
+        return true;
+      };
+
+      const applyFilters = () => {
+        const f = getFilters();
+        listings.forEach(li => {
+          li.style.display = match(li, f) ? '' : 'none';
+        });
+      };
+
+      // Category toggles (multi-select)
+      catCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+          e.preventDefault();
+          const cat = (card.getAttribute('data-category') || '').toLowerCase();
+          if (!cat) return;
+          if (selectedCats.has(cat)) {
+            selectedCats.delete(cat);
+            card.classList.remove('active');
+          } else {
+            selectedCats.add(cat);
+            card.classList.add('active');
+          }
+          applyFilters();
+        });
+      });
+
+      // Other filter listeners
+      qsa('input[name="age"], input[name="sex"], input[name="availability"], input[name="language"]').forEach(el => {
+        el.addEventListener('change', applyFilters);
+      });
+      qsa('input[name="device"]').forEach(el => el.addEventListener('change', applyFilters));
+      qs('select[name="location"]').addEventListener('change', applyFilters);
+      qs('#rateRange').addEventListener('input', applyFilters);
+      // Searchbar listeners
+      const searchInput = qs('#q');
+      const searchForm = document.querySelector('form[role="search"]');
+      if (searchInput) searchInput.addEventListener('input', applyFilters);
+      if (searchForm) searchForm.addEventListener('submit', (e) => { e.preventDefault(); applyFilters(); });
+
+      // Initial
+      applyFilters();
+    })();
+    
+    // --- Constellation background ---
+    const canvas = document.getElementById('constellation');
+    const ctx = canvas.getContext('2d');
+    let dots = [];
+    const setupCanvas = () => {
+        if (!canvas) return;
+        canvas.width = canvas.parentElement.offsetWidth;
+        canvas.height = canvas.parentElement.offsetHeight;
+        dots = [];
+        for (let i = 0; i < (canvas.width / 18); i++) {
+            dots.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                vx: -0.5 + Math.random(), vy: -0.5 + Math.random(),
+                radius: Math.random() * 1.5,
+            });
+        }
+    };
+    setupCanvas();
+    function animateLoop() {
+        if (!canvas) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        dots.forEach(d => {
+            d.x += d.vx; d.y += d.vy;
+            if (d.x < 0 || d.x > canvas.width) d.vx = -d.vx;
+            if (d.y < 0 || d.y > canvas.height) d.vy = -d.vy;
+            ctx.beginPath(); ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(127, 90, 240, 0.6)'; ctx.fill();
+        });
+        for (let i = 0; i < dots.length; i++) {
+            for (let j = i + 1; j < dots.length; j++) {
+                let dist = Math.sqrt(Math.pow(dots[i].x - dots[j].x, 2) + Math.pow(dots[i].y - dots[j].y, 2));
+                if (dist < 120) {
+                    ctx.strokeStyle = `rgba(127, 90, 240, ${0.8 - dist / 120})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath(); ctx.moveTo(dots[i].x, dots[i].y);
+                    ctx.lineTo(dots[j].x, dots[j].y); ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animateLoop);
+    }
+    animateLoop();
+    window.addEventListener('resize', setupCanvas);
+  </script>
+</body>
+</html>

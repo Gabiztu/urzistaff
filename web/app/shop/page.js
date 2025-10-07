@@ -87,6 +87,7 @@ export default function ShopPage() {
         .filter-group legend, .filter-group .label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
         .filter-options { display: flex; flex-wrap: wrap; gap: 16px; }
         label.chip { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+        /* Keep input visually hidden but allow label click to toggle */
         label.chip input { position: absolute; opacity: 0; pointer-events: none; }
         label.chip span { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--pill); min-height: 36px; color: var(--text); background: var(--elev); font-weight: 500; }
         label.chip input:checked + span { background: var(--primary); border-color: var(--primary); color: #fff; }

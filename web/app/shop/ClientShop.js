@@ -217,8 +217,8 @@ export default function ClientShop() {
               <div className="filter-options">
                 {['18-20','20-25','25-30','30+'].map(v => (
                   <label key={v} className="chip">
-                    <input type="radio" name="age" value={v} checked={age===v} readOnly />
-                    <span onClick={() => toggleAge(v)}>{v}</span>
+                    <input type="radio" name="age" value={v} checked={age===v} onChange={()=>setAge(v)} />
+                    <span>{v}</span>
                   </label>
                 ))}
               </div>
@@ -228,8 +228,8 @@ export default function ClientShop() {
               <div className="filter-options">
                 {['male','female'].map(v => (
                   <label key={v} className="chip">
-                    <input type="radio" name="sex" value={v} checked={sex===v} readOnly />
-                    <span onClick={() => toggleSex(v)}>{v[0].toUpperCase()+v.slice(1)}</span>
+                    <input type="radio" name="sex" value={v} checked={sex===v} onChange={()=>setSex(v)} />
+                    <span>{v[0].toUpperCase()+v.slice(1)}</span>
                   </label>
                 ))}
               </div>
@@ -250,8 +250,8 @@ export default function ClientShop() {
               <div className="filter-options">
                 {['full-time','part-time'].map(v => (
                   <label key={v} className="chip">
-                    <input type="radio" name="availability" value={v} checked={availability===v} readOnly />
-                    <span onClick={() => toggleAvailability(v)}>{v === 'full-time' ? 'Full Time' : 'Part Time'}</span>
+                    <input type="radio" name="availability" value={v} checked={availability===v} onChange={()=>setAvailability(v)} />
+                    <span>{v === 'full-time' ? 'Full Time' : 'Part Time'}</span>
                   </label>
                 ))}
               </div>
@@ -270,8 +270,8 @@ export default function ClientShop() {
               <div className="filter-options">
                 {['English','Italian','Spanish'].map((v) => (
                   <label key={v} className="chip">
-                    <input type="radio" name="language" value={v.toLowerCase()} checked={language===v} readOnly />
-                    <span onClick={() => toggleLanguage(v)}>{v}</span>
+                    <input type="radio" name="language" value={v} checked={language===v} onChange={()=>setLanguage(v)} />
+                    <span>{v}</span>
                   </label>
                 ))}
               </div>

@@ -13,7 +13,7 @@ export default function ClientShop() {
   const [devices, setDevices] = useState(new Set());
   const [maxRate, setMaxRate] = useState(50);
   const [selectedCats, setSelectedCats] = useState(new Set());
-  const [cartCount, setCartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(null);
 
   useEffect(() => {
     const io = new IntersectionObserver((entries) => {
@@ -46,6 +46,13 @@ export default function ClientShop() {
     timer = setInterval(load, 5000);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => { alive = false; if (timer) clearInterval(timer); document.removeEventListener('visibilitychange', handleVisibilityChange); };
+  }, []);
+
+  useEffect(() => {
+    try {
+      const n = parseInt(localStorage.getItem('cart_count') || '0', 10);
+      if (Number.isFinite(n)) setCartCount(n);
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -142,7 +149,7 @@ export default function ClientShop() {
           </nav>
           <a href="/cart" className="btn-cart" aria-label="Cart">
             <svg className="cart-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c.51 0 .962-.344 1.087-.849l1.858-6.443a.75.75 0 0 0-.7-1.028H5.613M15 21a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 0h-5.25"/></svg>
-            <span id="cartCount">{cartCount}</span>
+            <span id="cartCount" style={{visibility: cartCount===null ? 'hidden' : 'visible'}}>{cartCount ?? ''}</span>
           </a>
         </div>
       </header>

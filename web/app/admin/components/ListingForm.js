@@ -7,12 +7,12 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
     name: "",
     headline: "",
     description: "",
-    categories: "",
-    languages: "",
+    categories: [], // Change to array for easier management
+    languages: [], // Keep as array for easier management
     skills: "",
     age_range: "",
     sex: "",
-    devices: "",
+    devices: [], // Change to array for easier management
     availability: "",
     location: "",
     hourly_rate: 0,
@@ -27,12 +27,12 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
         name: initial.name || "",
         headline: initial.headline || "",
         description: initial.description || "",
-        categories: (initial.categories || []).join(", "),
-        languages: (initial.languages || []).join(", "),
+        categories: initial.categories || [], // Keep as array
+        languages: initial.languages || [], // Keep as array
         skills: (initial.skills || []).join(", "),
         age_range: initial.age_range || "",
         sex: initial.sex || "",
-        devices: (initial.devices || []).join(", "),
+        devices: initial.devices || [], // Keep as array
         availability: initial.availability || "",
         location: initial.location || "",
         hourly_rate: Number(initial.hourly_rate || 0),
@@ -51,16 +51,21 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
     e.preventDefault();
     setSaving(true);
     setError("");
+    
+    // Get the first category from the categories list for the category field
+    const firstCategory = form.categories.length > 0 ? form.categories[0] : null;
+    
     const payload = {
       name: form.name,
       headline: form.headline,
       description: form.description,
-      categories: toArray(form.categories),
-      languages: toArray(form.languages),
+      category: firstCategory, // Provide a value for the category field to satisfy the NOT NULL constraint
+      categories: form.categories, // Send as array directly
+      languages: form.languages, // Send as array directly
       skills: toArray(form.skills),
       age_range: form.age_range || null,
       sex: form.sex || null,
-      devices: toArray(form.devices),
+      devices: form.devices, // Send as array directly
       availability: form.availability || null,
       location: form.location || null,
       hourly_rate: Number(form.hourly_rate || 0),
@@ -102,6 +107,60 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
   };
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+  
+  // Handle language selection
+  const toggleLanguage = (language) => {
+    setForm(prevForm => {
+      const currentLanguages = [...prevForm.languages];
+      const index = currentLanguages.indexOf(language);
+      
+      if (index >= 0) {
+        // Remove language if already selected
+        currentLanguages.splice(index, 1);
+      } else {
+        // Add language if not selected
+        currentLanguages.push(language);
+      }
+      
+      return { ...prevForm, languages: currentLanguages };
+      });
+  };
+  
+  // Handle category selection
+  const toggleCategory = (category) => {
+    setForm(prevForm => {
+      const currentCategories = [...prevForm.categories];
+      const index = currentCategories.indexOf(category);
+      
+      if (index >= 0) {
+        // Remove category if already selected
+        currentCategories.splice(index, 1);
+      } else {
+        // Add category if not selected
+        currentCategories.push(category);
+      }
+      
+      return { ...prevForm, categories: currentCategories };
+    });
+  };
+  
+  // Handle device selection
+  const toggleDevice = (device) => {
+    setForm(prevForm => {
+      const currentDevices = [...prevForm.devices];
+      const index = currentDevices.indexOf(device);
+      
+      if (index >= 0) {
+        // Remove device if already selected
+        currentDevices.splice(index, 1);
+      } else {
+        // Add device if not selected
+        currentDevices.push(device);
+      }
+      
+      return { ...prevForm, devices: currentDevices };
+    });
+  };
 
   return (
     <form onSubmit={onSubmit} style={card}>
@@ -109,8 +168,57 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       <div style={row}><label style={lbl}>Name</label><input style={inp} value={form.name} onChange={(e)=>set("name", e.target.value)} required /></div>
       <div style={row}><label style={lbl}>Headline</label><input style={inp} value={form.headline} onChange={(e)=>set("headline", e.target.value)} /></div>
       <div style={row}><label style={lbl}>Description</label><textarea style={ta} value={form.description} onChange={(e)=>set("description", e.target.value)} rows={4} /></div>
-      <div style={row}><label style={lbl}>Categories (comma-separated)</label><input style={inp} value={form.categories} onChange={(e)=>set("categories", e.target.value)} placeholder="instagram, tiktok" /></div>
-      <div style={row}><label style={lbl}>Languages (comma-separated)</label><input style={inp} value={form.languages} onChange={(e)=>set("languages", e.target.value)} placeholder="english, spanish" /></div>
+      
+      {/* Category selection with checkboxes */}
+      <div style={row}>
+        <label style={lbl}>Categories</label>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          {[
+            { key: 'reddit', label: '👽 Reddit' },
+            { key: 'instagram', label: '📸 Instagram' },
+            { key: 'x', label: '𝕏 X (Twitter)' },
+            { key: 'facebook', label: '📘 Facebook' },
+            { key: 'chat support', label: '💬 Chat Support' },
+            { key: 'tiktok', label: '🎵 Tiktok' },
+            { key: 'threads', label: '🧵 Threads' }
+          ].map((cat) => (
+            <label key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={form.categories.includes(cat.key)}
+                onChange={() => toggleCategory(cat.key)}
+                style={{ width: 16, height: 16 }}
+              />
+              <span>{cat.label}</span>
+            </label>
+          ))}
+        </div>
+        <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
+          Selected: {form.categories.length > 0 ? form.categories.join(', ') : 'None'}
+        </div>
+      </div>
+      
+      {/* Language selection with checkboxes */}
+      <div style={row}>
+        <label style={lbl}>Languages</label>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          {['English', 'Spanish', 'Italian'].map((lang) => (
+            <label key={lang} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={form.languages.includes(lang.toLowerCase())}
+                onChange={() => toggleLanguage(lang.toLowerCase())}
+                style={{ width: 16, height: 16 }}
+              />
+              <span>{lang}</span>
+            </label>
+          ))}
+        </div>
+        <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
+          Selected: {form.languages.length > 0 ? form.languages.join(', ') : 'None'}
+        </div>
+      </div>
+      
       <div style={row}><label style={lbl}>Skills (comma-separated)</label><input style={inp} value={form.skills} onChange={(e)=>set("skills", e.target.value)} placeholder="excel, notion, reddit" /></div>
       <div style={row}>
         <label style={lbl}>Age range</label>
@@ -130,7 +238,31 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
           <option>female</option>
         </select>
       </div>
-      <div style={row}><label style={lbl}>Devices (comma-separated)</label><input style={inp} value={form.devices} onChange={(e)=>set("devices", e.target.value)} placeholder="windows, macos" /></div>
+      
+      {/* Device selection with checkboxes */}
+      <div style={row}>
+        <label style={lbl}>Devices</label>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          {[
+            { key: 'windows', label: 'Windows' },
+            { key: 'macos', label: 'MacOS' }
+          ].map((device) => (
+            <label key={device.key} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={form.devices.includes(device.key)}
+                onChange={() => toggleDevice(device.key)}
+                style={{ width: 16, height: 16 }}
+              />
+              <span>{device.label}</span>
+            </label>
+          ))}
+        </div>
+        <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
+          Selected: {form.devices.length > 0 ? form.devices.join(', ') : 'None'}
+        </div>
+      </div>
+      
       <div style={row}>
         <label style={lbl}>Availability</label>
         <select style={inp} value={form.availability} onChange={(e)=>set("availability", e.target.value)}>

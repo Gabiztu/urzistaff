@@ -88,6 +88,19 @@ export default function ListingProfile() {
     </main>
   );
 
+  // Format availability display
+  const formatAvailability = (availability) => {
+    if (!availability) return 'Not specified';
+    switch (availability) {
+      case 'full-time':
+        return 'Full-time';
+      case 'part-time':
+        return 'Part-time';
+      default:
+        return availability;
+    }
+  };
+
   return (
     <>
       <style suppressHydrationWarning>{`
@@ -170,6 +183,7 @@ export default function ListingProfile() {
             {data.headline && <p className="headline">{data.headline}</p>}
             <div className="meta-tags">
               <div className="meta-tag"><span className="status-dot" style={{background: availableNow ? 'var(--success)' : '#ef4444'}}></span> {availableNow ? 'Available Now' : 'Unavailable'}</div>
+              {data.availability && <div className="meta-tag">{formatAvailability(data.availability)}</div>}
               {data.location && <div className="meta-tag">{data.location}</div>}
               {(data.categories?.length>0) && <div className="meta-tag">{data.categories[0]}</div>}
             </div>
@@ -207,7 +221,7 @@ export default function ListingProfile() {
                   <li><span className="label">Hourly Rate</span><span className="value">{typeof data.hourly_rate === 'number' ? `$${data.hourly_rate}/hr` : '✓'}</span></li>
                   <li><span className="label">Languages</span><span className="value">{data.languages?.join(', ') || '✓'}</span></li>
                   <li><span className="label">Location</span><span className="value">{data.location || '✓'}</span></li>
-                  <li><span className="label">Availability</span><span className="value">{availableNow ? 'Available' : 'Unavailable'}</span></li>
+                  <li><span className="label">Availability</span><span className="value">{formatAvailability(data.availability)}</span></li>
                 </ul>
                 <h2 className="section-title" style={{marginTop:24}}>Setup</h2>
                 <ul>

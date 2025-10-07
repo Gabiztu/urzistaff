@@ -28,6 +28,20 @@ export default function ShopPage() {
   // Fetch listings + poll
   useEffect(() => {
     let alive = true; let timer;
+    
+    // Visibility detection to pause polling when tab is not active
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Clear interval when tab is hidden
+        if (timer) clearInterval(timer);
+        timer = null;
+      } else {
+        // Restart polling when tab becomes visible
+        load();
+        timer = setInterval(load, 5000);
+      }
+    };
+    
     const load = async () => {
       try {
         const res = await fetch('/api/listings?limit=200', { cache: 'no-store' });
@@ -36,9 +50,21 @@ export default function ShopPage() {
         setListings(Array.isArray(json?.data) ? json.data : []);
       } catch { /* ignore */ }
     };
+    
+    // Initial load
     load();
+    
+    // Set up polling interval
     timer = setInterval(load, 5000);
-    return () => { alive = false; if (timer) clearInterval(timer); };
+    
+    // Add visibility change listener
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => { 
+      alive = false; 
+      if (timer) clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   // Cart count
@@ -71,12 +97,29 @@ export default function ShopPage() {
     });
   };
 
+  // Functions to toggle single-select filters (like Device but for radio buttons)
+  const toggleAge = (value) => {
+    setAge(prev => prev === value ? "" : value);
+  };
+
+  const toggleSex = (value) => {
+    setSex(prev => prev === value ? "" : value);
+  };
+
+  const toggleAvailability = (value) => {
+    setAvailability(prev => prev === value ? "" : value);
+  };
+
+  const toggleLanguage = (value) => {
+    setLanguage(prev => prev === value ? "" : value);
+  };
+
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
     return listings.filter((r) => {
       // search
       if (query) {
-        const hay = `${r.name||''} ${r.headline||''} ${(r.categories||[]).join(' ')} ${(r.languages||[]).join(' ')} ${r.location||''}`.toLowerCase();
+        const hay = `${r.name||''} ${r.headline||''} ${(r.categories||[]).join(' ')} ${(r.languages||[]).join(' ')} ${r.location||''} ${r.description||''}`.toLowerCase();
         if (!hay.includes(query)) return false;
       }
       // categories
@@ -340,7 +383,16 @@ export default function ShopPage() {
               <legend>Age</legend>
               <div className="filter-options">
                 {['18-20','20-25','25-30','30+'].map(v => (
-                  <label key={v} className="chip"><input type="radio" name="age" value={v} checked={age===v} onChange={()=>setAge(v)} /><span>{v}</span></label>
+                  <label key={v} className="chip">
+                    <input 
+                      type="radio" 
+                      name="age" 
+                      value={v} 
+                      checked={age===v} 
+                      readOnly
+                    />
+                    <span onClick={() => toggleAge(v)}>{v}</span>
+                  </label>
                 ))}
               </div>
             </fieldset>
@@ -348,7 +400,16 @@ export default function ShopPage() {
               <legend>Sex</legend>
               <div className="filter-options">
                 {['male','female'].map(v => (
-                  <label key={v} className="chip"><input type="radio" name="sex" value={v} checked={sex===v} onChange={()=>setSex(v)} /><span>{v[0].toUpperCase()+v.slice(1)}</span></label>
+                  <label key={v} className="chip">
+                    <input 
+                      type="radio" 
+                      name="sex" 
+                      value={v} 
+                      checked={sex===v} 
+                      readOnly
+                    />
+                    <span onClick={() => toggleSex(v)}>{v[0].toUpperCase()+v.slice(1)}</span>
+                  </label>
                 ))}
               </div>
             </fieldset>
@@ -356,7 +417,16 @@ export default function ShopPage() {
               <legend>Device</legend>
               <div className="filter-options">
                 {['windows','macos'].map(v => (
-                  <label key={v} className="chip"><input type="checkbox" name="device" value={v} checked={devices.has(v)} onChange={()=>toggleDevice(v)} /><span>{v === 'macos' ? 'MacOS' : 'Windows'}</span></label>
+                  <label key={v} className="chip">
+                    <input 
+                      type="checkbox" 
+                      name="device" 
+                      value={v} 
+                      checked={devices.has(v)} 
+                      onChange={()=>toggleDevice(v)} 
+                    />
+                    <span>{v === 'macos' ? 'MacOS' : 'Windows'}</span>
+                  </label>
                 ))}
               </div>
             </fieldset>
@@ -364,7 +434,16 @@ export default function ShopPage() {
               <legend>Availability</legend>
               <div className="filter-options">
                 {['full-time','part-time'].map(v => (
-                  <label key={v} className="chip"><input type="radio" name="availability" value={v} checked={availability===v} onChange={()=>setAvailability(v)} /><span>{v === 'full-time' ? 'Full Time' : 'Part Time'}</span></label>
+                  <label key={v} className="chip">
+                    <input 
+                      type="radio" 
+                      name="availability" 
+                      value={v} 
+                      checked={availability===v} 
+                      readOnly
+                    />
+                    <span onClick={() => toggleAvailability(v)}>{v === 'full-time' ? 'Full Time' : 'Part Time'}</span>
+                  </label>
                 ))}
               </div>
             </fieldset>
@@ -380,7 +459,16 @@ export default function ShopPage() {
               <legend>Language</legend>
               <div className="filter-options">
                 {['English','Italian','Spanish'].map((v) => (
-                  <label key={v} className="chip"><input type="radio" name="language" value={v.toLowerCase()} checked={language===v} onChange={()=>setLanguage(v)} /><span>{v}</span></label>
+                  <label key={v} className="chip">
+                    <input 
+                      type="radio" 
+                      name="language" 
+                      value={v.toLowerCase()} 
+                      checked={language===v} 
+                      readOnly
+                    />
+                    <span onClick={() => toggleLanguage(v)}>{v}</span>
+                  </label>
                 ))}
               </div>
             </fieldset>

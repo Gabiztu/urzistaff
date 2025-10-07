@@ -15,7 +15,7 @@ export async function GET(request) {
 
     let query = supabase
       .from('listings')
-      .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,rating,reviews_count,is_active,category,created_at');
+      .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,rating,reviews_count,is_active,created_at');
 
     if (id) {
       // For a direct profile view, allow fetching by id regardless of is_active status

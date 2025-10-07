@@ -220,46 +220,58 @@ export default function ShopPage() {
         .browse-hero p { max-width: 550px; margin: 0 auto 32px; color: var(--muted); font-size: 18px;}
         .search-bar {
           max-width: 960px; margin: 0 auto;
-          padding: 10px; border-radius: 18px;
+          padding: 20px; border-radius: 18px;
           background:
             linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
             linear-gradient(120deg, rgba(127,90,240,.10), rgba(0,198,207,.08));
           border: 1px solid rgba(255,255,255,0.06);
           box-shadow: 0 10px 30px rgba(0,0,0,.35);
           backdrop-filter: saturate(140%) blur(8px);
-          display: grid; grid-template-columns: 1fr; gap: 10px;
+          display: flex; align-items: center; gap: 16px;
         }
-        .search-input-wrap { position: relative; display: flex; align-items: center; background: var(--elev); border: 1px solid var(--border); border-radius: var(--pill); }
-        .search-input-wrap:focus-within { outline: 2px solid color-mix(in oklab, var(--primary), white 25%); outline-offset: 2px; }
-        .search-icon { position: absolute; left: 14px; color: var(--muted); width: 20px; height: 20px; pointer-events: none; }
-        .clear-btn { position: absolute; right: 10px; display: none; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; }
-        .clear-btn:hover { color: var(--text); border-color: #444; background: rgba(255,255,255,0.04); }
+        .search-input-wrap { position: relative; display: flex; align-items: center; background: var(--elev); border: 1px solid var(--border); border-radius: var(--pill); flex: 1; }
+        .search-icon { position: absolute; left: 20px; color: var(--muted); width: 24px; height: 24px; pointer-events: none; }
+        .clear-btn { position: absolute; right: 16px; display: none; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; }
         .input {
-          width: 100%; padding: 14px 44px; border-radius: var(--pill); outline: none;
+          width: 100%; padding: 16px 360px; border-radius: var(--pill); outline: none;
           border: 0; background: transparent;
-          color: var(--text); transition: all .2s var(--ease-out); min-height: 52px;
+          color: var(--text); transition: all .2s var(--ease-out); min-height: 56px;
+          font-size: 18px;
         }
-        .input::placeholder { color: color-mix(in oklab, var(--muted), #888 30%); }
-        .btn-primary { background: var(--primary); border: 1px solid var(--primary); color: white; border-radius: 10px; font-weight: 600; padding: 12px 24px; cursor: pointer; transition: transform .2s var(--ease-out); min-height: 44px; }
-        .btn-primary:hover { transform: scale(1.03); }
+        .btn-primary { background: var(--primary); border: 1px solid var(--primary); color: white; border-radius: 10px; font-weight: 600; padding: 8px 10px; cursor: pointer; transition: transform .2s var(--ease-out); min-height: 44px; font-size: 16px; }
         @media (min-width: 900px) { .search-bar { grid-template-columns: 1fr auto; align-items: center; padding: 12px; } }
 
         /* Categories Section */
-        .categories-section { padding: 0 0 80px; text-align: center; position: relative; z-index: 10; }
+        .categories-section { padding: 10px 0 80px; text-align: center; position: relative; z-index: 10; overflow: visible; }
         .categories-section h2 { font-family: "Space Grotesk", sans-serif; font-size: 24px; margin-bottom: 24px; }
-        .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+        .category-grid { 
+          display: flex; 
+          flex-wrap: nowrap; 
+          gap: 16px; 
+          overflow-x: hidden;
+          justify-content: center;
+          padding: 10px 0;
+        }
         .category-card {
           background: var(--surface); border: 1px solid var(--border);
           border-radius: var(--radius); padding: 20px;
           text-align: left; display: flex; align-items: center; gap: 12px;
           color: var(--muted); font-weight: 600; transition: all .2s var(--ease-out);
+          flex: 1 1 0;
+          min-width: 0;
+          max-width: calc(100% / 7 - 16px);
         }
         .category-card:hover { transform: translateY(-4px); background: var(--elev); border-color: #444; color: var(--text); }
         .category-card.active { background: var(--elev); border-color: color-mix(in oklab, var(--primary), #444 40%); color: var(--text); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary), transparent 60%) inset; }
-        .category-card span { font-size: 24px; } /* Emoji */
-
+        .category-card span { font-size: 24px; flex-shrink: 0; } /* Emoji */
+        .category-card div { 
+          white-space: nowrap; 
+          overflow: hidden; 
+          text-overflow: ellipsis;
+          min-width: 0;
+        }
         /* Main Content Wrapper */
-        .main-listings-area { padding: 48px 0; }
+        .main-listings-area { padding: 0 0; }
 
         /* Advanced Filters Bar */
         .filters-bar { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
@@ -376,7 +388,7 @@ export default function ShopPage() {
           </div>
         </div>
       </section>
-      <main className="main-listings-area" id="content">
+      <main className="main-listings-area" id="content" style={{ marginTop: '-40px' }}>
         <div className="container">
           <div className="filters-bar reveal">
             <fieldset className="filter-group">

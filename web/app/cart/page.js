@@ -6,6 +6,8 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [discountCode, setDiscountCode] = useState("");
+  const [discountMsg, setDiscountMsg] = useState("");
+  const [discountOk, setDiscountOk] = useState(true);
   const [cartCount, setCartCount] = useState(() => {
     if (typeof window !== 'undefined') {
       const n = parseInt(window.localStorage?.getItem('cart_count') || '0', 10);
@@ -42,7 +44,15 @@ export default function CartPage() {
 
   useEffect(() => {
     setCartCount(getLS());
-    setDiscountCode((typeof localStorage !== 'undefined' ? (localStorage.getItem('discount_code')||'') : '').trim());
+    const saved = (typeof localStorage !== 'undefined' ? (localStorage.getItem('discount_code')||'') : '').trim();
+    setDiscountCode(saved);
+    if (saved) {
+      const upper = saved.toUpperCase();
+      setDiscountOk(upper === 'URZI10' || upper === 'WELCOME10' || upper === 'URZI20');
+      setDiscountMsg(upper === 'URZI10' || upper === 'WELCOME10' || upper === 'URZI20' ? 'Discount applied' : 'Invalid code');
+    } else {
+      setDiscountMsg("");
+    }
     loadCart();
   }, [getLS, loadCart]);
 
@@ -96,6 +106,10 @@ export default function CartPage() {
   const applyDiscount = useCallback(() => {
     const val = (discountCode || '').trim();
     try { localStorage.setItem('discount_code', val); } catch {}
+    const upper = val.toUpperCase();
+    const ok = upper === 'URZI10' || upper === 'WELCOME10' || upper === 'URZI20';
+    setDiscountOk(!!val && ok);
+    setDiscountMsg(val ? (ok ? 'Discount applied' : 'Invalid code') : '');
   }, [discountCode]);
 
   return (
@@ -134,7 +148,7 @@ export default function CartPage() {
 
         <div className="cart-layout">
           <main className="cart-items">
-            <h2>Your Items ({items.length})</h2>
+            <h2 id="itemsTitle">Your Items ({items.length})</h2>
             {loading ? (
               <div className="card" style={{textAlign:'center'}}>Loading…</div>
             ) : error ? (
@@ -183,6 +197,9 @@ export default function CartPage() {
                   Apply
                 </button>
               </div>
+              {discountMsg ? (
+                <p className="helper-text" style={{marginTop:6, color: discountOk ? 'var(--muted)' : 'var(--accent-2)'}}>{discountMsg}</p>
+              ) : null}
             </div>
             <a className="btn-primary" aria-disabled={items.length === 0} href={checkoutHref} style={{marginTop:32}} onClick={(e)=>{ if(items.length===0){ e.preventDefault(); } }}>
               Proceed to Checkout

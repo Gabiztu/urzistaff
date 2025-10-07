@@ -31,14 +31,18 @@ a:hover{text-decoration:underline}
 .gradient-text{background:linear-gradient(120deg,var(--primary),var(--accent-1));-webkit-background-clip:text;background-clip:text;color:transparent}
 .cart-layout{display:grid;grid-template-columns:1fr;gap:48px}
 @media(min-width:900px){.cart-layout{grid-template-columns:1.5fr 1fr;align-items:flex-start}}
-.cart-items-list{display:flex;flex-direction:column;gap:16px}
+.cart-layout{overflow-anchor:none}
+.cart-items-list{display:flex;flex-direction:column;gap:16px;overflow-anchor:none}
 .cart-item-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-6);display:flex;gap:16px;align-items:center}
 .cart-item-card .avatar{width:56px;height:56px;border-radius:50%;object-fit:cover}
 .cart-item-card .name{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--text-lg)}
 .cart-item-card .headline{color:var(--muted);font-size:var(--text-md);margin-top:-2px}
 .cart-item-card .price{font-size:18px;font-weight:600;margin-left:auto;text-align:right}
 .cart-item-card .remove-link{color:var(--accent-2);font-size:13px;font-weight:500;margin-top:4px}
-.order-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-6);padding-top:12px;position:sticky;top:40px}
+.order-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-6);position:sticky;top:40px;align-self:start}
+.order-summary{overflow-anchor:none}
+.order-summary h2{margin:0 0 16px}
+.cart-items>h2{margin:0 0 16px}
 .price-details .price-row{display:flex;justify-content:space-between;margin-bottom:12px;font-size:var(--text-md)}
 .price-details .label{color:var(--muted)}
 .price-details .value{font-weight:500}

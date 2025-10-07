@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 export default function ClientShop() {
   const [listings, setListings] = useState([]);
   const [q, setQ] = useState("");
+  const [typedQ, setTypedQ] = useState("");
   const [age, setAge] = useState("");
   const [sex, setSex] = useState("");
   const [availability, setAvailability] = useState("");
@@ -150,12 +151,34 @@ export default function ClientShop() {
         <div className="browse-hero-content reveal">
           <h1>Find your <span className="gradient-text">dedicated partner</span> in productivity.</h1>
           <p>We connect you with elite, pre-vetted virtual assistants who seamlessly integrate into your workflow.</p>
-          <form className="search-bar" role="search" onSubmit={(e)=>e.preventDefault()}>
-            <label className="sr-only" htmlFor="q">Search</label>
+          <form
+            className="search-bar"
+            role="search"
+            onSubmit={(e)=>{ e.preventDefault(); setQ(typedQ.trim()); }}
+          >
             <div className="search-input-wrap">
               <svg className="search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
-              <input id="q" name="q" className="input" type="search" placeholder="Search assistants by role, skills, location..." value={q} onChange={(e)=>setQ(e.target.value)} />
-              {q && <button type="button" id="clearSearch" className="clear-btn" aria-label="Clear search" onClick={()=>setQ("")}>✕</button>}
+              <input
+                id="q"
+                name="q"
+                className="input"
+                type="text"
+                placeholder="Search assistants by role, skills, location..."
+                value={typedQ}
+                onChange={(e)=>setTypedQ(e.target.value)}
+              />
+              {typedQ && (
+                <button
+                  type="button"
+                  id="clearSearch"
+                  className="clear-btn"
+                  aria-label="Clear search"
+                  onClick={()=>{ setTypedQ(""); setQ(""); }}
+                  style={{ position:'absolute', right:16, top:'50%', transform:'translateY(-50%)', width:36, height:36, display:'inline-flex', alignItems:'center', justifyContent:'center', borderRadius:'50%' }}
+                >
+                  ✕
+                </button>
+              )}
             </div>
             <button className="btn-primary" type="submit">Search</button>
           </form>
@@ -226,6 +249,7 @@ export default function ClientShop() {
                 ))}
               </div>
             </fieldset>
+            <div className="filters-break" aria-hidden="true" />
             <div className="filter-group">
               <div className="label">Location</div>
               <select className="filter-select" name="location" aria-label="Location" value={location} onChange={(e)=>setLocation(e.target.value)}>
@@ -254,20 +278,18 @@ export default function ClientShop() {
           <div className="listings-container reveal">
             {filtered.map((r) => (
               <article key={r.id} className="listing-card" data-category={(r.categories&&r.categories[0])||''} data-age={r.age_range||''} data-sex={r.sex||''} data-device={(r.devices||[]).join(',')} data-availability={r.availability||''} data-location={r.location||''} data-language={(r.languages&&r.languages[0])||''} data-rate={r.hourly_rate ?? ''} style={{position:'relative'}}>
-                <a className="card-link" href={`/p/${r.id}`} aria-label={`View ${r.name} profile`} style={{position:'absolute',inset:0,zIndex:5,borderRadius:'inherit'}}><span className="sr-only">View profile</span></a>
                 <img loading="lazy" src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(r.name||'VA')}`} alt={r.name} className="avatar" />
-                <div>
+                <div className="listing-info">
                   <div className="name">{r.name}</div>
                   {r.headline ? <div className="headline">{r.headline}</div> : null}
                   <div className="skills">
-                    {(r.categories||[]).slice(0,3).map((c) => (<span key={c} className="skill">{c}</span>))}
-                    {(r.languages||[]).slice(0,2).map((l) => (<span key={l} className="skill">{l}</span>))}
+                    {(r.categories||[]).map((c) => (<span key={c} className="skill">{c}</span>))}
+                    {(r.languages||[]).map((l) => (<span key={l} className="skill">{l}</span>))}
                   </div>
                 </div>
                 <div className="listing-meta">
                   <div className="price">${Number(r.hourly_rate ?? 0).toFixed(0)}<span style={{fontSize:14,color:'var(--muted)'}}>/hr</span></div>
-                  {r.rating ? <div className="rating">⭐ {r.rating} ({r.reviews_count} reviews)</div> : null}
-                  <button className="btn-primary" type="button" style={{marginTop:8, position:'relative', zIndex:6}} onClick={(e)=>{e.preventDefault(); e.stopPropagation(); addToCart(r);}}>Add to Cart</button>
+                  <button className="btn-primary" type="button" style={{position:'relative', zIndex:6}} onClick={(e)=>{e.preventDefault(); e.stopPropagation(); addToCart(r);}}>Add to Cart</button>
                 </div>
               </article>
             ))}

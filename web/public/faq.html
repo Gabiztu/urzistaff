@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Urzistaff — FAQ</title>
+  <meta name="description" content="Answers to common questions about hiring and working with Urzistaff virtual assistants." />
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='100%' height='100%' rx='12' fill='%237F5AF0'/><text x='50%' y='54%' text-anchor='middle' font-size='34' font-family='Arial' fill='white'>UZ</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#7F5AF0; --accent-1:#00C6CF; --accent-2:#F04E8A; --bg:#0B0A10; --surface:#14131B; --elev:#1C1B22; --text:#E5E7EB; --muted:#94A3B8; --border:#2B2A33; --radius:14px; --pill:999px; --shadow:0 8px 40px rgba(0,0,0,0.4); --ease-out:cubic-bezier(.22,1,.36,1); --space-4:clamp(12px,2.4vw,20px); --space-6:clamp(16px,3vw,24px); --text-md:clamp(14px,1.4vw,16px); --text-lg:clamp(16px,1.6vw,20px); }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth; scrollbar-gutter: stable both-edges}
+    body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+    .container{max-width:1200px;margin:0 auto;padding:0 var(--space-4)}
+    h1,h2{font-family:"Space Grotesk",sans-serif}
+    a{color:var(--primary);text-decoration:none}
+    a:hover{text-decoration:underline}
+    :focus-visible{outline:2px solid color-mix(in oklab,var(--primary),#fff 20%);outline-offset:2px}
+
+    /* Header/Nav */
+    .site-header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(1.5) blur(12px);background:color-mix(in oklab, var(--bg) 80%, transparent);border-bottom:1px solid var(--border)}
+    .nav-container{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+    .nav-brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk",sans-serif;font-weight:600;color:inherit;text-decoration:none}
+    .nav-brand-logo{height:28px;width:auto;display:block}
+    .nav-brand-text{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:18px}
+    .nav-links{display:none}
+    @media(min-width:768px){.nav-links{display:flex;gap:24px;font-weight:500;color:var(--muted)}.nav-links a{color:inherit;text-decoration:none}.nav-links a.active{color:var(--text)}}
+    .btn-cart{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--pill);border:1px solid var(--border);background:var(--surface);color:var(--text);text-decoration:none}
+    .btn-cart:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#444}
+    .cart-icon{width:22px;height:22px}
+
+    /* Hero */
+    .hero{padding:64px 0 24px;text-align:center}
+    .hero h1{font-size:clamp(2rem,4vw,2.5rem);margin:0 0 12px}
+    .gradient-text{background:linear-gradient(120deg,var(--primary),var(--accent-1));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{color:var(--muted);max-width:720px;margin:0 auto}
+
+    /* FAQ */
+    .faq{margin:24px auto 64px;display:flex;flex-direction:column;gap:12px}
+    .qa{border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+    .q{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer}
+    .q h3{margin:0;font-size:18px}
+    .toggle{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--border);color:var(--muted);transition:all .2s var(--ease-out)}
+    .qa.open .toggle{border-color:var(--primary);background:var(--primary);color:#fff}
+    .a{display:none;padding:0 18px 18px;color:var(--muted);line-height:1.7}
+    .qa.open .a{display:block}
+    ul{margin:8px 0 0 18px}
+    li{margin:6px 0}
+
+    .policy-box{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:8px}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--pill);font-size:12px;border:1px solid var(--border);color:var(--muted);background:var(--surface)}
+  </style>
+  <script>
+    // Minimal accordion behavior
+    document.addEventListener('click', (e) => {
+      const q = e.target.closest('.q');
+      if (!q) return;
+      const qa = q.closest('.qa');
+      qa.classList.toggle('open');
+    });
+  </script>
+  </head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/" class="nav-brand" aria-label="Urzistaff home">
+        <img src="/urzistaff-logo.png.png" data-fallback="/urzistaff-logo.png,/urzistaff-logo.jpg,/urzistaff-logo.jpeg,/logo.png,/logo.jpg" alt="Urzistaff" class="nav-brand-logo" onerror="(function(img){const list=(img.dataset.fallback||'').split(',').map(s=>s.trim()).filter(Boolean); if(list.length){img.dataset.fallback=list.slice(1).join(','); img.src=list[0];} else {img.style.display='none'; const t=img.closest('.nav-brand').querySelector('.nav-brand-text'); if(t) t.style.display='inline-block';}})(this)" />
+        <span class="nav-brand-text" style="display:none">Urzistaff</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/faq" class="active">FAQ</a>
+        <a href="/support">Support</a>
+      </nav>
+      <a href="/cart" class="btn-cart" aria-label="Cart">
+        <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c.51 0 .962-.344 1.087-.849l1.858-6.443a.75.75 0 0 0-.7-1.028H5.613M15 21a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 0h-5.25"/></svg>
+        <span id="cartCount">0</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="hero container">
+    <h1><span class="gradient-text">Frequently Asked Questions</span></h1>
+    <p>We connect clients with quality, pre-vetted virtual assistants. Here are quick answers about how it works.</p>
+  </section>
+
+  <main class="container">
+    <section class="faq" aria-label="FAQ list">
+      <article class="qa open">
+        <div class="q" role="button" tabindex="0" aria-expanded="true">
+          <h3>What is Urzistaff?</h3>
+          <div class="toggle">+</div>
+        </div>
+        <div class="a">
+          <p>Urzistaff is an agency that connects clients with high‑quality, qualified virtual assistants (VAs). We curate talent, streamline matching, and support you end‑to‑end so you never lose time or money.</p>
+        </div>
+      </article>
+
+      <article class="qa open">
+        <div class="q" role="button" tabindex="0" aria-expanded="true">
+          <h3>Guarantee Policy</h3>
+          <div class="toggle">+</div>
+        </div>
+        <div class="a">
+          <p class="badge">Middleman accepted: <strong>@marshal</strong></p>
+          <div class="policy-box">
+            <ul>
+              <li>If the hired VA does not respond within 72 hours, you may select a replacement.</li>
+              <li>If the hired VA becomes unavailable within the first two weeks after hiring, you may select a replacement.</li>
+              <li>The replacement may be one VA of equal value or multiple VAs whose combined value matches the original.</li>
+              <li>This policy ensures you do not lose time or money.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="q" role="button" tabindex="0" aria-expanded="false">
+          <h3>How does the hiring process work?</h3>
+          <div class="toggle">+</div>
+        </div>
+        <div class="a">
+          <ol style="margin:8px 0 0 18px; padding:0;">
+            <li>Browse our <a href="/shop">Shop</a> and add assistants to your cart.</li>
+            <li>Checkout securely, leaving your Telegram so we can coordinate.</li>
+            <li>We introduce you and ensure a smooth start. If anything goes wrong, our Guarantee Policy applies.</li>
+          </ol>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="q" role="button" tabindex="0" aria-expanded="false">
+          <h3>What does the $99 price cover?</h3>
+          <div class="toggle">+</div>
+        </div>
+        <div class="a">
+          <p>The $99 fee is a one‑time listing/connection fee per assistant selection. It covers vetting, matching, and onboarding support.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="q" role="button" tabindex="0" aria-expanded="false">
+          <h3>Which payments do you accept?</h3>
+          <div class="toggle">+</div>
+        </div>
+        <div class="a">
+          <p>We process payments via <strong>NOWPayments</strong>. If you need middleman escrow, we accept <strong>@marshal</strong>.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="q" role="button" tabindex="0" aria-expanded="false">
+          <h3>How fast will the VA respond?</h3>
+          <div class="toggle">+</div>
+        </div>
+        <div class="a">
+          <p>Typically within 24–48 hours. If there’s no response within 72 hours, our Guarantee Policy lets you choose a replacement.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="q" role="button" tabindex="0" aria-expanded="false">
+          <h3>Can I replace my VA later?</h3>
+          <div class="toggle">+</div>
+        </div>
+        <div class="a">
+          <p>Yes. If your VA becomes unavailable within two weeks of hiring, you can select another VA of the same value (or multiple VAs matching the original value).</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="q" role="button" tabindex="0" aria-expanded="false">
+          <h3>How do I get support?</h3>
+          <div class="toggle">+</div>
+        </div>
+        <div class="a">
+          <p>Visit our <a href="/support">Support</a> page to chat on Telegram or join our channel for updates.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    // Update header cart count
+    (function(){
+      const countEl = document.getElementById('cartCount');
+      const getLS = () => { try { return parseInt(localStorage.getItem('cart_count')||'0', 10) || 0; } catch { return 0; } };
+      const setLS = (n) => { try { localStorage.setItem('cart_count', String(Math.max(0, n|0))); } catch {} };
+      if (countEl) countEl.textContent = String(getLS());
+      const updateCount = async () => {
+        try {
+          const res = await fetch('/api/cart', { cache: 'no-store' });
+          const json = await res.json();
+          const n = Array.isArray(json?.cart?.items) ? json.cart.items.length : 0;
+          if (countEl) countEl.textContent = String(n);
+          setLS(n);
+        } catch { /* keep last-known value */ }
+      };
+      updateCount();
+    })();
+  </script>
+</body>
+</html>

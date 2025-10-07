@@ -11,7 +11,7 @@ const nextConfig = {
         destination: '/landing.html',
       },
       // If you want static shop instead of dynamic app route, re-enable below
-      { source: '/shop', destination: '/shop.html' },
+      // { source: '/shop', destination: '/shop.html' },
       // Serve cart page
       {
         source: '/cart',

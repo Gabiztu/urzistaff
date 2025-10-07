@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Urzistaff — Your Cart</title>
+  <meta name="description" content="Review your selection before checkout." />
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='100%' height='100%' rx='12' fill='%237F5AF0'/><text x='50%' y='54%' text-anchor='middle' font-size='34' font-family='Arial' fill='white'>UZ</text></svg>" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#7F5AF0; --accent-1:#00C6CF; --accent-2:#F04E8A; --bg:#0B0A10; --surface:#14131B; --elev:#1C1B22; --text:#E5E7EB; --muted:#94A3B8; --border:#2B2A33; --radius:14px; --pill:999px; --shadow:0 8px 40px rgba(0,0,0,0.4); --ease-out:cubic-bezier(.22,1,.36,1); --space-4:clamp(12px,2.4vw,20px); --space-6:clamp(16px,3vw,24px); --text-md:clamp(14px,1.4vw,16px); --text-lg:clamp(16px,1.6vw,20px); }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth; scrollbar-gutter: stable both-edges}
+    body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text);padding:0}
+    /* Shared container (matches shop) */
+    .container{max-width:1200px;margin:0 auto;padding:0 var(--space-4)}
+    /* Page content wrapper (narrower + top margin) */
+    .page{max-width:1000px;margin:40px auto;padding:0 var(--space-4)}
+    h1,h2{font-family:"Space Grotesk",sans-serif}
+    h1{font-size:clamp(2rem,4vw,2.5rem);margin:0 0 12px}
+    h2{font-size:clamp(1.25rem,3vw,1.5rem);margin-bottom:24px}
+    a{color:var(--primary);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .gradient-text{background:linear-gradient(120deg,var(--primary),var(--accent-1));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .cart-layout{display:grid;grid-template-columns:1fr;gap:48px}
+    @media(min-width:900px){.cart-layout{grid-template-columns:1.5fr 1fr;align-items:flex-start}}
+    .cart-items-list{display:flex;flex-direction:column;gap:16px}
+    .cart-item-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-6);display:flex;gap:16px;align-items:center}
+    .cart-item-card .avatar{width:56px;height:56px;border-radius:50%;object-fit:cover}
+    .cart-item-card .name{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--text-lg)}
+    .cart-item-card .headline{color:var(--muted);font-size:var(--text-md);margin-top:-2px}
+    .cart-item-card .price{font-size:18px;font-weight:600;margin-left:auto;text-align:right}
+    .cart-item-card .remove-link{color:var(--accent-2);font-size:13px;font-weight:500;margin-top:4px}
+    .order-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-6);position:sticky;top:40px}
+    .price-details .price-row{display:flex;justify-content:space-between;margin-bottom:12px;font-size:var(--text-md)}
+    .price-details .label{color:var(--muted)}
+    .price-details .value{font-weight:500}
+    .price-details .total{margin-top:20px;padding-top:20px;border-top:1px solid var(--border);font-size:var(--text-lg);font-weight:700}
+    .price-details .total .value{color:var(--primary)}
+    .btn-primary{width:100%;text-align:center;display:inline-block;background:var(--primary);border:1px solid var(--primary);color:#fff;border-radius:10px;font-weight:600;padding:14px 24px;cursor:pointer;transition:transform .2s var(--ease-out);font-size:var(--text-lg)}
+    .btn-sm{padding:8px 12px;font-size:13px;min-height:36px}
+    .btn-primary:hover{transform:scale(1.03);text-decoration:none}
+    .btn-primary[aria-disabled="true"]{opacity:.55;cursor:not-allowed;pointer-events:none}
+    .info-text{text-align:center;margin-top:24px;font-size:14px;color:var(--muted)}
+    :focus-visible{outline:2px solid color-mix(in oklab,var(--primary),#fff 20%);outline-offset:2px}
+    /* Site Header/Nav */
+    .site-header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(1.5) blur(12px);background:color-mix(in oklab, var(--bg) 80%, transparent);border-bottom:1px solid var(--border)}
+    .nav-container{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+    .nav-brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk",sans-serif;font-weight:600;color:inherit;text-decoration:none}
+    .nav-brand-logo{height:28px;width:auto;display:block}
+    @media(min-width:768px){.nav-brand-logo{height:28px}}
+    .nav-links{display:none}
+    .nav-brand-text{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:18px}
+    @media(min-width:768px){.nav-links{display:flex;gap:24px;font-weight:500;color:var(--muted)}.nav-links a{color:inherit;text-decoration:none}.nav-links a.active{color:var(--text)}}
+    .btn-cart{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--pill);border:1px solid var(--border);background:var(--surface);color:var(--text);text-decoration:none}
+    .btn-cart:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#444}
+    .cart-icon{width:22px;height:22px}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/" class="nav-brand" aria-label="Urzistaff home">
+        <img src="/urzistaff-logo.png" data-fallback="/urzistaff-logo.jpg,/urzistaff-logo.jpeg,/logo.png,/logo.jpg" alt="Urzistaff" class="nav-brand-logo" onerror="(function(img){const list=(img.dataset.fallback||'').split(',').map(s=>s.trim()).filter(Boolean); if(list.length){img.dataset.fallback=list.slice(1).join(','); img.src=list[0];} else {img.style.display='none'; const t=img.closest('.nav-brand').querySelector('.nav-brand-text'); if(t) t.style.display='inline-block';}})(this)" />
+        <span class="nav-brand-text" style="display:none">Urzistaff</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/faq">FAQ</a>
+        <a href="/support">Support</a>
+      </nav>
+      <a href="/cart" class="btn-cart" aria-label="Cart">
+        <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c.51 0 .962-.344 1.087-.849l1.858-6.443a.75.75 0 0 0-.7-1.028H5.613M15 21a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 0h-5.25"/></svg>
+        <span id="cartCount">0</span>
+      </a>
+    </div>
+  </header>
+  <div class="container page">
+    <header style="text-align:center;margin-bottom:48px;">
+      <h1><span class="gradient-text">Review Your Cart</span></h1>
+      <p><a href="/shop">← Or continue browsing</a></p>
+    </header>
+
+    <div class="cart-layout">
+      <main class="cart-items">
+        <h2 id="itemsTitle">Your Items (0)</h2>
+        <div id="itemsList" class="cart-items-list"></div>
+      </main>
+
+      <aside class="order-summary">
+        <h2>Order Summary</h2>
+        <div class="price-details">
+          <div class="price-row"><div class="label">Subtotal</div><div id="subtotalVal" class="value">$0.00</div></div>
+          <div class="price-row" id="discountRow" style="display:none;"><div class="label">Discount</div><div id="discountVal" class="value">-$0.00</div></div>
+          <div class="price-row"><div class="label">Taxes & Fees</div><div id="feesVal" class="value">$0.00</div></div>
+          <div class="price-row total"><div class="label">Total</div><div id="totalVal" class="value">$0.00</div></div>
+        </div>
+        <div class="form-group" style="margin-top:10px;">
+          <label for="discountCode" style="display:block;font-weight:600;margin-bottom:6px;font-size:14px">Discount code</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input id="discountCode" class="input" placeholder="Enter code" style="flex:1;min-height:40px" />
+            <button id="applyDiscount" class="btn-primary btn-sm" type="button" style="min-width:92px;">Apply</button>
+          </div>
+          <p id="discountMsg" class="helper-text" style="display:none;margin-top:6px"></p>
+        </div>
+        <a id="toCheckout" class="btn-primary" aria-disabled="true" style="margin-top:32px;">Proceed to Checkout</a>
+        <p class="info-text">This is a one-time fee to connect with the assistant.</p>
+      </aside>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const listEl = document.getElementById('itemsList');
+      const titleEl = document.getElementById('itemsTitle');
+      const subtotalEl = document.getElementById('subtotalVal');
+      const discountEl = document.getElementById('discountVal');
+      const discountRow = document.getElementById('discountRow');
+      const feesEl = document.getElementById('feesVal');
+      const totalEl = document.getElementById('totalVal');
+      const toCheckout = document.getElementById('toCheckout');
+      const headerCount = document.getElementById('cartCount');
+      const getLS = () => { try { return parseInt(localStorage.getItem('cart_count')||'0', 10) || 0; } catch { return 0; } };
+      const setLS = (n) => { try { localStorage.setItem('cart_count', String(Math.max(0, n|0))); } catch {} };
+      // Instant paint from last-known value
+      if (headerCount) headerCount.textContent = String(getLS());
+      const UNIT_PRICE = 99;
+
+      const avatar = (name) => `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name||'VA')}`;
+
+      const loadCart = async () => {
+        try {
+          const res = await fetch('/api/cart', { cache: 'no-store' });
+          const json = await res.json();
+          return Array.isArray(json?.cart?.items) ? json.cart.items : [];
+        } catch { return []; }
+      };
+
+      const format = (n) => `$${Number(n||0).toFixed(2)}`;
+      const formatNeg = (n) => `-$${Number(Math.abs(n)||0).toFixed(2)}`;
+
+      const getCode = () => (localStorage.getItem('discount_code') || '').trim();
+      const setCode = (c) => { if (typeof localStorage !== 'undefined') localStorage.setItem('discount_code', (c||'').trim()); };
+      const discountFor = (subtotal) => {
+        const code = getCode().toUpperCase();
+        let pct = 0;
+        if (code === 'URZI10' || code === 'WELCOME10') pct = 0.10;
+        else if (code === 'URZI20') pct = 0.20;
+        const amt = +(subtotal * pct).toFixed(2);
+        return { code, amount: amt, pct };
+      };
+
+      const render = async () => {
+        const cart = await loadCart();
+        titleEl.textContent = `Your Items (${cart.length})`;
+        if (headerCount) headerCount.textContent = String(cart.length);
+        setLS(cart.length);
+        listEl.innerHTML = '';
+        let subtotal = 0;
+        cart.forEach(item => {
+          subtotal += UNIT_PRICE;
+          const row = document.createElement('div');
+          row.className = 'cart-item-card';
+          row.innerHTML = `
+            <img loading="lazy" src="${avatar(item.name)}" alt="${item.name}" class="avatar">
+            <div>
+              <div class="name">${item.name}</div>
+              <div class="headline">${item.headline||''}</div>
+            </div>
+            <div class="price">
+              <div>${format(UNIT_PRICE)}</div>
+              <a href="#" class="remove-link" data-id="${item.listing_id}">Remove</a>
+            </div>`;
+          listEl.appendChild(row);
+        });
+        const { amount: discAmt } = discountFor(subtotal);
+        const fees = 0;
+        const total = Math.max(0, subtotal - discAmt + fees);
+        subtotalEl.textContent = format(subtotal);
+        if (discountEl) discountEl.textContent = formatNeg(discAmt);
+        if (discountRow) discountRow.style.display = discAmt > 0 ? '' : 'none';
+        feesEl.textContent = format(fees);
+        totalEl.textContent = format(total);
+
+        // Build checkout URL and enable/disable button depending on cart emptiness
+        if (!toCheckout) return;
+        if (cart.length === 0) {
+          toCheckout.setAttribute('aria-disabled', 'true');
+          toCheckout.removeAttribute('href');
+        } else {
+          const params = new URLSearchParams();
+          params.set('id', cart[0].listing_id || cart[0].id);
+          params.set('name', cart[0].name);
+          params.set('headline', cart[0].headline||'');
+          params.set('price', String(UNIT_PRICE));
+          toCheckout.setAttribute('aria-disabled', 'false');
+          toCheckout.href = `/checkout?${params.toString()}`;
+        }
+      };
+
+      document.addEventListener('click', (e) => {
+        const rem = e.target.closest('.remove-link');
+        if (!rem) return;
+        e.preventDefault();
+        const id = rem.getAttribute('data-id');
+        fetch(`/api/cart/items?listing_id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+          .finally(() => render());
+      });
+
+      const codeInput = document.getElementById('discountCode');
+      const applyBtn = document.getElementById('applyDiscount');
+      const msgEl = document.getElementById('discountMsg');
+      if (codeInput) codeInput.value = getCode();
+      const showMsg = (t, ok) => {
+        if (!msgEl) return;
+        msgEl.textContent = t;
+        msgEl.style.display = t ? '' : 'none';
+        msgEl.style.color = ok ? 'var(--muted)' : 'var(--accent-2)';
+      };
+      applyBtn?.addEventListener('click', () => {
+        const val = (codeInput?.value || '').trim();
+        setCode(val);
+        const { pct } = discountFor(100);
+        if (val && pct > 0) showMsg('Discount applied', true); else if (val) showMsg('Invalid code', false); else showMsg('', true);
+        render();
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

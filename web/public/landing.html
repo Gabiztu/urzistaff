@@ -41,7 +41,17 @@
     .card-actions{display:flex;gap:var(--space-2);margin-top:auto;flex-wrap:wrap} .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--pill);padding:10px 16px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .2s var(--ease-out),box-shadow .2s var(--ease-out);min-height:44px;text-decoration:none}
     .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)} .btn-primary{border-color:var(--primary);background:var(--primary);color:#fff}
     :focus-visible{outline:2px solid color-mix(in oklab,var(--primary),#fff 20%);outline-offset:2px}
-    .process-visual{border-radius:16px;aspect-ratio:4/3;object-fit:cover;width:100%}
+    .why-us-visual{position:relative;isolation:isolate;perspective:1000px}
+    .why-us-visual::after{content:"";position:absolute;inset:auto -10% -12% -10%;height:40%;background:radial-gradient(60% 60% at 50% 0%, color-mix(in oklab, var(--primary), transparent 70%), transparent);filter:blur(30px);opacity:.45;z-index:0;pointer-events:none}
+    .process-visual{position:relative;z-index:1;border-radius:16px;aspect-ratio:4/3;object-fit:cover;width:100%;box-shadow:0 16px 40px rgba(0,0,0,.18);transform-style:preserve-3d;transition:transform .55s var(--ease-out), filter .55s var(--ease-out), box-shadow .55s var(--ease-out);filter:saturate(1.05) contrast(1.03) brightness(1.02)}
+    .why-us-visual:hover .process-visual{transform:translateZ(14px) rotateX(3deg) rotateY(-4deg) scale(1.02);filter:saturate(1.1) contrast(1.06)}
+    @media (hover: none){.why-us-visual:hover .process-visual{transform:none}}
+
+    .why-us-text{position:relative}
+    .why-us-text::before{content:"";position:absolute;left:-12px;top:0;bottom:0;width:4px;border-radius:4px;background:linear-gradient(180deg,var(--primary),color-mix(in oklab,var(--primary),var(--accent-1) 40%));opacity:.7}
+    .why-us-text h2{background:linear-gradient(120deg, color-mix(in oklab,var(--text),#fff 10%), color-mix(in oklab,var(--primary),#fff 10%));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .why-us-text .feature-list li{position:relative}
+    .why-us-text .feature-list li::after{content:"";position:absolute;left:0;right:60%;bottom:-6px;height:1px;background:linear-gradient(90deg, color-mix(in oklab,var(--primary),transparent 40%), transparent);opacity:.35}
     .process-step{position:relative;border-left:2px solid var(--primary);padding-left:24px;margin-bottom:32px} .process-step h3{font-family:"Space Grotesk";font-size:20px;margin:0 0 4px} .process-step p{color:var(--muted);margin:0}
     .process-step::before { content: ''; position: absolute; left: -9px; top: 2px; width: 16px; height: 16px; background: var(--primary); border-radius: 50%; border: 3px solid var(--surface); }
     .feature-list{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:16px}
@@ -172,6 +182,23 @@
     </div>
   </section>
   <script>
+    (function(){
+      // Subtle interactive tilt for the photo card
+      const wrap = document.querySelector('.why-us-visual');
+      const img = wrap?.querySelector('.process-visual');
+      if (wrap && img) {
+        const max = 6; // deg
+        wrap.addEventListener('mousemove', (e) => {
+          const r = wrap.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          img.style.transform = `rotateY(${x*max}deg) rotateX(${ -y*max}deg) translateZ(14px) scale(1.02)`;
+        });
+        wrap.addEventListener('mouseleave', () => {
+          img.style.transform = '';
+        });
+      }
+    })();
     // Theme: respect saved preference, do not auto-switch hero in light mode
     (function(){
       const root = document.documentElement;

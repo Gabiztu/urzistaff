@@ -89,9 +89,7 @@ export default function ListingProfile() {
   return (
     <>
       <style suppressHydrationWarning>{`
-    :root { --primary:#7F5AF0; --accent-1:#00C6CF; --bg:#0B0A10; --surface:#14131B; --elev:#1C1B22; --text:#E5E7EB; --muted:#94A3B8; --border:#2B2A33; --success:#10B981; --radius:14px; --pill:999px; --shadow:0 8px 40px rgba(0,0,0,0.4); --ease-out:cubic-bezier(.22,1,.36,1); }
     *,*::before,*::after{box-sizing:border-box}
-    body{margin:0;font-family:Inter, sans-serif;background:var(--bg);color:var(--text)}
     .container{max-width:1200px;margin:0 auto;padding:0 24px}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--pill);padding:12px 24px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .2s var(--ease-out), box-shadow .2s var(--ease-out), border-color .2s var(--ease-out); text-decoration: none;}
     .btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(127,90,240,.25);border-color:#444}

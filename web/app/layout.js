@@ -1,4 +1,6 @@
 import './globals.css'
+import ThemeToggle from './components/ThemeToggle'
+import Script from 'next/script'
 
 export const metadata = {
   title: 'Urzistaff',
@@ -8,7 +10,21 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body style={{ background: '#0B0A10', color: '#E5E7EB' }}>{children}</body>
+      <head>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`
+            try {
+              var t = localStorage.getItem('theme');
+              if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+              document.documentElement.setAttribute('data-theme', t || 'light');
+            } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+          `}
+        </Script>
+      </head>
+      <body>
+        {children}
+        <ThemeToggle />
+      </body>
     </html>
   )
 }

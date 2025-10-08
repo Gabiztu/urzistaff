@@ -205,7 +205,26 @@ export default function ClientShop({ initialListings = [] }) {
               {k:'tiktok', label:'🎵 Tiktok'},
               {k:'threads', label:'🧵 Threads'},
             ].map(c => (
-              <a key={c.k} href="#" className={`category-card${selectedCats.has(c.k)?' active':''}`} data-category={c.k} onClick={(e)=>{e.preventDefault(); toggleCategory(c.k);}}><span>{c.label.split(' ')[0]}</span> {c.label.slice(c.label.indexOf(' ')+1)}</a>
+              <a
+                key={c.k}
+                href="#"
+                className={`category-card${selectedCats.has(c.k)?' active':''}`}
+                data-category={c.k}
+                onClick={(e)=>{e.preventDefault(); toggleCategory(c.k);}}
+              >
+                {c.k === 'reddit' ? (
+                  <img
+                    src="/Reddit-Logo.jpg"
+                    alt="Reddit"
+                    className="category-logo"
+                    style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0, borderRadius: 4 }}
+                  />
+                ) : (
+                  <span>{c.label.split(' ')[0]}</span>
+                )}
+                {" "}
+                {c.label.slice(c.label.indexOf(' ')+1)}
+              </a>
             ))}
           </div>
         </div>

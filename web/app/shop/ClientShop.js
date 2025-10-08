@@ -247,7 +247,11 @@ export default function ClientShop({ initialListings = [] }) {
               <legend>Age</legend>
               <div className="filter-options">
                 {['18-20','20-25','25-30','30+'].map(v => (
-                  <label key={v} className="chip">
+                  <label
+                    key={v}
+                    className="chip"
+                    onClick={(e)=>{ if (age===v) { e.preventDefault(); setAge(""); } }}
+                  >
                     <input type="radio" name="age" value={v} checked={age===v} onChange={()=>setAge(v)} />
                     <span>{v}</span>
                   </label>
@@ -258,7 +262,11 @@ export default function ClientShop({ initialListings = [] }) {
               <legend>Sex</legend>
               <div className="filter-options">
                 {['male','female'].map(v => (
-                  <label key={v} className="chip">
+                  <label
+                    key={v}
+                    className="chip"
+                    onClick={(e)=>{ if (sex===v) { e.preventDefault(); setSex(""); } }}
+                  >
                     <input type="radio" name="sex" value={v} checked={sex===v} onChange={()=>setSex(v)} />
                     <span>{v[0].toUpperCase()+v.slice(1)}</span>
                   </label>
@@ -280,7 +288,11 @@ export default function ClientShop({ initialListings = [] }) {
               <legend>Availability</legend>
               <div className="filter-options">
                 {['full-time','part-time'].map(v => (
-                  <label key={v} className="chip">
+                  <label
+                    key={v}
+                    className="chip"
+                    onClick={(e)=>{ if (availability===v) { e.preventDefault(); setAvailability(""); } }}
+                  >
                     <input type="radio" name="availability" value={v} checked={availability===v} onChange={()=>setAvailability(v)} />
                     <span>{v === 'full-time' ? 'Full Time' : 'Part Time'}</span>
                   </label>
@@ -300,7 +312,11 @@ export default function ClientShop({ initialListings = [] }) {
               <legend>Language</legend>
               <div className="filter-options">
                 {['English','Italian','Spanish'].map((v) => (
-                  <label key={v} className="chip">
+                  <label
+                    key={v}
+                    className="chip"
+                    onClick={(e)=>{ if (language===v) { e.preventDefault(); setLanguage(""); } }}
+                  >
                     <input type="radio" name="language" value={v} checked={language===v} onChange={()=>setLanguage(v)} />
                     <span>{v}</span>
                   </label>

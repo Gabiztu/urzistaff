@@ -1,7 +1,9 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ClientShop({ initialListings = [] }) {
+  const router = useRouter();
   const catLogos = {
     reddit: "/reddit.png",
     instagram: "/instagram.png",
@@ -331,7 +333,23 @@ export default function ClientShop({ initialListings = [] }) {
           </div>
           <div className="listings-container reveal">
             {filtered.map((r) => (
-              <article key={r.id} className="listing-card" data-category={(r.categories&&r.categories[0])||''} data-age={r.age_range||''} data-sex={r.sex||''} data-device={(r.devices||[]).join(',')} data-availability={r.availability||''} data-location={r.location||''} data-language={(r.languages&&r.languages[0])||''} data-rate={r.hourly_rate ?? ''} style={{position:'relative'}}>
+              <article
+                key={r.id}
+                className="listing-card"
+                data-category={(r.categories&&r.categories[0])||''}
+                data-age={r.age_range||''}
+                data-sex={r.sex||''}
+                data-device={(r.devices||[]).join(',')}
+                data-availability={r.availability||''}
+                data-location={r.location||''}
+                data-language={(r.languages&&r.languages[0])||''}
+                data-rate={r.hourly_rate ?? ''}
+                style={{position:'relative', cursor:'pointer'}}
+                role="link"
+                tabIndex={0}
+                onClick={() => router.push(`/p/${r.id}`)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push(`/p/${r.id}`); } }}
+              >
                 <img loading="lazy" src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(r.name||'VA')}`} alt={r.name} className="avatar" />
                 <div className="listing-info">
                   <div className="name">{r.name}</div>

@@ -2,6 +2,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export default function ClientShop({ initialListings = [] }) {
+  const catLogos = {
+    reddit: "/Reddit-Logo.jpg",
+    instagram: "/instagram_logo.jpg",
+    x: "/x.png",
+    facebook: "/facebook.jpg",
+    tiktok: "/tiktok.jpg",
+    threads: "/threads.jpg",
+    "chat support": "/chat_support.jpg",
+  };
   const [listings, setListings] = useState(initialListings);
   const [q, setQ] = useState("");
   const [typedQ, setTypedQ] = useState("");
@@ -212,16 +221,18 @@ export default function ClientShop({ initialListings = [] }) {
                 data-category={c.k}
                 onClick={(e)=>{e.preventDefault(); toggleCategory(c.k);}}
               >
-                {c.k === 'reddit' ? (
-                  <img
-                    src="/Reddit-Logo.jpg"
-                    alt="Reddit"
-                    className="category-logo"
-                    style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0, borderRadius: 4 }}
-                  />
-                ) : (
-                  <span>{c.label.split(' ')[0]}</span>
-                )}
+                {catLogos[c.k]
+                  ? (
+                    <img
+                      src={catLogos[c.k]}
+                      alt={c.label.slice(c.label.indexOf(' ')+1)}
+                      className="category-logo"
+                      style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0, borderRadius: 4 }}
+                    />
+                  )
+                  : (
+                    <span>{c.label.split(' ')[0]}</span>
+                  )}
                 {" "}
                 {c.label.slice(c.label.indexOf(' ')+1)}
               </a>

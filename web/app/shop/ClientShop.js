@@ -25,6 +25,7 @@ export default function ClientShop({ initialListings = [] }) {
   const [maxRate, setMaxRate] = useState(50);
   const [selectedCats, setSelectedCats] = useState(new Set());
   const [cartCount, setCartCount] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const io = new IntersectionObserver((entries) => {
@@ -158,11 +159,26 @@ export default function ClientShop({ initialListings = [] }) {
             <a href="/faq">FAQ</a>
             <a href="/support">Support</a>
           </nav>
+          <button
+            type="button"
+            className="menu-btn"
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            onClick={()=>setMenuOpen(v=>!v)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
           <a href="/cart" className="btn-cart" aria-label="Cart">
             <svg className="cart-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c.51 0 .962-.344 1.087-.849l1.858-6.443a.75.75 0 0 0-.7-1.028H5.613M15 21a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 0h-5.25"/></svg>
             <span id="cartCount" style={{visibility: cartCount===null ? 'hidden' : 'visible'}}>{cartCount ?? ''}</span>
           </a>
         </div>
+        <nav className={`mobile-nav${menuOpen ? ' open' : ''}`}>
+          <a href="/">Home</a>
+          <a href="/shop" className="active">Shop</a>
+          <a href="/faq">FAQ</a>
+          <a href="/support">Support</a>
+        </nav>
       </header>
       <header className="browse-hero">
         <canvas id="constellation" ref={canvasRef} aria-hidden="true"></canvas>

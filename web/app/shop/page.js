@@ -21,6 +21,16 @@ export default async function ShopPage() {
     <>
       <style dangerouslySetInnerHTML={{__html: `
         /* Additional styles for the shop page */
+        .site-header { position: sticky; top: 0; z-index: 50; background: var(--bg); }
+        .nav-container { position: relative; }
+        /* Mobile menu */
+        .menu-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--border); background: var(--elev); color: var(--text); border-radius: 10px; padding: 8px 10px; margin-left: auto; margin-right: 10px; }
+        @media (min-width: 768px) { .menu-btn { display: none; } }
+        .mobile-nav { display: none; position: absolute; top: 100%; right: 12px; left: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: var(--shadow); }
+        .mobile-nav a { display: block; padding: 10px 12px; color: var(--text); border-radius: 8px; text-align: center; }
+        .mobile-nav a:hover, .mobile-nav a.active { background: var(--elev); }
+        .mobile-nav.open { display: flex; flex-direction: column; gap: 6px; }
+        @media (min-width: 768px) { .mobile-nav { display: none !important; } }
         .browse-hero {
           position: relative; overflow: hidden; padding: 80px 0; text-align: center;
         }

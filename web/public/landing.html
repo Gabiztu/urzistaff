@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
   <style>
-    :root { --primary:#7F5AF0; --accent-1:#00C6CF; --accent-2:#F04E8A; --light-bg:#FFFFFF; --light-surface:#F8FAFC; --light-elev:#FFFFFF; --light-text:#0F172A; --light-muted:#475569; --light-border:#E2E8F0; --dark-bg:#0B0A10; --dark-surface:#14131B; --dark-elev:#1C1B22; --dark-text:#E5E7EB; --dark-muted:#94A3B8; --dark-border:#2B2A33; --radius:14px; --pill:999px; --shadow:0 8px 32px rgba(0,0,0,0.1); --ease-out:cubic-bezier(.22,1,.36,1); --space-1:4px; --space-2:8px; --space-3:clamp(10px,2vw,16px); --space-4:clamp(12px,2.4vw,20px); --space-6:clamp(16px,3vw,24px); --card-pad:var(--space-4); --card-gap:var(--space-3); --text-sm:clamp(12px,1.2vw,14px); --text-md:clamp(14px,1.4vw,16px); --text-lg:clamp(16px,1.6vw,20px); --text-xl:clamp(24px,4vw,40px);} 
+    :root { --primary:#7F5AF0; --accent-1:#00C6CF; --accent-2:#F04E8A; --light-bg:#FFFFFF; --light-surface:#F8FAFC; --light-elev:#FFFFFF; --light-text:#0F172A; --light-muted:#475569; --light-border:#E2E8F0; --dark-bg:#0B0A10; --dark-surface:#14131B; --dark-elev:#1C1B22; --dark-text:#E5E7EB; --dark-muted:#94A3B8; --dark-border:#2B2A33; --radius:14px; --pill:999px; --shadow:0 8px 32px rgba(0,0,0,0.1); --ease-out:cubic-bezier(.22,1,.36,1); --space-1:4px; --space-2:8px; --space-3:clamp(10px,2vw,16px); --space-4:clamp(12px,2.4vw,20px); --space-6:clamp(16px,3vw,24px); --card-pad:var(--space-4); --card-gap:var(--space-3); --text-sm:clamp(12px,1.2vw,14px); --text-md:clamp(14px,1.4vw,16px); --text-lg:clamp(16px,1.6vw,20px); --text-xl:clamp(24px,4vw,40px);}
     html[data-theme="light"]{--bg:var(--light-bg);--surface:var(--light-surface);--elev:var(--light-elev);--text:var(--light-text);--muted:var(--light-muted);--border:var(--light-border)}
     html[data-theme="dark"]{--bg:var(--dark-bg);--surface:var(--dark-surface);--elev:var(--dark-elev);--text:var(--dark-text);--muted:var(--dark-muted);--border:var(--dark-border);--shadow:0 8px 40px rgba(0,0,0,0.4)}
     *,*::before,*::after{box-sizing:border-box} html{scroll-behavior:smooth; scrollbar-gutter: stable both-edges}
@@ -20,23 +20,16 @@
     .prologue-hero-content{z-index:10}
     @keyframes popInCenter{0%{opacity:0;transform:scale(.82)}60%{opacity:1;transform:scale(1.02)}100%{opacity:1;transform:none}}
     .prologue-hero h1{animation:popInCenter 1.35s var(--ease-out) .1s both;will-change:transform,opacity}
-    .prologue-hero h1{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:clamp(3.25rem,8.5vw,6.5rem);line-height:1.08;letter-spacing:-2px;margin:0 auto 36px;max-width:1000px;color:var(--dark-text)}
+    .prologue-hero h1{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:clamp(3.25rem,8.5vw,6.5rem);line-height:1.08;letter-spacing:-2px;margin:0 auto 12px;max-width:1000px;color:var(--dark-text)}
+    .prologue-hero p.subtitle { font-size: var(--text-lg); color: var(--dark-muted); max-width: 600px; margin: 0 auto 36px; animation: popInCenter 1.35s var(--ease-out) .3s both; }
     .prologue-hero .highlight{display:inline-block;background:linear-gradient(45deg,#7F5AF0,#00C6CF);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .prologue-hero .highlight-1,.prologue-hero .highlight-2{display:inline-block;background-clip:text;-webkit-background-clip:text;color:transparent}
-    .prologue-hero .highlight-1{background-image:linear-gradient(120deg,#A855F7,#7F5AF0)} .prologue-hero .highlight-2{background-image:linear-gradient(120deg,#00C6CF,#56CFE1)}
-    .skill-cloud{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
-    .skill-tag{font-size:14px;font-weight:600;padding:12px 22px;border-radius:30px;background:rgba(255,255,255,0.03);color:var(--dark-text);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:all .25s var(--ease-out);box-shadow:0 1px 0 rgba(255,255,255,0.06) inset;animation:popInCenter .95s var(--ease-out) .35s both;will-change:transform,opacity}
-    .skill-tag:hover{background-color:var(--primary);border-color:var(--primary);color:#fff;transform:translateY(-2px)} .skill-tag.active{background-color:var(--primary);border-color:var(--primary);color:#fff}
-    .skill-tag:nth-child(2){animation:popInCenter .95s var(--ease-out) .45s both, float 6s ease-in-out 0s infinite}
-    .skill-tag:nth-child(4){animation:popInCenter .95s var(--ease-out) .55s both, float 6s ease-in-out 2s infinite}
-    .cta-group .btn{animation:popInCenter 1.2s var(--ease-out) .85s both;will-change:transform,opacity}
-    .cta-group .btn:nth-child(2){animation-delay:1.0s}
-    @keyframes fadeInUp{to{opacity:1;transform:none}}
     .cta-group{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
-    .cta-group .btn{min-width:180px;padding:12px 22px}
+    .cta-group .btn{min-width:180px;padding:12px 22px; animation:popInCenter 1.2s var(--ease-out) .85s both;will-change:transform,opacity}
     #constellation{position:absolute;inset:0;z-index:1}
     .main-content{background:var(--bg);position:relative;z-index:20}
-    .section{padding:clamp(48px,8vw,80px) 0} .section-title{font-family:"Space Grotesk",sans-serif;font-size:var(--text-xl);text-align:center;margin-bottom:var(--space-6)}
+    .section{padding:clamp(60px,10vw,100px) 0} .section-title{font-family:"Space Grotesk",sans-serif;font-size:var(--text-xl);text-align:center;margin-bottom:clamp(24px, 5vw, 48px)}
+    .section-subtitle{font-size:var(--text-lg);color:var(--muted);text-align:center;margin-top:-24px;margin-bottom:48px;max-width:700px;margin-left:auto;margin-right:auto}
+    .grid-2{display:grid;grid-template-columns:1fr;gap:48px}@media(min-width:900px){.grid-2{grid-template-columns:1fr 1fr;gap:64px;align-items:center}}
     .cards{display:grid;gap:var(--card-gap);grid-template-columns:1fr} @media(min-width:600px){.cards{grid-template-columns:repeat(2,1fr)}} @media(min-width:1024px){.cards{grid-template-columns:repeat(3,1fr)}}
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--card-pad);display:flex;flex-direction:column;transition:transform .2s var(--ease-out),box-shadow .2s var(--ease-out);position:relative;overflow:hidden;container-type:inline-size;z-index:1}
     .card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:color-mix(in oklab,var(--primary),var(--border) 60%);z-index:2}
@@ -45,13 +38,24 @@
     .card-top{display:flex;justify-content:space-between;align-items:start} .avatar{width:44px;height:44px;border-radius:var(--pill);display:grid;place-items:center;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--primary),var(--accent-1));flex-shrink:0}
     .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--pill);font-size:12px;border:1px solid var(--border);color:var(--muted);background:var(--elev)}
     .skills{display:flex;gap:var(--space-2);flex-wrap:wrap;margin:var(--space-3) 0} .skill{font-size:var(--text-sm);padding:6px 10px;border-radius:var(--pill);border:1px solid var(--border);color:var(--muted);background:var(--elev)}
-    .card-actions{display:flex;gap:var(--space-2);margin-top:auto;flex-wrap:wrap} .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--pill);padding:10px 16px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .2s var(--ease-out),box-shadow .2s var(--ease-out);min-height:44px}
+    .card-actions{display:flex;gap:var(--space-2);margin-top:auto;flex-wrap:wrap} .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--pill);padding:10px 16px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .2s var(--ease-out),box-shadow .2s var(--ease-out);min-height:44px;text-decoration:none}
     .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)} .btn-primary{border-color:var(--primary);background:var(--primary);color:#fff}
     :focus-visible{outline:2px solid color-mix(in oklab,var(--primary),#fff 20%);outline-offset:2px}
-    @container (max-width:380px){.avatar{width:40px;height:40px}.btn{padding:8px 14px;font-size:var(--text-sm)}.skills .skill{padding:4px 8px}}
-    .process-section{display:grid;align-items:center;gap:48px;grid-template-columns:1fr} .process-visual{border-radius:16px;aspect-ratio:4/3;object-fit:cover;width:100%}
-    .process-step{border-left:2px solid var(--primary);padding-left:24px;margin-bottom:32px} .process-step h3{font-family:"Space Grotesk";font-size:20px;margin:0 0 4px} .process-step p{color:var(--muted);margin:0}
-    @media(min-width:900px){.process-section{grid-template-columns:1fr 1fr;gap:64px}}
+    .process-visual{border-radius:16px;aspect-ratio:4/3;object-fit:cover;width:100%}
+    .process-step{position:relative;border-left:2px solid var(--primary);padding-left:24px;margin-bottom:32px} .process-step h3{font-family:"Space Grotesk";font-size:20px;margin:0 0 4px} .process-step p{color:var(--muted);margin:0}
+    .process-step::before { content: ''; position: absolute; left: -9px; top: 2px; width: 16px; height: 16px; background: var(--primary); border-radius: 50%; border: 3px solid var(--surface); }
+    .feature-list{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:16px}
+    .feature-list li{display:flex;align-items:flex-start;gap:12px;font-size:var(--text-md)}
+    .feature-list svg{width:22px;height:22px;color:var(--primary);flex-shrink:0;margin-top:2px}
+    .guarantee-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(24px, 5vw, 40px);margin-top:40px}
+    .guarantee-box h3{font-family:"Space Grotesk";font-size:24px;margin:0 0 16px;display:flex;align-items:center;gap:12px}
+    .guarantee-box h3 svg{color:var(--accent-1)}
+    .guarantee-box p { color: var(--muted); max-width: 65ch; }
+    .guarantee-box p:last-of-type { margin-bottom: 0; }
+    .cta-section { background: linear-gradient(45deg, var(--dark-surface), var(--dark-bg)); padding: clamp(60px, 10vw, 80px) 0; text-align: center; }
+    .cta-section h2 { font-family: "Space Grotesk"; font-size: var(--text-xl); color: var(--dark-text); max-width: 600px; margin: 0 auto 16px; }
+    .cta-section p { color: var(--dark-muted); margin: 0 auto 32px; max-width: 500px; }
+    .cta-section .btn { background: var(--primary); color: #fff; border-color: var(--primary); font-size: 18px; padding: 14px 32px; }
     /* Carousel for home listings */
     .carousel{position:relative}
     .carousel-viewport{overflow:hidden; width:100%; padding-top:6px; overscroll-behavior:contain}
@@ -72,28 +76,55 @@
   </style>
 </head>
 <body>
-  
+
   <div class="prologue-hero">
     <canvas id="constellation" aria-hidden="true"></canvas>
     <div class="prologue-hero-content">
-      <h1>Your next <span class="highlight">game&#8209;changer</span> is a real person.</h1>
-      <div class="skill-cloud">
-        <button class="skill-tag">Content Creation</button>
-        <button class="skill-tag">Social Media</button>
-        <button class="skill-tag">Data Analysis</button>
-        <button class="skill-tag">Email Management</button>
-        <button class="skill-tag">Executive Support</button>
-      </div>
+      <h1>Your <span class="highlight">game&#8209;changing</span> Virtual Assistant is here.</h1>
+      <p class="subtitle">Tired of wasting time on unreliable VAs? We provide handpicked Virtual Assistants, fully trained and ready from day one.</p>
       <div class="cta-group">
-        <a class="btn btn-primary" href="/shop">Browse assistants</a>
-        <a class="btn" href="#process">How it works</a>
+        <a class="btn btn-primary" href="#browse">Browse assistants</a>
+        <a class="btn" href="#why-us">Why Urzistaff?</a>
       </div>
     </div>
   </div>
+
   <main class="main-content" id="content">
-    <section class="section" id="browse">
+
+    <section class="section" id="why-us">
+        <div class="container grid-2">
+            <div class="why-us-text reveal">
+                <h2 class="section-title" style="text-align:left; margin-bottom: 16px;">Stop the endless interviews.</h2>
+                <p style="color:var(--muted); font-size: var(--text-lg);">Hiring the wrong VA doesn’t just cost money – it costs time, endless frustration, and tasks that never get done the way you need them. That’s why we built Urzistaff.</p>
+                <ul class="feature-list">
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span><strong>VAs trained to follow systems & SOPs.</strong> Skip the learning curve.</span>
+                    </li>
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      <span><strong>Proven reliability.</strong> All assistants are tested for IQ, English proficiency, and typing speed.</span>
+                    </li>
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      <span><strong>Instant replacement guarantee.</strong> If your VA underperforms, we replace them at no cost and with zero downtime.</span>
+                    </li>
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      <span><strong>Ongoing support.</strong> You're never left alone in the process. We're here to help.</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="why-us-visual reveal">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop" alt="Professionals collaborating" class="process-visual" />
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="browse" style="background:var(--surface)">
       <div class="container">
         <h2 class="section-title reveal">Browse Available Experts</h2>
+        <p class="section-subtitle reveal">We only accept a limited number of new clients each month to ensure quality. Find your perfect match below.</p>
         <div class="carousel">
           <button class="carousel-btn prev" id="homePrev" aria-label="Previous">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -107,22 +138,32 @@
         </div>
       </div>
     </section>
-    <section class="section" id="process" style="background:var(--surface)">
-      <div class="container process-section">
-        <div class="process-visual-wrapper reveal">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop" alt="Professionals collaborating" class="process-visual" />
+
+    <section class="section" id="guarantee">
+        <div class="container">
+            <div class="guarantee-box reveal">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    Our Replacement Guarantee
+                </h3>
+                <p>We make sure you never lose time or money. If the VA you hire doesn’t respond within 72 hours, or becomes unavailable within the first 2 weeks after hiring, you’ll be able to choose another VA of the same value — or multiple VAs that match the original value.</p>
+                <p style="margin-top:16px; color: var(--text);"><strong>MM accepted:</strong> @marshal</p>
+            </div>
         </div>
-        <div class="process-text reveal">
-          <h2 style='font-family:"Space Grotesk";font-size:clamp(2rem,5vw,2.75rem);margin:0 0 24px;text-align:left'>The Process, Perfected.</h2>
-          <div class="process-step"><h3>1. Curated Selection</h3><p>We do the heavy lifting. Every assistant is rigorously vetted for skill, reliability, and communication.</p></div>
-          <div class="process-step"><h3>2. Precision Matching</h3><p>Our smart search and detailed profiles ensure you find the perfect partner for your specific needs, fast.</p></div>
-          <div class="process-step"><h3>3. Seamless Collaboration</h3><p>With integrated tools and secure payments, working with your VA is simple, transparent, and effective.</p></div>
-        </div>
-      </div>
     </section>
+
+    <section class="cta-section" id="contact">
+        <div class="container">
+            <h2 class="reveal">Ready to reclaim your time?</h2>
+            <p class="reveal">We only accept a limited number of new clients each month to ensure quality.</p>
+            <div class="reveal">
+                <a href="#" class="btn btn-primary">Write @raegency to get your VAs today</a>
+            </div>
+        </div>
+    </section>
+
   </main>
   <script>
-    
     const hero=document.querySelector('.prologue-hero');const root=document.documentElement;const observer=new IntersectionObserver(entries=>{root.setAttribute('data-theme',entries[0].intersectionRatio>0.6?'dark':(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));},{threshold:0.6});observer.observe(hero);const io_reveal=new IntersectionObserver(e=>e.forEach(entry=>entry.isIntersecting&&entry.target.classList.add('in')),{threshold:0.1});document.querySelectorAll('.reveal').forEach(el=>io_reveal.observe(el));const cards=document.querySelectorAll('.card');cards.forEach(card=>{card.addEventListener('mousemove',e=>{const rect=card.getBoundingClientRect();card.style.setProperty('--x',`${e.clientX-rect.left}px`);card.style.setProperty('--y',`${e.clientY-rect.top}px`);});});const canvas=document.getElementById('constellation');const ctx=canvas.getContext('2d');let dots=[];let running=true;const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;const isSmall=window.matchMedia('(max-width: 600px)').matches;const particleFactor=prefersReduced?0:(isSmall?0.5:1);const setupCanvas=()=>{if(!canvas)return;canvas.width=window.innerWidth;canvas.height=window.innerHeight;dots=[];const baseCount=canvas.width/18;const count=Math.max(10,Math.floor(baseCount*particleFactor));for(let i=0;i<count;i++){dots.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:-0.5+Math.random(),vy:-0.5+Math.random(),radius:Math.random()*1.5});}};setupCanvas();const vis=()=>{running=document.visibilityState==='visible';};document.addEventListener('visibilitychange',vis);const ioCanvas=new IntersectionObserver(([e])=>{running=e.isIntersecting;},{threshold:0.1});if(canvas)ioCanvas.observe(canvas);function animateLoop(){if(running&&!prefersReduced){ctx.clearRect(0,0,canvas.width,canvas.height);dots.forEach(d=>{d.x+=d.vx;d.y+=d.vy;if(d.x<0||d.x>canvas.width)d.vx=-d.vx;if(d.y<0||d.y>canvas.height)d.vy=-d.vy;ctx.beginPath();ctx.arc(d.x,d.y,d.radius,0,Math.PI*2);ctx.fillStyle='rgba(127, 90, 240, 0.6)';ctx.fill();});for(let i=0;i<dots.length;i++){for(let j=i+1;j<dots.length;j++){let dist=Math.hypot(dots[i].x-dots[j].x,dots[i].y-dots[j].y);if(dist<120){ctx.strokeStyle=`rgba(127, 90, 240, ${0.8-dist/120})`;ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(dots[i].x,dots[i].y);ctx.lineTo(dots[j].x,dots[j].y);ctx.stroke();}}}}requestAnimationFrame(animateLoop);}animateLoop();window.addEventListener('resize',setupCanvas);
     (function(){
       const track = document.getElementById('homeListings');
@@ -171,7 +212,7 @@
       const render = (rows) => {
         pages = chunk(rows, 3);
         if (!pages.length) {
-          track.innerHTML = '<div class="carousel-page"><div class="cards"><p style="color:var(--muted);text-align:center;margin:12px 0">No experts available yet.</p></div></div>';
+          track.innerHTML = '<div class="carousel-page"><div class="cards"><p style="color:var(--muted);text-align:center;width:100%;margin:12px 0">No experts available yet.</p></div></div>';
           btnPrev.style.display = 'none';
           btnNext.style.display = 'none';
           return;

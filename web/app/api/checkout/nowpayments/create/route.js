@@ -48,6 +48,11 @@ export async function POST(request) {
     const telegram = body?.telegram || undefined;
     const note = body?.note || undefined;
     const fullName = body?.fullName || undefined;
+    const address = body?.address || undefined;
+    const city = body?.city || undefined;
+    const country = body?.country || undefined;
+    const region = body?.region || undefined;
+    const zip = body?.zip || undefined;
 
     const subtotal = UNIT_PRICE * qty;
     const total = subtotal; // no taxes/fees
@@ -65,6 +70,13 @@ export async function POST(request) {
       (telegram ? ` (tg: ${telegram})` : '') +
       (note ? ` | note: ${String(note).slice(0,140)}` : '');
 
+    // Snapshot items to persist what was purchased
+    const snapshotItems = (items || []).map(it => ({
+      listing_id: it.listing_id,
+      name: it.name ?? null,
+      price: Number(it.price ?? UNIT_PRICE) || UNIT_PRICE,
+    }));
+
     // Create order record (pending)
     const { data: order, error: orderErr } = await supabase
       .from('orders')
@@ -73,9 +85,15 @@ export async function POST(request) {
         full_name: fullName || null,
         telegram: telegram || null,
         note: note || null,
+        address: address || null,
+        city: city || null,
+        country: country || null,
+        region: region || null,
+        zip: zip || null,
         item_count: qty,
         total,
         fiat_amount_usd: total,
+        items: snapshotItems,
         status: 'pending',
       })
       .select('id')

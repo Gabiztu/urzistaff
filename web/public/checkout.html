@@ -410,6 +410,13 @@
             if (form) {
               payload.fullName = form.querySelector('#fullName')?.value || undefined;
               payload.telegram = form.querySelector('#telegram')?.value || undefined;
+              // Billing details
+              payload.address = form.querySelector('#address')?.value || undefined;
+              payload.city = form.querySelector('#city')?.value || undefined;
+              payload.country = form.querySelector('#country')?.value || undefined;
+              payload.region = form.querySelector('#region')?.value || undefined;
+              payload.zip = form.querySelector('#zip')?.value || undefined;
+              // Optional note
               const noteOn = form.querySelector('#addNoteToggle')?.checked;
               payload.note = noteOn ? (form.querySelector('#orderNote')?.value || '').trim() : undefined;
             }

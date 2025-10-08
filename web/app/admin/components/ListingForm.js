@@ -163,8 +163,27 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
   };
 
   return (
-    <form onSubmit={onSubmit} style={card}>
-      <h3 style={{margin:0}}>{initial ? "Edit Listing" : "New Listing"}</h3>
+    <form onSubmit={onSubmit} style={card} className="lf-card">
+      <style dangerouslySetInnerHTML={{__html: `
+        .lf-card { position: relative; overflow: hidden; }
+        .lf-card::before { content: ""; position: absolute; inset: -2px; background: radial-gradient(800px 200px at 20% -10%, rgba(127,90,240,.12), transparent 60%), radial-gradient(600px 200px at 120% -20%, rgba(0,198,207,.10), transparent 60%); pointer-events: none; }
+        .lf-title { display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px; }
+        .lf-title h3 { font-family: "Space Grotesk", sans-serif; font-size: 20px; margin: 0; background: linear-gradient(120deg, #7F5AF0, #00C6CF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .lf-desc { margin: 0 0 8px; color: #94A3B8; font-size: 12px; }
+        .lf-chipbar { display:flex; gap:10px; flex-wrap: wrap; }
+        label.chip { position: relative; display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid #2b2a33; background:#1c1b22; color:#e5e7eb; border-radius: 999px; cursor:pointer; transition: transform .15s cubic-bezier(.22,1,.36,1), box-shadow .15s cubic-bezier(.22,1,.36,1), border-color .15s; }
+        label.chip:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.35); border-color:#40404a; }
+        label.chip input { position:absolute; inset:0; opacity:0; pointer-events:none; }
+        label.chip:has(input:checked) { background:#7F5AF0; border-color:#7F5AF0; color:white; }
+        .lf-actions { display:flex; gap:8px; margin-top:8px }
+        .lf-card input[type="text"], .lf-card input[type="number"], .lf-card textarea, .lf-card select { outline:none; transition: box-shadow .15s, border-color .15s; }
+        .lf-card input:focus, .lf-card textarea:focus, .lf-card select:focus { border-color:#7F5AF0; box-shadow: 0 0 0 2px rgba(127,90,240,.25); }
+      `}} />
+
+      <div className="lf-title">
+        <h3 className="lf-h3">{initial ? "Edit Listing" : "New Listing"}</h3>
+      </div>
+      <p className="lf-desc">Fill in the details below and hit Save. You can toggle categories, languages, and devices as chips.</p>
       <div style={row}><label style={lbl}>Name</label><input style={inp} value={form.name} onChange={(e)=>set("name", e.target.value)} required /></div>
       <div style={row}><label style={lbl}>Headline</label><input style={inp} value={form.headline} onChange={(e)=>set("headline", e.target.value)} /></div>
       <div style={row}><label style={lbl}>Description</label><textarea style={ta} value={form.description} onChange={(e)=>set("description", e.target.value)} rows={4} /></div>
@@ -172,7 +191,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       {/* Category selection with checkboxes */}
       <div style={row}>
         <label style={lbl}>Categories</label>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div className="lf-chipbar" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           {[
             { key: 'reddit', label: '👽 Reddit' },
             { key: 'instagram', label: '📸 Instagram' },
@@ -182,12 +201,12 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
             { key: 'tiktok', label: '🎵 Tiktok' },
             { key: 'threads', label: '🧵 Threads' }
           ].map((cat) => (
-            <label key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+            <label key={cat.key} className="chip" style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={form.categories.includes(cat.key)}
                 onChange={() => toggleCategory(cat.key)}
-                style={{ width: 16, height: 16 }}
+                style={{ width: 16, height: 16, opacity: 0, position: 'absolute' }}
               />
               <span>{cat.label}</span>
             </label>
@@ -201,14 +220,14 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       {/* Language selection with checkboxes */}
       <div style={row}>
         <label style={lbl}>Languages</label>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div className="lf-chipbar" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           {['English', 'Spanish', 'Italian'].map((lang) => (
-            <label key={lang} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+            <label key={lang} className="chip" style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={form.languages.includes(lang.toLowerCase())}
                 onChange={() => toggleLanguage(lang.toLowerCase())}
-                style={{ width: 16, height: 16 }}
+                style={{ width: 16, height: 16, opacity: 0, position: 'absolute' }}
               />
               <span>{lang}</span>
             </label>
@@ -219,7 +238,6 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
         </div>
       </div>
       
-      <div style={row}><label style={lbl}>Skills (comma-separated)</label><input style={inp} value={form.skills} onChange={(e)=>set("skills", e.target.value)} placeholder="excel, notion, reddit" /></div>
       <div style={row}>
         <label style={lbl}>Age range</label>
         <select style={inp} value={form.age_range} onChange={(e)=>set("age_range", e.target.value)}>
@@ -242,17 +260,17 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       {/* Device selection with checkboxes */}
       <div style={row}>
         <label style={lbl}>Devices</label>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div className="lf-chipbar" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           {[
             { key: 'windows', label: 'Windows' },
             { key: 'macos', label: 'MacOS' }
           ].map((device) => (
-            <label key={device.key} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+            <label key={device.key} className="chip" style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={form.devices.includes(device.key)}
                 onChange={() => toggleDevice(device.key)}
-                style={{ width: 16, height: 16 }}
+                style={{ width: 16, height: 16, opacity: 0, position: 'absolute' }}
               />
               <span>{device.label}</span>
             </label>
@@ -280,7 +298,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
 
       {error && <p style={{color:'#ff8a8a', fontSize:12}}>{error}</p>}
 
-      <div style={{display:'flex', gap:8, marginTop:8}}>
+      <div className="lf-actions" style={{display:'flex', gap:8, marginTop:8}}>
         <button type="submit" disabled={saving} style={btnPrimary}>{saving ? "Saving…" : "Save"}</button>
         <button type="button" onClick={onCancel} style={btn}>Cancel</button>
         {initial?.id && (

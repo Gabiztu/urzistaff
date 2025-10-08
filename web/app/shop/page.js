@@ -65,7 +65,7 @@ export default async function ShopPage() {
         @media (min-width: 900px) { .search-bar { grid-template-columns: 1fr auto; align-items: center; padding: 12px; } }
 
         /* Categories Section */
-        .categories-section { padding: 10px 0 80px; text-align: center; position: relative; z-index: 10; overflow: visible; }
+        .categories-section { padding: 10px 0 60px; text-align: center; position: relative; z-index: 10; overflow: visible; }
         .categories-section h2 { font-family: "Space Grotesk", sans-serif; font-size: 24px; margin-bottom: 24px; }
         .category-grid { 
           display: flex; 
@@ -97,7 +97,7 @@ export default async function ShopPage() {
         .main-listings-area { padding: 0 0; }
 
         /* Advanced Filters Bar */
-        .filters-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; row-gap: var(--space-2); column-gap: 32px; margin-top: -5px; }
+        .filters-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; row-gap: var(--space-2); column-gap: 32px; margin-top: -12px; }
         .filters-break { flex-basis: 100%; height: 0; }
         .filter-group { position: relative; display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--pill); padding: 8px 10px; }
         .filter-group legend, .filter-group .label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
@@ -120,7 +120,7 @@ export default async function ShopPage() {
         .rate input[type="range"] { width: 160px; }
 
         /* Listings */
-        .listings-container { margin-top: var(--space-4); display: grid; grid-template-columns: 1fr; gap: 14px; }
+        .listings-container { margin-top: var(--space-2); display: grid; grid-template-columns: 1fr; gap: 14px; }
         .listing-card {
           background: var(--surface); border: 1px solid var(--border);
           border-radius: 16px; padding: 16px;

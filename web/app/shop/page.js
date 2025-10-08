@@ -102,11 +102,16 @@ export default async function ShopPage() {
         .filter-group { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--pill); padding: 8px 10px; }
         .filter-group legend, .filter-group .label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
         .filter-options { display: flex; flex-wrap: wrap; gap: 16px; }
-        label.chip { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+        /* Make the entire label the clickable pill surface */
+        label.chip { position: relative; display: inline-flex; align-items: center; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--pill); min-height: 36px; color: var(--text); background: var(--elev); font-weight: 500; }
         /* Keep input visually hidden but allow label click to toggle */
         label.chip input { position: absolute; opacity: 0; pointer-events: none; }
-        label.chip span { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--pill); min-height: 36px; color: var(--text); background: var(--elev); font-weight: 500; }
-        label.chip input:checked + span { background: var(--primary); border-color: var(--primary); color: #fff; }
+        /* Inner span is purely presentational; forward clicks to the label */
+        label.chip span { display: inline-flex; align-items: center; justify-content: center; pointer-events: none; }
+        /* Checked state styles applied to the whole pill */
+        label.chip:has(input:checked) { background: var(--primary); border-color: var(--primary); color: #fff; }
+        /* Keep existing span rule for broader compatibility */
+        label.chip input:checked + span { background: transparent; border-color: inherit; color: inherit; }
         .filter-select { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--elev); color: var(--text); }
         .rate { display: flex; align-items: center; gap: 10px; }
         .rate input[type="range"] { width: 160px; }

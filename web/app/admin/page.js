@@ -87,7 +87,30 @@ export default function AdminHome() {
         .badge.ok { background:#10B9811A; color:#10B981; border:1px solid #0f5; }
         .badge.muted { background: color-mix(in oklab, var(--surface), var(--text) 8%); color: var(--muted); border: 1px solid var(--border) }
         .muted { color: var(--muted) }
-        @media (max-width: 900px) { .stat-grid { grid-template-columns: 1fr 1fr } }
+        @media (max-width: 900px) {
+          .stat-grid { grid-template-columns: 1fr 1fr }
+        }
+        /* Mobile-first enhancements without changing desktop */
+        @media (max-width: 768px) {
+          .wrap { padding: 16px; }
+          .topbar { flex-wrap: wrap; align-items: flex-start; gap: 8px; }
+          .brand h1 { font-size: 18px; }
+          .actions { width: 100%; justify-content: flex-start; }
+          .actions .btn { flex: 1 1 auto; min-width: 0; }
+          .stat-grid { grid-template-columns: 1fr; }
+          .section-head { flex-wrap: wrap; gap: 8px; }
+          .search { width: 100%; }
+          .search input { width: 100%; }
+          /* Table: make it easier to view on phones */
+          .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -8px; padding: 0 8px; }
+          th, td { padding: 10px; }
+          /* Hide Created column to save space */
+          thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
+        }
+        @media (max-width: 420px) {
+          .actions .btn { padding: 8px 10px; }
+          th, td { padding: 8px; }
+        }
       `}} />
 
       <div className="wrap">

@@ -16,12 +16,12 @@
     *,*::before,*::after{box-sizing:border-box} html{scroll-behavior:smooth; scrollbar-gutter: stable both-edges}
     body{margin:0;font-family:Inter,ui-sans-serif,system-ui;color:var(--text);background:var(--bg);line-height:1.6;transition:background-color .4s var(--ease-out),color .4s var(--ease-out)}
     .container{max-width:1200px;margin:0 auto;padding:0 var(--space-4)} .reveal{opacity:0;transform:translateY(20px)} .reveal.in{opacity:1;transform:none;transition:opacity .8s var(--ease-out),transform .8s var(--ease-out)} @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-    .prologue-hero{height:100vh;width:100%;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:16px;background-color:var(--dark-bg);overflow:hidden}
+    .prologue-hero{height:100vh;width:100%;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:16px;background-color:var(--bg);overflow:hidden}
     .prologue-hero-content{z-index:10}
     @keyframes popInCenter{0%{opacity:0;transform:scale(.82)}60%{opacity:1;transform:scale(1.02)}100%{opacity:1;transform:none}}
     .prologue-hero h1{animation:popInCenter 1.35s var(--ease-out) .1s both;will-change:transform,opacity}
-    .prologue-hero h1{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:clamp(3.25rem,8.5vw,6.5rem);line-height:1.08;letter-spacing:-2px;margin:0 auto 12px;max-width:1000px;color:var(--dark-text)}
-    .prologue-hero p.subtitle { font-size: var(--text-lg); color: var(--dark-muted); max-width: 600px; margin: 0 auto 36px; animation: popInCenter 1.35s var(--ease-out) .3s both; }
+    .prologue-hero h1{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:clamp(3.25rem,8.5vw,6.5rem);line-height:1.08;letter-spacing:-2px;margin:0 auto 12px;max-width:1000px;color:var(--text)}
+    .prologue-hero p.subtitle { font-size: var(--text-lg); color: var(--muted); max-width: 600px; margin: 0 auto 36px; animation: popInCenter 1.35s var(--ease-out) .3s both; }
     .prologue-hero .highlight{display:inline-block;background:linear-gradient(45deg,#7F5AF0,#00C6CF);-webkit-background-clip:text;background-clip:text;color:transparent}
     .cta-group{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
     .cta-group .btn{min-width:180px;padding:12px 22px; animation:popInCenter 1.2s var(--ease-out) .85s both;will-change:transform,opacity}
@@ -52,9 +52,11 @@
     .guarantee-box h3 svg{color:var(--accent-1)}
     .guarantee-box p { color: var(--muted); max-width: 65ch; }
     .guarantee-box p:last-of-type { margin-bottom: 0; }
-    .cta-section { background: linear-gradient(45deg, var(--dark-surface), var(--dark-bg)); padding: clamp(60px, 10vw, 80px) 0; text-align: center; }
-    .cta-section h2 { font-family: "Space Grotesk"; font-size: var(--text-xl); color: var(--dark-text); max-width: 600px; margin: 0 auto 16px; }
-    .cta-section p { color: var(--dark-muted); margin: 0 auto 32px; max-width: 500px; }
+    .cta-section { background: linear-gradient(45deg, var(--surface), var(--bg)); padding: clamp(60px, 10vw, 80px) 0; text-align: center; }
+    .cta-section h2 { font-family: "Space Grotesk"; font-size: var(--text-xl); color: var(--text); max-width: 600px; margin: 0 auto 16px; }
+    .cta-section p { color: var(--muted); margin: 0 auto 32px; max-width: 500px; }
+    /* tighten spacing of guarantee section on light */
+    #guarantee.section { padding: clamp(40px, 6vw, 60px) 0; }
     .cta-section .btn { background: var(--primary); color: #fff; border-color: var(--primary); font-size: 18px; padding: 14px 32px; }
     /* Carousel for home listings */
     .carousel{position:relative}
@@ -170,22 +172,13 @@
     </div>
   </section>
   <script>
-    // Theme: respect saved preference; otherwise auto dark on hero
+    // Theme: respect saved preference, do not auto-switch hero in light mode
     (function(){
       const root = document.documentElement;
-      try {
-        const saved = localStorage.getItem('theme');
-        if (saved) root.setAttribute('data-theme', saved);
-      } catch {}
-      const hero = document.querySelector('.prologue-hero');
-      const observer = new IntersectionObserver(entries => {
-        try { if (localStorage.getItem('theme')) return; } catch {}
-        root.setAttribute('data-theme', entries[0].intersectionRatio>0.6 ? 'dark' : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-      },{threshold:0.6});
-      observer.observe(hero);
+      try { const saved = localStorage.getItem('theme'); if (saved) root.setAttribute('data-theme', saved); } catch {}
       const btn = document.getElementById('toggleTheme');
-      const updateBtn = () => { btn.textContent = (root.getAttribute('data-theme') === 'dark') ? 'Switch to Light' : 'Switch to Dark'; };
-      btn.addEventListener('click', () => {
+      const updateBtn = () => { if(!btn) return; btn.textContent = (root.getAttribute('data-theme') === 'dark') ? 'Switch to Light' : 'Switch to Dark'; };
+      btn?.addEventListener('click', () => {
         const cur = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
         const next = cur === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);

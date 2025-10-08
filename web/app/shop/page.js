@@ -99,8 +99,11 @@ export default async function ShopPage() {
         /* Advanced Filters Bar */
         .filters-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; row-gap: var(--space-2); column-gap: 32px; }
         .filters-break { flex-basis: 100%; height: 0; }
-        .filter-group { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--pill); padding: 8px 10px; }
+        .filter-group { position: relative; display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--pill); padding: 8px 10px; }
         .filter-group legend, .filter-group .label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+        /* Prevent legend from overlaying chips in some browsers */
+        .filter-group legend { pointer-events: none; }
+        .filter-group .filter-options { position: relative; z-index: 1; }
         .filter-options { display: flex; flex-wrap: wrap; gap: 16px; }
         /* Make the entire label the clickable pill surface */
         label.chip { position: relative; display: inline-flex; align-items: center; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--pill); min-height: 36px; color: var(--text); background: var(--elev); font-weight: 500; }

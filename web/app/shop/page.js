@@ -102,6 +102,27 @@ export default async function ShopPage() {
             scroll-snap-align: start;
           }
         }
+        /* Very small phones: switch to wrapped tiles (no horizontal scroll) */
+        @media (max-width: 600px) {
+          .category-grid { 
+            overflow-x: visible; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 12px; 
+          }
+          .category-card { 
+            flex: 1 1 calc(50% - 12px); 
+            min-width: 0; 
+            max-width: none; 
+          }
+        }
+
+        /* Make search bar stack on very small screens to avoid overflow */
+        @media (max-width: 480px) {
+          .search-bar { flex-wrap: wrap; gap: 10px; }
+          .search-input-wrap { width: 100%; }
+          .search-bar .btn-primary { width: 100%; }
+        }
         .category-card:hover { transform: translateY(-4px); background: var(--elev); border-color: #444; color: var(--text); }
         .category-card.active { background: var(--elev); border-color: color-mix(in oklab, var(--primary), #444 40%); color: var(--text); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary), transparent 60%) inset; }
         .category-card span { font-size: 24px; flex-shrink: 0; } /* Emoji */

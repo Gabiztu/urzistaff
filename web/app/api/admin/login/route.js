@@ -118,7 +118,8 @@ export async function POST(req) {
     // Enforce TOTP if configured
     const secret = process.env.ADMIN_TOTP_SECRET || '';
     if (secret) {
-      const ok = typeof totpCode === 'string' && totpCode.trim().length >= 6 && totp.verify({ token: totpCode.trim(), secret });
+      const token = (typeof totpCode === 'string' ? totpCode.replace(/\s+/g, '') : '').trim();
+      const ok = token.length >= 6 && totp.verify({ token, secret, window: 1 }); // allow ±30s skew
       if (!ok) {
         recordFailure(ip, email);
         return generic();

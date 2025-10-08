@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export default function ClientShop({ initialListings = [] }) {
   const catLogos = {
-    reddit: "/Reddit-Logo.jpg",
+    reddit: "/reddit.png",
     instagram: "/instagram_logo.jpg",
     x: "/x.png",
     facebook: "/facebook.jpg",

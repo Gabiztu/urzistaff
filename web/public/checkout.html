@@ -15,7 +15,7 @@
     html[data-theme="dark"]{--bg:var(--dark-bg);--surface:var(--dark-surface);--elev:var(--dark-elev);--text:var(--dark-text);--muted:var(--dark-muted);--border:var(--dark-border);--shadow:0 8px 40px rgba(0,0,0,0.4)}
     *,*::before,*::after{box-sizing:border-box}
     html{scroll-behavior:smooth; scrollbar-gutter: stable both-edges}
-    body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text);padding-bottom:40px}
+    body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text);padding-bottom:40px;min-height:100vh;display:flex;flex-direction:column}
     .container{max-width:960px;width:100%;margin:0 auto;padding:20px}
     h1,h2{font-family:"Space Grotesk",sans-serif}
     h1{font-size:clamp(1.8rem,4vw,2.2rem);margin:0 0 8px}
@@ -275,7 +275,7 @@
       </aside>
     </div>
   </div>
-  <section class="theme-toggle-section" aria-label="Theme switcher" style="border-top:1px solid var(--border);background:var(--surface);margin-top:32px">
+  <section class="theme-toggle-section" aria-label="Theme switcher" style="border-top:1px solid var(--border);background:var(--surface);margin-top:auto">
     <div class="container-wide" style="padding:20px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
       <div style="font-weight:600; color: var(--muted)">Copyright by UrziStaff | All Rights Reserved by Gabriel Valentin Dragomir</div>
       <button id="toggleTheme" class="btn-secondary" type="button" style="width:auto">Switch to Dark</button>

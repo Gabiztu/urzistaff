@@ -26,7 +26,7 @@ export default function ThemeToggle() {
   return (
     <section className="theme-toggle-section" aria-label="Theme switcher">
       <div className="theme-toggle-wrap">
-        <div className="theme-toggle-title">Theme</div>
+        <div className="theme-toggle-title">Copyright by UrziStaff | All Rights Reserved by Gabriel Valentin Dragomir</div>
         <button type="button" className="theme-toggle-btn" onClick={toggle} aria-pressed={theme === 'dark'}>
           {theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
         </button>

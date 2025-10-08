@@ -26,8 +26,9 @@ export default function ThemeToggle() {
   };
 
   const isAdminSection = typeof pathname === 'string' && pathname.startsWith('/admin');
+  const isCheckoutButtonOnly = typeof pathname === 'string' && (pathname === '/checkout/cancel' || pathname === '/checkout/success');
 
-  if (isAdminSection) {
+  if (isAdminSection || isCheckoutButtonOnly) {
     return (
       <section className="theme-toggle-section" aria-label="Theme switcher" style={{position:'fixed',left:0,right:0,bottom:0,borderTop:'1px solid var(--border)',background:'var(--surface)'}}>
         <div className="theme-toggle-wrap" style={{justifyContent:'center'}}>

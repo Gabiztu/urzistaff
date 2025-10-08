@@ -35,6 +35,8 @@
     .cart-item-card .price{font-size:18px;font-weight:600;margin-left:auto;text-align:right}
     .cart-item-card .remove-link{color:var(--accent-2);font-size:13px;font-weight:500;margin-top:4px}
     .order-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-6);position:sticky;top:40px}
+    /* Align Order Summary top with first item card (offset past the h2 spacing) */
+    @media(min-width:900px){ .order-summary{ margin-top:24px; } }
     .price-details .price-row{display:flex;justify-content:space-between;margin-bottom:12px;font-size:var(--text-md)}
     .price-details .label{color:var(--muted)}
     .price-details .value{font-weight:500}

@@ -15,6 +15,7 @@ export default function ListingProfile() {
     }
     return null;
   });
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -97,10 +98,17 @@ export default function ListingProfile() {
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(1.5rem, 5vw, 2rem);transition:transform .2s var(--ease-out), box-shadow .2s var(--ease-out), border-color .2s var(--ease-out);}
     .card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#444}
     .site-header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(1.5) blur(12px);background:color-mix(in oklab, var(--bg) 80%, transparent);border-bottom:1px solid var(--border);padding:12px 0}
-    .nav-container{display:flex;align-items:center;justify-content:space-between}
+    .nav-container{display:flex;align-items:center;justify-content:space-between;position:relative}
     .nav-brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk",sans-serif;font-weight:600;color:inherit;text-decoration:none}
     .nav-brand-logo{width:32px;height:32px;background:var(--primary);border-radius:8px}
     .nav-actions{display:flex;align-items:center;gap:8px}
+    /* Mobile menu */
+    .menu-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;margin-left:auto;margin-right:10px}
+    @media (min-width: 768px) { .menu-btn { display: none; } }
+    .mobile-nav{display:none;position:absolute;top:100%;left:12px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+    .mobile-nav a{display:block;padding:10px 12px;color:var(--text);border-radius:8px;text-align:center;text-decoration:none}
+    .mobile-nav a:hover,.mobile-nav a.active{background:var(--elev)}
+    .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
     .nav-actions .btn{padding:8px 16px}
     .cart-icon{width:24px;height:24px}
     .profile-grid{display:grid;grid-template-columns:1fr;gap:32px;align-items:flex-start;padding: 48px 0 80px;}
@@ -146,6 +154,15 @@ export default function ListingProfile() {
           <a href="/" className="nav-brand">
             <span>UrziStaff</span>
           </a>
+          <button
+            type="button"
+            className="menu-btn"
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            onClick={()=>setMenuOpen(v=>!v)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
           <div className="nav-actions">
             <a className="btn" href="/shop">← Back to Listings</a>
             <a className="btn btn-cart" aria-label="Cart" href="/cart">
@@ -156,6 +173,12 @@ export default function ListingProfile() {
             </a>
           </div>
         </div>
+        <nav className={`mobile-nav${menuOpen ? ' open' : ''}`}>
+          <a href="/">Home</a>
+          <a href="/shop">Shop</a>
+          <a href="/faq">FAQ</a>
+          <a href="/support">Support</a>
+        </nav>
       </header>
 
       <main id="content">

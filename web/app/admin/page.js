@@ -120,6 +120,7 @@ export default function AdminHome() {
             <h1>Urzistaff Admin</h1>
           </div>
           <div className="actions">
+            <a className="btn" href="/admin/clients">Clients</a>
             <button className="btn" onClick={()=>{ setEditing(null); setShowForm(true); }}>New Listing</button>
             <button className="btn btn-primary" onClick={signOut}>Sign out</button>
           </div>

@@ -97,7 +97,7 @@ export default async function ShopPage() {
         .main-listings-area { padding: 0 0; }
 
         /* Advanced Filters Bar */
-        .filters-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; row-gap: var(--space-2); column-gap: 32px; }
+        .filters-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; row-gap: var(--space-2); column-gap: 32px; margin-top: -5px; }
         .filters-break { flex-basis: 100%; height: 0; }
         .filter-group { position: relative; display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--pill); padding: 8px 10px; }
         .filter-group legend, .filter-group .label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }

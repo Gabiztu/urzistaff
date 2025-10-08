@@ -31,13 +31,17 @@ export async function GET(request) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json({ data }, {
-      headers: {
-        'Cache-Control': 'no-store, max-age=0',
-        'CDN-Cache-Control': 'no-store',
-        'Vercel-CDN-Cache-Control': 'no-store',
+    const cacheHeader = 'public, s-maxage=60, stale-while-revalidate=300';
+    return NextResponse.json(
+      { data },
+      {
+        headers: {
+          'Cache-Control': cacheHeader,
+          'CDN-Cache-Control': cacheHeader,
+          'Vercel-CDN-Cache-Control': cacheHeader,
+        },
       }
-    });
+    );
   } catch (e) {
     return NextResponse.json({ error: e.message || String(e) }, { status: 500 });
   }

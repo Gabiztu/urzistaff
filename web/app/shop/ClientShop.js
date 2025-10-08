@@ -1,8 +1,8 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-export default function ClientShop() {
-  const [listings, setListings] = useState([]);
+export default function ClientShop({ initialListings = [] }) {
+  const [listings, setListings] = useState(initialListings);
   const [q, setQ] = useState("");
   const [typedQ, setTypedQ] = useState("");
   const [age, setAge] = useState("");
@@ -36,7 +36,8 @@ export default function ClientShop() {
     };
     const load = async () => {
       try {
-        const res = await fetch('/api/listings?limit=200', { cache: 'no-store' });
+        // Allow CDN/browser caching controlled by API headers
+        const res = await fetch('/api/listings?limit=200');
         const json = await res.json();
         if (!alive) return;
         setListings(Array.isArray(json?.data) ? json.data : []);

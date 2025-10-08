@@ -1,6 +1,22 @@
 import ClientShop from "./ClientShop";
+import { createClient } from "@supabase/supabase-js";
 
-export default function ShopPage() {
+async function getInitialListings() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+  const { data } = await supabase
+    .from('listings')
+    .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,rating,reviews_count,is_active,created_at')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(200);
+  return Array.isArray(data) ? data : [];
+}
+
+export default async function ShopPage() {
+  const initialListings = await getInitialListings();
   return (
     <>
       <style dangerouslySetInnerHTML={{__html: `
@@ -141,7 +157,7 @@ export default function ShopPage() {
           #constellation { display: none !important; }
         }
       `}} />
-      <ClientShop />
+      <ClientShop initialListings={initialListings} />
     </>
   );
 }

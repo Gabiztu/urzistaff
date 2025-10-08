@@ -12,16 +12,7 @@ const nextConfig = {
       },
       // If you want static shop instead of dynamic app route, re-enable below
       // { source: '/shop', destination: '/shop.html' },
-      // Serve cart page
-      {
-        source: '/cart',
-        destination: '/cart.html',
-      },
-      // Serve checkout pages
-      {
-        source: '/checkout',
-        destination: '/checkout.html',
-      },
+      // Note: /cart and /checkout are handled by Next.js app routes (SSR)
       {
         source: '/checkout-success',
         destination: '/checkout-success.html',

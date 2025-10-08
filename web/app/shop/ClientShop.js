@@ -47,8 +47,8 @@ export default function ClientShop({ initialListings = [] }) {
     };
     const load = async () => {
       try {
-        // Allow CDN/browser caching controlled by API headers
-        const res = await fetch('/api/listings?limit=200');
+        // Force fresh data so new listings appear immediately after admin creates them
+        const res = await fetch('/api/listings?limit=200', { cache: 'no-store' });
         const json = await res.json();
         if (!alive) return;
         setListings(Array.isArray(json?.data) ? json.data : []);
@@ -149,9 +149,8 @@ export default function ClientShop({ initialListings = [] }) {
     <>
       <header className="site-header">
         <div className="container nav-container">
-          <a href="/" className="nav-brand" aria-label="Urzistaff home">
-            <img src="/urzistaff-logo.png" data-fallback="/urzistaff-logo.png,/urzistaff-logo.jpg,/urzistaff-logo.jpeg,/logo.png,/logo.jpg" alt="Urzistaff" className="nav-brand-logo" />
-            <span className="nav-brand-text" style={{display:'none'}}>Urzistaff</span>
+          <a href="/" className="nav-brand" aria-label="UrziStaff home">
+            <span className="nav-brand-text">UrziStaff</span>
           </a>
           <nav className="nav-links">
             <a href="/">Home</a>

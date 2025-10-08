@@ -146,8 +146,7 @@ export default function ListingProfile() {
       <header className="site-header">
         <div className="container nav-container">
           <a href="/" className="nav-brand">
-            <div className="nav-brand-logo"></div>
-            <span>Urzistaff</span>
+            <span>UrziStaff</span>
           </a>
           <div className="nav-actions">
             <a className="btn" href="/shop">← Back to Listings</a>

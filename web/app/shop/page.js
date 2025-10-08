@@ -71,7 +71,7 @@ export default async function ShopPage() {
           display: flex; 
           flex-wrap: nowrap; 
           gap: 16px; 
-          overflow-x: hidden;
+          overflow-x: hidden; /* desktop keeps centered grid */
           justify-content: center;
           padding: 10px 0;
         }
@@ -83,6 +83,24 @@ export default async function ShopPage() {
           flex: 1 1 0;
           min-width: 0;
           max-width: calc(100% / 7 - 16px);
+        }
+        /* Mobile: enable horizontal scroll so all categories are reachable without affecting desktop layout */
+        @media (max-width: 900px) {
+          .category-grid { 
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch; 
+            gap: 12px; 
+            padding: 10px 12px; 
+            justify-content: flex-start; 
+            scroll-snap-type: x proximity;
+          }
+          .category-grid::-webkit-scrollbar { display: none; }
+          .category-card { 
+            flex: 0 0 auto; 
+            min-width: 180px; 
+            max-width: 80%; 
+            scroll-snap-align: start;
+          }
         }
         .category-card:hover { transform: translateY(-4px); background: var(--elev); border-color: #444; color: var(--text); }
         .category-card.active { background: var(--elev); border-color: color-mix(in oklab, var(--primary), #444 40%); color: var(--text); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary), transparent 60%) inset; }

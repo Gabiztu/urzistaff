@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState("light");
+  const pathname = usePathname?.() || "";
 
   useEffect(() => {
     try {
@@ -22,6 +24,20 @@ export default function ThemeToggle() {
     try { localStorage.setItem('theme', next); } catch {}
     setTheme(next);
   };
+
+  const isAdminLogin = typeof pathname === 'string' && pathname.startsWith('/admin/login');
+
+  if (isAdminLogin) {
+    return (
+      <section className="theme-toggle-section" aria-label="Theme switcher" style={{position:'fixed',left:0,right:0,bottom:0,borderTop:'1px solid var(--border)',background:'var(--surface)'}}>
+        <div className="theme-toggle-wrap" style={{justifyContent:'center'}}>
+          <button type="button" className="theme-toggle-btn" onClick={toggle} aria-pressed={theme === 'dark'} style={{width:'auto'}}>
+            {theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="theme-toggle-section" aria-label="Theme switcher">

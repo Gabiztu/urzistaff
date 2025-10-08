@@ -120,7 +120,7 @@ export default async function ShopPage() {
         .rate input[type="range"] { width: 160px; }
 
         /* Listings */
-        .listings-container { margin-top: var(--space-2); display: grid; grid-template-columns: 1fr; gap: 14px; }
+        .listings-container { margin-top: 25px; display: grid; grid-template-columns: 1fr; gap: 14px; }
         .listing-card {
           background: var(--surface); border: 1px solid var(--border);
           border-radius: 16px; padding: 16px;

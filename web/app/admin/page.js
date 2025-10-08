@@ -56,7 +56,8 @@ export default function AdminHome() {
   return (
     <main>
       <style dangerouslySetInnerHTML={{__html: `
-        :root { --primary:#7F5AF0; --bg:#0B0A10; --surface:#14131B; --elev:#1C1B22; --text:#E5E7EB; --muted:#94A3B8; --border:#2B2A33; --pill:999px; --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35); --ease:cubic-bezier(.22,1,.36,1); }
+        /* Use global theme variables defined in globals.css (light/dark) */
+        :root { --pill:999px; --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.12); --ease:cubic-bezier(.22,1,.36,1); }
         .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
         .topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 16px; }
         .brand { display:flex; align-items:center; gap:10px; font-family: "Space Grotesk", sans-serif; }
@@ -74,17 +75,17 @@ export default function AdminHome() {
         .stat .value { font-size: 22px; font-weight: 800; font-family: "Space Grotesk", sans-serif }
         .section-head { display:flex; align-items:center; justify-content:space-between; }
         .search { display:flex; gap:8px; }
-        .search input { padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#121218; color:var(--text) }
+        .search input { padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:var(--elev); color:var(--text) }
         .table-wrap { overflow:auto; border:1px solid var(--border); border-radius: 12px; }
         table { width:100%; border-collapse: collapse; }
-        thead tr { background: #0f0f14; }
+        thead tr { background: var(--elev); }
         th, td { text-align:left; padding:12px; }
         th { color: var(--text); font-weight: 700; border-bottom: 1px solid var(--border); }
         tbody tr { border-top: 1px solid var(--border); transition: background .15s var(--ease); }
-        tbody tr:hover { background: #13121a; }
+        tbody tr:hover { background: color-mix(in oklab, var(--surface), var(--text) 6%); }
         .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius: var(--pill); font-size: 12px; font-weight: 700; }
         .badge.ok { background:#10B9811A; color:#10B981; border:1px solid #0f5; }
-        .badge.muted { background: #2b2a331A; color: #94A3B8; border: 1px solid var(--border) }
+        .badge.muted { background: color-mix(in oklab, var(--surface), var(--text) 8%); color: var(--muted); border: 1px solid var(--border) }
         .muted { color: var(--muted) }
         @media (max-width: 900px) { .stat-grid { grid-template-columns: 1fr 1fr } }
       `}} />

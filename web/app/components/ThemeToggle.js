@@ -25,9 +25,9 @@ export default function ThemeToggle() {
     setTheme(next);
   };
 
-  const isAdminLogin = typeof pathname === 'string' && pathname.startsWith('/admin/login');
+  const isAdminSection = typeof pathname === 'string' && pathname.startsWith('/admin');
 
-  if (isAdminLogin) {
+  if (isAdminSection) {
     return (
       <section className="theme-toggle-section" aria-label="Theme switcher" style={{position:'fixed',left:0,right:0,bottom:0,borderTop:'1px solid var(--border)',background:'var(--surface)'}}>
         <div className="theme-toggle-wrap" style={{justifyContent:'center'}}>

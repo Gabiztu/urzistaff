@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "installCommand": "cd web && npm ci || (cd web && npm install)",
+  "buildCommand": "cd web && npm run build",
+  "rewrites": [
+    { "source": "/", "destination": "/landing.html" },
+    { "source": "/cart", "destination": "/cart.html" },
+    { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/checkout-success", "destination": "/checkout-success.html" },
+    { "source": "/checkout-failed", "destination": "/checkout-failed.html" },
+    { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/support", "destination": "/support.html" }
+  ]
+}

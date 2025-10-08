@@ -60,6 +60,8 @@ export default function AdminClients() {
         .btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
         .card { background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding: 16px; }
         .table-wrap { overflow:auto; border:1px solid var(--border); border-radius: 12px; }
+        .desktop-only { display:block; }
+        .mobile-only { display:none; }
         table { width:100%; border-collapse: collapse; }
         thead tr { background: var(--elev); }
         th, td { text-align:left; padding:12px; }
@@ -70,9 +72,15 @@ export default function AdminClients() {
         @media (max-width: 900px) {
           .wrap { padding: 16px; }
           th, td { padding: 10px; }
-          /* Hide region and zip on small screens */
-          thead th:nth-child(6), tbody td:nth-child(6),
-          thead th:nth-child(7), tbody td:nth-child(7) { display: none; }
+          /* Switch to mobile card list */
+          .desktop-only { display:none; }
+          .mobile-only { display:grid; grid-template-columns: 1fr; gap: 12px; }
+          .client-card { background: var(--surface); border:1px solid var(--border); border-radius: 12px; padding: 12px; }
+          .kv { display:flex; gap:8px; align-items:flex-start; margin: 6px 0; }
+          .kv .k { flex: 0 0 120px; max-width: 40%; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+          .kv .v { flex: 1; min-width: 0; word-break: break-word; }
+          .chiplist { display:flex; flex-wrap: wrap; gap:6px; }
+          .chip { display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border:1px solid var(--border); border-radius: 9999px; background: var(--elev); font-size: 12px; }
         }
       `}} />
 
@@ -96,7 +104,8 @@ export default function AdminClients() {
           ) : rows.length === 0 ? (
             <p className="muted">No orders found.</p>
           ) : (
-            <div className="table-wrap">
+            <>
+            <div className="table-wrap desktop-only">
               <table>
                 <thead>
                   <tr>
@@ -133,6 +142,36 @@ export default function AdminClients() {
                 </tbody>
               </table>
             </div>
+            <div className="mobile-only">
+              {rows.map((r) => {
+                const list = Array.isArray(r.items) ? r.items : [];
+                const purchased = r.paid_at ? new Date(r.paid_at).toLocaleString() : '—';
+                return (
+                  <div className="client-card" key={r.id}>
+                    <div className="kv"><span className="k">Telegram</span><span className="v">{r.telegram || '—'}</span></div>
+                    <div className="kv"><span className="k">Purchased At</span><span className="v">{purchased}</span></div>
+                    <div className="kv"><span className="k">Name</span><span className="v">{r.full_name || '—'}</span></div>
+                    <div className="kv"><span className="k">Address</span><span className="v">{r.address || '—'}</span></div>
+                    <div className="kv"><span className="k">City</span><span className="v">{r.city || '—'}</span></div>
+                    <div className="kv"><span className="k">Region</span><span className="v">{r.region || '—'}</span></div>
+                    <div className="kv"><span className="k">ZIP</span><span className="v">{r.zip || '—'}</span></div>
+                    <div className="kv"><span className="k">Country</span><span className="v">{r.country || '—'}</span></div>
+                    <div className="kv"><span className="k">Listings</span>
+                      <span className="v">
+                        {list.length ? (
+                          <div className="chiplist">
+                            {list.map((i, idx) => (
+                              <span className="chip" key={`${r.id}-${idx}`}>{i?.name || i?.listing_id || 'Item'}</span>
+                            ))}
+                          </div>
+                        ) : '—'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            </>
           )}
         </section>
       </div>

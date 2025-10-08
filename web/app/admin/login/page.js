@@ -8,6 +8,7 @@ export default function AdminLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [totpCode, setTotpCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -15,9 +16,20 @@ export default function AdminLogin() {
     e.preventDefault();
     setError("");
     setLoading(true);
+    // Precheck with server (rate-limit, allowlist, MFA)
+    try {
+      const pre = await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ stage:'precheck', email, totpCode }) });
+      if (!pre.ok) throw new Error('Invalid credentials');
+    } catch {
+      setError('Invalid credentials');
+      setLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      setError(error.message);
+      setError('Invalid credentials');
+      try { await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ stage:'report', email, success:false }) }); } catch {}
       setLoading(false);
       return;
     }
@@ -32,6 +44,7 @@ export default function AdminLogin() {
       await supabase.auth.signOut();
       return;
     }
+    try { await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ stage:'report', email, success:true }) }); } catch {}
     router.push("/admin");
   };
 
@@ -43,6 +56,8 @@ export default function AdminLogin() {
         <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
         <label>Password</label>
         <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required />
+        <label>Authenticator code</label>
+        <input type="text" inputMode="numeric" pattern="^[0-9]{6}$" placeholder="6-digit code" value={totpCode} onChange={(e)=>setTotpCode(e.target.value)} required />
         {error && <p className={styles.error}>{error}</p>}
         <button disabled={loading} type="submit">{loading? "Signing in..." : "Sign in"}</button>
       </form>

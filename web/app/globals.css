@@ -68,7 +68,7 @@ a:hover{text-decoration:underline}
 /* Theme toggle footer */
 .theme-toggle-section{margin:48px 0 0;border-top:1px solid var(--border);background:var(--surface)}
 .theme-toggle-wrap{max-width:1200px;margin:0 auto;padding:20px var(--space-4);display:flex;align-items:center;justify-content:space-between;gap:12px}
-.theme-toggle-title{font-weight:600}
+.theme-toggle-title{font-weight:600;color:var(--muted)}
 .theme-toggle-btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;border:1px solid var(--border);background:var(--elev);color:var(--text);padding:10px 14px;cursor:pointer;transition:transform .15s var(--ease-out)}
 .theme-toggle-btn:hover{transform:translateY(-1px)}
 

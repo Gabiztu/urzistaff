@@ -15,7 +15,7 @@
     html[data-theme="dark"]{--bg:var(--dark-bg);--surface:var(--dark-surface);--elev:var(--dark-elev);--text:var(--dark-text);--muted:var(--dark-muted);--border:var(--dark-border);--shadow:0 8px 40px rgba(0,0,0,0.4)}
     *,*::before,*::after{box-sizing:border-box}
     html{scroll-behavior:smooth; scrollbar-gutter: stable both-edges}
-    body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+    body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
     .container{max-width:1200px;margin:0 auto;padding:0 var(--space-4)}
     h1,h2{font-family:"Space Grotesk",sans-serif}
     a{color:var(--primary);text-decoration:none}
@@ -76,7 +76,7 @@
     <p>Reach us on Telegram for 1:1 support, or join our channel for announcements, updates, and tips.</p>
   </section>
 
-  <main class="container">
+  <main class="container" style="flex:1">
     <div class="grid">
       <div class="card">
         <h2>Chat with Support</h2>
@@ -97,9 +97,9 @@
     </div>
   </main>
 
-  <section class="theme-toggle-section" aria-label="Theme switcher" style="border-top:1px solid var(--border);background:var(--surface);margin-top:32px">
+  <section class="theme-toggle-section" aria-label="Theme switcher" style="border-top:1px solid var(--border);background:var(--surface);margin-top:auto">
     <div class="container" style="padding:20px 0; display:flex; align-items:center; justify-content:space-between; gap:12px;">
-      <div style="font-weight:600">Copyright by UrziStaff | All Rights Reserved by Gabriel Valentin Dragomir</div>
+      <div style="font-weight:600; color: var(--muted)">Copyright by UrziStaff | All Rights Reserved by Gabriel Valentin Dragomir</div>
       <button id="toggleTheme" class="btn-secondary" type="button">Switch to Dark</button>
     </div>
   </section>

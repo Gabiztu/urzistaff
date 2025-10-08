@@ -169,15 +169,15 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
         .lf-card::before { content: ""; position: absolute; inset: -2px; background: radial-gradient(800px 200px at 20% -10%, rgba(127,90,240,.12), transparent 60%), radial-gradient(600px 200px at 120% -20%, rgba(0,198,207,.10), transparent 60%); pointer-events: none; }
         .lf-title { display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px; }
         .lf-title h3 { font-family: "Space Grotesk", sans-serif; font-size: 20px; margin: 0; background: linear-gradient(120deg, #7F5AF0, #00C6CF); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .lf-desc { margin: 0 0 8px; color: #94A3B8; font-size: 12px; }
+        .lf-desc { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
         .lf-chipbar { display:flex; gap:10px; flex-wrap: wrap; }
-        label.chip { position: relative; display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid #2b2a33; background:#1c1b22; color:#e5e7eb; border-radius: 999px; cursor:pointer; transition: transform .15s cubic-bezier(.22,1,.36,1), box-shadow .15s cubic-bezier(.22,1,.36,1), border-color .15s; }
-        label.chip:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.35); border-color:#40404a; }
+        label.chip { position: relative; display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--border); background:var(--elev); color:var(--text); border-radius: 999px; cursor:pointer; transition: transform .15s cubic-bezier(.22,1,.36,1), box-shadow .15s cubic-bezier(.22,1,.36,1), border-color .15s; }
+        label.chip:hover { transform: translateY(-1px); box-shadow: var(--shadow); border-color: color-mix(in oklab, var(--border), var(--text) 25%); }
         label.chip input { position:absolute; inset:0; opacity:0; pointer-events:none; }
-        label.chip:has(input:checked) { background:#7F5AF0; border-color:#7F5AF0; color:white; }
+        label.chip:has(input:checked) { background: var(--primary); border-color: var(--primary); color:white; }
         .lf-actions { display:flex; gap:8px; margin-top:8px }
-        .lf-card input[type="text"], .lf-card input[type="number"], .lf-card textarea, .lf-card select { outline:none; transition: box-shadow .15s, border-color .15s; }
-        .lf-card input:focus, .lf-card textarea:focus, .lf-card select:focus { border-color:#7F5AF0; box-shadow: 0 0 0 2px rgba(127,90,240,.25); }
+        .lf-card input[type="text"], .lf-card input[type="number"], .lf-card textarea, .lf-card select { background: var(--elev); color: var(--text); border:1px solid var(--border); border-radius:10px; outline:none; transition: box-shadow .15s, border-color .15s; }
+        .lf-card input:focus, .lf-card textarea:focus, .lf-card select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary), transparent 70%); }
       `}} />
 
       <div className="lf-title">
@@ -309,11 +309,11 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
   );
 }
 
-const card = { display:'grid', gap:10, border:'1px solid #2b2a33', borderRadius:12, background:'#0f0f14', padding:14 };
+const card = { display:'grid', gap:10, border:'1px solid var(--border)', borderRadius:12, background:'var(--surface)', padding:14 };
 const row = { display:'grid', gap:6 };
-const lbl = { fontSize:12, color:'#94a3b8', fontWeight:600 };
-const inp = { padding:'10px 12px', border:'1px solid #2b2a33', borderRadius:10, background:'#121218', color:'#e5e7eb' };
+const lbl = { fontSize:12, color:'var(--muted)', fontWeight:600 };
+const inp = { padding:'10px 12px', border:'1px solid var(--border)', borderRadius:10, background:'var(--elev)', color:'var(--text)' };
 const ta = inp;
-const btn = { padding:'10px 12px', borderRadius:10, background:'#2b2a33', color:'#e5e7eb', border:'1px solid #2b2a33', cursor:'pointer' };
+const btn = { padding:'10px 12px', borderRadius:10, background:'var(--elev)', color:'var(--text)', border:'1px solid var(--border)', cursor:'pointer' };
 const btnPrimary = { ...btn, background:'#7f5af0', borderColor:'#7f5af0', color:'#fff' };
 const btnDanger = { ...btn, background:'#3b0f14', borderColor:'#652127', color:'#ff8a8a' };

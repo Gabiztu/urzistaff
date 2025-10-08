@@ -43,6 +43,10 @@ a:hover{text-decoration:underline}
 .order-summary{overflow-anchor:none}
 .order-summary h2{margin:0 0 16px}
 .cart-items>h2{margin:0 0 16px}
+@media(min-width:900px){
+  /* Align Order Summary with the top of "Your Items" heading */
+  .cart-layout .order-summary{ margin-top: 0; }
+}
 .price-details .price-row{display:flex;justify-content:space-between;margin-bottom:12px;font-size:var(--text-md)}
 .price-details .label{color:var(--muted)}
 .price-details .value{font-weight:500}

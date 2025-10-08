@@ -4,12 +4,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 export default function ClientShop({ initialListings = [] }) {
   const catLogos = {
     reddit: "/reddit.png",
-    instagram: "/instagram_logo.jpg",
+    instagram: "/instagram.png",
     x: "/x.png",
-    facebook: "/facebook.jpg",
-    tiktok: "/tiktok.jpg",
-    threads: "/threads.jpg",
-    "chat support": "/chat_support.jpg",
+    facebook: "/facebook.png",
+    tiktok: "/tiktok.png",
+    threads: "/threads.png",
+    "chat support": "/chat_support.png",
   };
   const [listings, setListings] = useState(initialListings);
   const [q, setQ] = useState("");
@@ -227,7 +227,7 @@ export default function ClientShop({ initialListings = [] }) {
                       src={catLogos[c.k]}
                       alt={c.label.slice(c.label.indexOf(' ')+1)}
                       className="category-logo"
-                      style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0, borderRadius: 4 }}
+                      style={{ width: 26, height: 26, objectFit: 'contain', flexShrink: 0, borderRadius: '50%' }}
                     />
                   )
                   : (

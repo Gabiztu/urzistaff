@@ -240,7 +240,7 @@ export default function ClientShop({ initialListings = [] }) {
           </div>
         </div>
       </section>
-      <main className="main-listings-area" id="content" style={{ marginTop: '-40px' }}>
+      <main className="main-listings-area" id="content">
         <div className="container">
           <div className="filters-bar reveal">
             <fieldset className="filter-group">

@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="en" data-theme="dark"> <!-- Start in dark mode for the hero -->
 <head>
+  <script>
+    (async () => {
+      try {
+        const res = await fetch('/landing.html', { method: 'HEAD', cache: 'no-store' });
+        if (res.ok) { location.replace('/landing.html'); return; }
+      } catch {}
+      location.replace('/web/public/landing.html');
+    })();
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Urzistaff TEST — The Art of Assistance</title>

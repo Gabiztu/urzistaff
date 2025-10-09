@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import LoadingScreen from "@/app/components/LoadingScreen";
 
 export default function AdminClients() {
   const router = useRouter();
@@ -41,9 +42,7 @@ export default function AdminClients() {
     router.replace("/admin/login");
   };
 
-  if (!ready) {
-    return <main style={{padding:24}}><p>Loading admin…</p>{error && <p style={{color:'#f88'}}>{error}</p>}</main>;
-  }
+  if (!ready) { return <LoadingScreen label="Loading admin" />; }
 
   return (
     <main>
@@ -100,7 +99,7 @@ export default function AdminClients() {
 
         <section className="card">
           {loading ? (
-            <p className="muted">Loading…</p>
+            <LoadingScreen full={false} label="Loading orders" />
           ) : rows.length === 0 ? (
             <p className="muted">No orders found.</p>
           ) : (

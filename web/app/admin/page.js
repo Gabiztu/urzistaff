@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import ListingForm from "./components/ListingForm";
+import LoadingScreen from "@/app/components/LoadingScreen";
 
 export default function AdminHome() {
   const router = useRouter();
@@ -64,9 +65,7 @@ export default function AdminHome() {
     router.replace("/admin/login");
   };
 
-  if (!ready) {
-    return <main style={{padding:24}}><p>Loading admin...</p>{error && <p style={{color:'#f88'}}>{error}</p>}</main>;
-  }
+  if (!ready) { return <LoadingScreen label="Loading admin" />; }
 
   const total = totalCount;
   const active = rows.filter(r => r.is_active).length;
@@ -77,7 +76,7 @@ export default function AdminHome() {
       <style dangerouslySetInnerHTML={{__html: `
         /* Use global theme variables defined in globals.css (light/dark) */
         :root { --pill:999px; --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.12); --ease:cubic-bezier(.22,1,.36,1); }
-        .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+        .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px) + 90px); }
         .topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 16px; }
         .brand { display:flex; align-items:center; gap:10px; font-family: "Space Grotesk", sans-serif; }
         .logo { width:28px; height:28px; border-radius:8px; background: var(--primary); }
@@ -182,7 +181,7 @@ export default function AdminHome() {
             </div>
 
             {loadingRows ? (
-              <p className="muted" style={{marginTop:8}}>Loading listings…</p>
+              <LoadingScreen full={false} label="Loading listings" />
             ) : rows.length === 0 ? (
               <p className="muted" style={{marginTop:8}}>No listings yet.</p>
             ) : (
@@ -214,7 +213,7 @@ export default function AdminHome() {
               </div>
             )}
             {!loadingRows && total > 0 && (
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:12}}>
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:12,padding:'8px 12px',display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:12,marginBottom:12}}>
                 <span className="muted">
                   Showing {Math.min((page-1)*PAGE_SIZE+1, total)}–{Math.min(page*PAGE_SIZE, total)} of {total}
                 </span>

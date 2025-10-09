@@ -121,12 +121,13 @@ export default function ClientSupport() {
 
       {/* Page-specific styles to match original support.html */}
       <style jsx>{`
-        .page-shell{min-height:100vh;display:flex;flex-direction:column}
+        .page-shell{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
+        .page-shell>*{width:100%}
         .hero{padding:64px 0 32px;text-align:center}
         .hero h1{font-size:clamp(2rem,4vw,2.5rem);margin:0 0 12px}
         .hero p{color:var(--muted);max-width:700px;margin:0 auto}
 
-        .grid{display:grid;grid-template-columns:1fr;gap:20px;margin:32px auto;max-width:900px}
+        .grid{display:grid;grid-template-columns:1fr;gap:20px;margin:32px auto;max-width:900px;width:100%}
         @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
 
         .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;display:flex;flex-direction:column;gap:14px;min-height:220px}

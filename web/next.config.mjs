@@ -22,14 +22,7 @@ const nextConfig = {
         source: '/checkout',
         destination: '/checkout.html',
       },
-      {
-        source: '/checkout-success',
-        destination: '/checkout-success.html',
-      },
-      {
-        source: '/checkout-failed',
-        destination: '/checkout-failed.html',
-      },
+      
       // FAQ and Support
       {
         source: '/faq',

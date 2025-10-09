@@ -51,6 +51,7 @@ export default function ClientSupport() {
 
   return (
     <>
+      <div className="page-shell">
       <header className="site-header">
         <div className="container nav-container">
           <a href="/" className="nav-brand" aria-label="UrziStaff home">
@@ -112,10 +113,15 @@ export default function ClientSupport() {
         </div>
       </main>
 
-      <ThemeToggle />
+      <div className="footer-push">
+        <ThemeToggle />
+      </div>
+
+      </div>
 
       {/* Page-specific styles to match original support.html */}
       <style jsx>{`
+        .page-shell{min-height:100vh;display:flex;flex-direction:column}
         .hero{padding:64px 0 32px;text-align:center}
         .hero h1{font-size:clamp(2rem,4vw,2.5rem);margin:0 0 12px}
         .hero p{color:var(--muted);max-width:700px;margin:0 auto}
@@ -143,6 +149,7 @@ export default function ClientSupport() {
         .mobile-nav a:hover,.mobile-nav a.active{background:var(--elev)}
         .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
         .nav-container{position:relative}
+        .footer-push{margin-top:auto}
       `}</style>
     </>
   );

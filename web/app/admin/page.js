@@ -13,6 +13,32 @@ export default function AdminHome() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
 
+  const PAGE_SIZE = 10;
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [q, setQ] = useState("");
+
+  const fetchPage = async (pageNumber = 1, query = q) => {
+    setLoadingRows(true);
+    const from = (pageNumber - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    let qb = supabase
+      .from("listings")
+      .select("id,name,hourly_rate,is_active,created_at", { count: "exact" })
+      .order("created_at", { ascending: false });
+    if (query && query.trim()) qb = qb.ilike("name", `%${query.trim()}%`);
+    const { data, count, error } = await qb.range(from, to);
+    if (error) {
+      setError(error.message || String(error));
+      setRows([]);
+      setTotalCount(0);
+    } else {
+      setRows(data || []);
+      setTotalCount(count || 0);
+    }
+    setLoadingRows(false);
+  };
+
   useEffect(() => {
     const check = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -28,14 +54,7 @@ export default function AdminHome() {
         return;
       }
       setReady(true);
-      // Load listings (read-only)
-      const { data } = await supabase
-        .from("listings")
-        .select("id,name,hourly_rate,is_active,created_at")
-        .order("created_at", { ascending: false })
-        .limit(50);
-      setRows(data || []);
-      setLoadingRows(false);
+      await fetchPage(1);
     };
     check();
   }, [router]);
@@ -49,7 +68,7 @@ export default function AdminHome() {
     return <main style={{padding:24}}><p>Loading admin...</p>{error && <p style={{color:'#f88'}}>{error}</p>}</main>;
   }
 
-  const total = rows.length;
+  const total = totalCount;
   const active = rows.filter(r => r.is_active).length;
   const inactive = total - active;
 
@@ -140,15 +159,7 @@ export default function AdminHome() {
               <ListingForm
                 initial={editing}
                 onCancel={()=>{ setShowForm(false); setEditing(null); }}
-                onSaved={async ()=>{
-                  setShowForm(false); setEditing(null);
-                  const { data } = await supabase
-                    .from("listings")
-                    .select("id,name,hourly_rate,is_active,created_at")
-                    .order("created_at", { ascending: false })
-                    .limit(50);
-                  setRows(data || []);
-                }}
+                onSaved={async ()=>{ setShowForm(false); setEditing(null); await fetchPage(page); }}
               />
             </div>
           )}
@@ -157,18 +168,16 @@ export default function AdminHome() {
             <div className="section-head">
               <h2 style={{margin:0}}>Listings</h2>
               <div className="search">
-                <input placeholder="Search by name..." onChange={(e)=>{
-                  const q = e.target.value.toLowerCase();
-                  setRows((prev)=>{
-                    // naive client-side filter just for display; refetch is out of scope
-                    if (!Array.isArray(prev) || !prev.__orig) {
-                      const orig = Array.isArray(prev) ? prev.slice() : [];
-                      Object.defineProperty(orig, "__orig", { value: orig, enumerable: false });
-                      return orig.filter(r=>r.name?.toLowerCase().includes(q));
-                    }
-                    return prev.__orig.filter(r=>r.name?.toLowerCase().includes(q));
-                  });
-                }} />
+                <input
+                  placeholder="Search by name..."
+                  value={q}
+                  onChange={async (e) => {
+                    const v = e.target.value;
+                    setQ(v);
+                    setPage(1);
+                    await fetchPage(1, v);
+                  }}
+                />
               </div>
             </div>
 
@@ -202,6 +211,23 @@ export default function AdminHome() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+            {!loadingRows && total > 0 && (
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:12}}>
+                <span className="muted">
+                  Showing {Math.min((page-1)*PAGE_SIZE+1, total)}–{Math.min(page*PAGE_SIZE, total)} of {total}
+                </span>
+                {(() => {
+                  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+                  return (
+                    <div style={{display:'flex',gap:8}}>
+                      <button className="btn" disabled={page<=1} onClick={async()=>{ const p = page-1; setPage(p); await fetchPage(p); }}>Prev</button>
+                      <span className="muted">Page {page} of {totalPages}</span>
+                      <button className="btn" disabled={page>=totalPages} onClick={async()=>{ const p = page+1; setPage(p); await fetchPage(p); }}>Next</button>
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </section>

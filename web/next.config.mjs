@@ -8,7 +8,7 @@ const nextConfig = {
       // Serve existing static landing page at /
       {
         source: '/',
-        destination: '/landing.html',
+        destination: '/index.html',
       },
       // If you want static shop instead of dynamic app route, re-enable below
       // { source: '/shop', destination: '/shop.html' },

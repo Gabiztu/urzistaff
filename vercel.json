@@ -4,7 +4,7 @@
   "installCommand": "cd web && npm ci || (cd web && npm install)",
   "buildCommand": "cd web && npm run build",
   "rewrites": [
-    { "source": "/", "destination": "/landing.html" },
+    { "source": "/", "destination": "/index.html" },
     { "source": "/cart", "destination": "/cart.html" },
     { "source": "/checkout", "destination": "/checkout.html" },
     { "source": "/checkout-success", "destination": "/checkout-success.html" },

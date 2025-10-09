@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "../components/ThemeToggle";
@@ -87,7 +87,7 @@ export default function ClientSupport() {
       </header>
 
       <section className="hero container">
-        <h1><span className="gradient-text">We92re here to help</span></h1>
+        <h1><span className="gradient-text">We're here to help</span></h1>
         <p>Reach us on Telegram for 1:1 support, or join our channel for announcements, updates, and tips.</p>
       </section>
 
@@ -147,3 +147,4 @@ export default function ClientSupport() {
     </>
   );
 }
+

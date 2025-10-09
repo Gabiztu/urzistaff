@@ -4,10 +4,10 @@
   <script>
     (async () => {
       try {
-        const res = await fetch('/landing.html', { method: 'HEAD', cache: 'no-store' });
-        if (res.ok) { location.replace('/landing.html'); return; }
+        const res = await fetch('landing.html', { method: 'HEAD', cache: 'no-store' });
+        if (res.ok) { location.replace('landing.html'); return; }
       } catch {}
-      location.replace('/web/public/landing.html');
+      location.replace('web/public/landing.html');
     })();
   </script>
   <meta charset="utf-8" />

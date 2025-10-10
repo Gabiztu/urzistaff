@@ -260,3 +260,18 @@ label.pay-option:has(input:checked) .pay-check{border-color:var(--primary);backg
     @media(max-width:1200px){.carousel-btn.prev{left:-28px}.carousel-btn.next{right:-28px}}
     @media(max-width:768px){.carousel-btn.prev{left:8px}.carousel-btn.next{right:8px}}
   
+  /* Home hero: continuous animated text for Browse assistants CTA */
+  .prologue-hero .cta-group .btn.btn-primary .animated-browse {
+    display: inline-block;
+    background: linear-gradient(90deg, #ffffff 0%, #93c5fd 25%, #ffffff 50%, #93c5fd 75%, #ffffff 100%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: browseShimmer 3s linear infinite;
+  }
+
+  @keyframes browseShimmer {
+    0% { background-position: 0% 0; }
+    100% { background-position: -300% 0; }
+  }

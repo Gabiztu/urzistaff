@@ -109,21 +109,24 @@ export default function ClientHome() {
     const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
     const initials = (name='') => (name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('')||'VA').toUpperCase();
     const fmtRate = (n) => { const x = Number(n); return Number.isFinite(x) ? `$${x.toFixed(0)}/hr` : ''; };
+    const fmtPrice = (n) => { const x = Number(n); return Number.isFinite(x) ? `$${x.toFixed(0)}` : '$99'; };
     const card = (r) => {
       const skills = [];
       (r.categories||[]).slice(0,2).forEach(c=>skills.push(c));
       (r.languages||[]).slice(0,2).forEach(l=>skills.push(l));
+      (r.devices||[]).slice(0,2).forEach(d=>skills.push(d));
       return `
         <article class="card reveal">
           <div class="card-top">
             <div style="display:flex;gap:10px;align-items:center">
               <div class="avatar">${esc(initials(r.name))}</div>
               <div>
-                <h3 style="margin:0">${esc(r.name||'—')}</h3>
+                <h3 style="margin:0">${esc(r.name||'—')}${r.availability ? ` <span style="margin-left:8px;font-size:12px;color:#60a5fa;opacity:.9;font-weight:600">${esc(r.availability==='full-time'?'Full-time':(r.availability==='part-time'?'Part-time':String(r.availability)))}</span>` : ''}</h3>
                 ${r.rating ? `<span class=\"badge\" style=\"margin-top:4px\">⭐ ${esc(Number(r.rating).toFixed(1))}${r.reviews_count ? ` (${esc(r.reviews_count)} reviews)` : ''}</span>` : ''}
+                <div class=\"per-hour\" style=\"color:var(--muted);font-size:14px;margin-top:4px\">${esc(fmtRate(r.hourly_rate).replace('/hr',''))} per hour</div>
               </div>
             </div>
-            <div style="font-weight:700;font-size:18px">${fmtRate(r.hourly_rate)}</div>
+            <div style="font-weight:700;font-size:18px">${fmtPrice(r.purchase_price)}</div>
           </div>
           <div class="skills">${skills.map(s => `<span class=\"skill\">${esc(s)}</span>`).join('')}</div>
           <div class="card-actions">
@@ -185,7 +188,7 @@ export default function ClientHome() {
             <h1>Your <span className="highlight">game	changing</span> Virtual Assistant is here.</h1>
             <p className="subtitle">Tired of wasting time on unreliable VAs? We provide handpicked Virtual Assistants, fully trained and ready from day one.</p>
             <div className="cta-group">
-              <a className="btn btn-primary" href="/shop">Browse assistants</a>
+              <a className="btn btn-primary" href="/shop"><span className="animated-browse">Browse assistants</span></a>
               <a className="btn" href="/faq">Why Urzistaff?</a>
             </div>
           </div>
@@ -225,7 +228,7 @@ export default function ClientHome() {
           <section className="section" id="browse" style={{background:'var(--surface)'}}>
             <div className="container">
               <h2 className="section-title reveal">Browse Available Experts</h2>
-              <p className="section-subtitle reveal">We only accept a limited number of new clients each month to ensure quality. Find your perfect match below.</p>
+              <p className="section-subtitle reveal">Write @raegency(Telegram) to get your VAs today.</p>
               <div className="carousel">
                 <button className="carousel-btn prev" ref={prevBtnRef} aria-label="Previous">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -248,7 +251,6 @@ export default function ClientHome() {
                   Our Replacement Guarantee
                 </h3>
                 <p>We make sure you never lose time or money. If the VA you hire doesn’t respond within 72 hours, or becomes unavailable within the first 2 weeks after hiring, you’ll be able to choose another VA of the same value — or multiple VAs that match the original value.</p>
-                <p style={{marginTop:16, color:'var(--text)'}}><strong>MM accepted:</strong> @marshal</p>
               </div>
             </div>
           </section>

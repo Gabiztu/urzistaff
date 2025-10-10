@@ -1,8 +1,8 @@
 {
   "version": 2,
   "framework": "nextjs",
-  "installCommand": "cd web && npm ci || (cd web && npm install)",
-  "buildCommand": "cd web && npm run build",
+  "installCommand": "npm ci || npm install",
+  "buildCommand": "npm run build",
   "rewrites": [
     
     

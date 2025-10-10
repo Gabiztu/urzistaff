@@ -109,6 +109,14 @@ export default function ListingProfile() {
     .mobile-nav a:hover,.mobile-nav a.active{background:var(--elev)}
     .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
     .nav-actions .btn{padding:8px 16px}
+    .back-btn { gap: 8px; }
+    .back-btn svg { width: 22px; height: 22px; }
+    /* Small screens: icon-only circular back button */
+    @media(max-width: 768px){
+      .back-btn { width:40px; height:40px; padding:0; border-radius:50%; }
+      .back-btn svg { width: 24px; height: 24px; }
+      .back-btn .back-text{ display:none; }
+    }
     .cart-icon{width:24px;height:24px}
     .profile-grid{display:grid;grid-template-columns:1fr;gap:32px;align-items:flex-start;padding: 48px 0 80px;}
     @media(min-width:900px){.profile-grid{grid-template-columns:minmax(0, 2fr) minmax(0, 1fr)}}
@@ -163,7 +171,12 @@ export default function ListingProfile() {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
           </button>
           <div className="nav-actions">
-            <a className="btn" href="/shop">← Back to Listings</a>
+            <a className="btn back-btn" href="/shop" aria-label="Back to listings">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+              <span className="back-text">Back to Listings</span>
+            </a>
             <a className="btn btn-cart" aria-label="Cart" href="/cart">
               <svg className="cart-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c.51 0 .962-.344 1.087-.849l1.858-6.443a.75.75 0 0 0-.7-1.028H5.613M15 21a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 0h-5.25" />

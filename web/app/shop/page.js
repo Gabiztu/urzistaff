@@ -155,7 +155,7 @@ export default async function ShopPage() {
         .filter-group .filter-options { position: relative; z-index: 1; }
         .filter-options { display: flex; flex-wrap: wrap; gap: 16px; }
         /* Make the entire label the clickable pill surface */
-        label.chip { position: relative; display: inline-flex; align-items: center; cursor: pointer; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--pill); min-height: 36px; color: var(--text); background: var(--elev); font-weight: 500; }
+        label.chip { position: relative; display: inline-flex; align-items: center; cursor: pointer; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--pill); height: 40px; color: var(--text); background: var(--elev); font-weight: 500; font-size: 14px; }
         /* Keep input visually hidden but allow label click to toggle */
         label.chip input { position: absolute; opacity: 0; pointer-events: none; }
         /* Inner span is purely presentational; forward clicks to the label */
@@ -164,7 +164,7 @@ export default async function ShopPage() {
         label.chip:has(input:checked) { background: var(--primary); border-color: var(--primary); color: #fff; }
         /* Keep existing span rule for broader compatibility */
         label.chip input:checked + span { background: transparent; border-color: inherit; color: inherit; }
-        .filter-select { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--elev); color: var(--text); }
+        .filter-select { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--elev); color: var(--text); height: 40px; font-size: 14px; }
         .rate { display: flex; align-items: center; gap: 10px; }
         .rate input[type="range"] { width: 160px; }
 

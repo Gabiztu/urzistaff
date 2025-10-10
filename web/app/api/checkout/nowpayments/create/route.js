@@ -8,7 +8,6 @@ const supabase = createClient(
 );
 
 const CART_COOKIE = 'cart_token';
-const UNIT_PRICE = 99; // USD per listing
 
 async function getCartByToken(token) {
   if (!token) return { data: null, error: null };
@@ -54,7 +53,7 @@ export async function POST(request) {
     const region = body?.region || undefined;
     const zip = body?.zip || undefined;
 
-    const subtotal = UNIT_PRICE * qty;
+    const subtotal = (items || []).reduce((s, it) => s + Number(it.price || 0), 0);
     const total = subtotal; // no taxes/fees
 
     // Build absolute URLs
@@ -74,7 +73,7 @@ export async function POST(request) {
     const snapshotItems = (items || []).map(it => ({
       listing_id: it.listing_id,
       name: it.name ?? null,
-      price: Number(it.price ?? UNIT_PRICE) || UNIT_PRICE,
+      price: Number(it.price || 0) || 0,
     }));
 
     // Create order record (pending)

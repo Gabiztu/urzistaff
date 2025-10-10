@@ -16,6 +16,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
     availability: "",
     location: "",
     hourly_rate: 0,
+    purchase_price: 99,
     is_active: true,
   }));
   const [saving, setSaving] = useState(false);
@@ -36,6 +37,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
         availability: initial.availability || "",
         location: initial.location || "",
         hourly_rate: Number(initial.hourly_rate || 0),
+        purchase_price: Number(initial.purchase_price || 99),
         is_active: Boolean(initial.is_active ?? true),
       });
     }
@@ -69,6 +71,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       availability: form.availability || null,
       location: form.location || null,
       hourly_rate: Number(form.hourly_rate || 0),
+      purchase_price: Number(form.purchase_price || 99),
       is_active: !!form.is_active,
     };
     try {
@@ -221,7 +224,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       <div style={row}>
         <label style={lbl}>Languages</label>
         <div className="lf-chipbar" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          {['English', 'Spanish', 'Italian'].map((lang) => (
+          {['English', 'German', 'French', 'Spanish', 'Italian'].map((lang) => (
             <label key={lang} className="chip" style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
               <input
                 type="checkbox"
@@ -289,8 +292,75 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
           <option>part-time</option>
         </select>
       </div>
-      <div style={row}><label style={lbl}>Location</label><input style={inp} value={form.location} onChange={(e)=>set("location", e.target.value)} placeholder="Philippines" /></div>
+      <div style={row}>
+        <label style={lbl}>Location</label>
+        <select style={inp} value={form.location} onChange={(e)=>set("location", e.target.value)}>
+          <option value="">—</option>
+          <option>United States</option>
+          <option>United Kingdom</option>
+          <option>Canada</option>
+          <option>Australia</option>
+          <option>New Zealand</option>
+          <option>Ireland</option>
+          <option>Germany</option>
+          <option>France</option>
+          <option>Italy</option>
+          <option>Spain</option>
+          <option>Portugal</option>
+          <option>Netherlands</option>
+          <option>Belgium</option>
+          <option>Switzerland</option>
+          <option>Austria</option>
+          <option>Sweden</option>
+          <option>Norway</option>
+          <option>Denmark</option>
+          <option>Finland</option>
+          <option>Poland</option>
+          <option>Czechia</option>
+          <option>Romania</option>
+          <option>Greece</option>
+          <option>Hungary</option>
+          <option>Bulgaria</option>
+          <option>Croatia</option>
+          <option>Serbia</option>
+          <option>Turkey</option>
+          <option>Ukraine</option>
+          <option>Russia</option>
+          <option>Brazil</option>
+          <option>Mexico</option>
+          <option>Argentina</option>
+          <option>Chile</option>
+          <option>Colombia</option>
+          <option>Peru</option>
+          <option>Philippines</option>
+          <option>India</option>
+          <option>Indonesia</option>
+          <option>Malaysia</option>
+          <option>Singapore</option>
+          <option>Thailand</option>
+          <option>Vietnam</option>
+          <option>Japan</option>
+          <option>South Korea</option>
+          <option>China</option>
+          <option>South Africa</option>
+          <option>Nigeria</option>
+          <option>Kenya</option>
+          <option>Egypt</option>
+          <option>United Arab Emirates</option>
+        </select>
+      </div>
       <div style={row}><label style={lbl}>Hourly rate ($/hr)</label><input style={inp} type="number" min="0" step="0.01" value={form.hourly_rate} onChange={(e)=>set("hourly_rate", e.target.value)} required /></div>
+      <div style={row}>
+        <label style={lbl}>Purchase Price</label>
+        <div className="lf-chipbar">
+          {[49,99].map((v)=> (
+            <label key={v} className="chip">
+              <input type="radio" name="purchasePrice" checked={Number(form.purchase_price)===v} onChange={()=>set("purchase_price", v)} />
+              <span>${v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
       <div style={{display:'flex', alignItems:'center', gap:8}}>
         <input id="active" type="checkbox" checked={form.is_active} onChange={(e)=>set("is_active", e.target.checked)} />
         <label htmlFor="active">Active</label>

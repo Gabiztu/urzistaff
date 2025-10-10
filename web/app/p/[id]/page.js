@@ -51,11 +51,10 @@ export default function ListingProfile() {
   const handleAddToCart = async () => {
     try {
       await fetch('/api/cart', { method: 'POST' });
-      const price = data.hourly_rate || 99;
       await fetch('/api/cart/items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ listing_id: data.id, name: data.name, headline: data.headline || '', price })
+        body: JSON.stringify({ listing_id: data.id, name: data.name, headline: data.headline || '' })
       });
       const res = await fetch('/api/cart', { cache: 'no-store' });
       const json = await res.json();

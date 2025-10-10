@@ -21,12 +21,21 @@ async function getCartByToken(token) {
 
 export async function POST(request) {
   try {
-    const { listing_id, name, headline, price } = await request.json();
+    const { listing_id, name, headline } = await request.json();
     if (!listing_id) return NextResponse.json({ error: 'listing_id required' }, { status: 400 });
     const cookieStore = cookies();
     const token = cookieStore.get(CART_COOKIE)?.value;
     const { data: cart } = await getCartByToken(token);
     if (!cart) return NextResponse.json({ error: 'cart_not_found' }, { status: 404 });
+
+    // Resolve authoritative price and details from listings to prevent client tampering
+    const { data: listing, error: listingErr } = await supabase
+      .from('listings')
+      .select('id, name, headline, purchase_price')
+      .eq('id', listing_id)
+      .maybeSingle();
+    if (listingErr) return NextResponse.json({ error: listingErr.message }, { status: 400 });
+    if (!listing) return NextResponse.json({ error: 'listing_not_found' }, { status: 404 });
 
     // Upsert-like: ensure one entry per listing in this cart
     const { data: existing, error: exErr } = await supabase
@@ -41,7 +50,10 @@ export async function POST(request) {
       return NextResponse.json({ item: existing, duplicated: true }, { status: 200, headers: { 'Cache-Control': 'no-store' } });
     }
 
-    const payload = { cart_id: cart.id, listing_id, name: name || null, headline: headline || null, price: Number(price || 0) };
+    const finalName = name || listing.name || null;
+    const finalHeadline = headline || listing.headline || null;
+    const finalPrice = Number(listing.purchase_price || 99);
+    const payload = { cart_id: cart.id, listing_id, name: finalName, headline: finalHeadline, price: finalPrice };
     const { data: item, error } = await supabase
       .from('cart_items')
       .insert(payload)

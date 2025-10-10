@@ -23,7 +23,7 @@ export default function ClientShop({ initialListings = [] }) {
   const [location, setLocation] = useState("Select");
   const [language, setLanguage] = useState("");
   const [devices, setDevices] = useState(new Set());
-  const [maxRate, setMaxRate] = useState(50);
+  const [maxRate, setMaxRate] = useState(10);
   const [selectedCats, setSelectedCats] = useState(new Set());
   const [cartCount, setCartCount] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -125,7 +125,7 @@ export default function ClientShop({ initialListings = [] }) {
   const addToCart = useCallback(async (item) => {
     try {
       await fetch('/api/cart', { method: 'POST' });
-      await fetch('/api/cart/items', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ listing_id:item.id, name:item.name, headline:item.headline||'', price: Number(item.hourly_rate||99) }) });
+      await fetch('/api/cart/items', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ listing_id:item.id, name:item.name, headline:item.headline||'' }) });
       const res = await fetch('/api/cart', { cache: 'no-store' });
       const json = await res.json();
       const n = Array.isArray(json?.cart?.items) ? json.cart.items.length : 0;
@@ -184,7 +184,7 @@ export default function ClientShop({ initialListings = [] }) {
       <header className="browse-hero">
         <canvas id="constellation" ref={canvasRef} aria-hidden="true"></canvas>
         <div className="browse-hero-content reveal">
-          <h1>Find your <span className="gradient-text">dedicated partner</span> in productivity.</h1>
+          <h1>Find your <span className="gradient-text">dedicated employee</span> to grow your business.</h1>
           <p>We connect you with elite, pre-vetted virtual assistants who seamlessly integrate into your workflow.</p>
           <form
             className="search-bar"
@@ -321,7 +321,15 @@ export default function ClientShop({ initialListings = [] }) {
             <div className="filter-group">
               <div className="label">Location</div>
               <select className="filter-select" name="location" aria-label="Location" value={location} onChange={(e)=>setLocation(e.target.value)}>
-                {['Select','United States','United Kingdom','Canada','Australia','Italy','Spain','Germany','France','Brazil','Mexico','India','Philippines','Japan','South Korea'].map(v => (
+                {[
+                  'Select',
+                  'United States','United Kingdom','Canada','Australia','New Zealand','Ireland',
+                  'Germany','France','Italy','Spain','Portugal','Netherlands','Belgium','Switzerland','Austria',
+                  'Sweden','Norway','Denmark','Finland','Poland','Czechia','Romania','Greece','Hungary','Bulgaria','Croatia','Serbia','Turkey','Ukraine','Russia',
+                  'Brazil','Mexico','Argentina','Chile','Colombia','Peru',
+                  'Philippines','India','Indonesia','Malaysia','Singapore','Thailand','Vietnam','Japan','South Korea','China',
+                  'South Africa','Nigeria','Kenya','Egypt','United Arab Emirates'
+                ].map(v => (
                   <option key={v} value={v}>{v}</option>
                 ))}
               </select>
@@ -329,7 +337,7 @@ export default function ClientShop({ initialListings = [] }) {
             <fieldset className="filter-group">
               <legend>Language</legend>
               <div className="filter-options">
-                {['English','Italian','Spanish'].map((v) => (
+                {['English','German','French','Italian','Spanish'].map((v) => (
                   <label
                     key={v}
                     className="chip"
@@ -343,7 +351,7 @@ export default function ClientShop({ initialListings = [] }) {
             </fieldset>
             <div className="filter-group rate">
               <div className="label">Hourly Rate</div>
-              <input type="range" min="0" max="100" step="1" id="rateRange" aria-label="Hourly Rate" value={maxRate} onChange={(e)=>setMaxRate(Number(e.target.value))} />
+              <input type="range" min="1" max="10" step="1" id="rateRange" aria-label="Hourly Rate" value={maxRate} onChange={(e)=>setMaxRate(Number(e.target.value))} />
               <div id="rateValue">${""+maxRate}/hr</div>
             </div>
           </div>
@@ -368,15 +376,26 @@ export default function ClientShop({ initialListings = [] }) {
               >
                 <img loading="lazy" src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(r.name||'VA')}`} alt={r.name} className="avatar" />
                 <div className="listing-info">
-                  <div className="name">{r.name}</div>
-                  {r.headline ? <div className="headline">{r.headline}</div> : null}
-                  <div className="skills">
-                    {(r.categories||[]).map((c) => (<span key={c} className="skill">{c}</span>))}
-                    {(r.languages||[]).map((l) => (<span key={l} className="skill">{l}</span>))}
+                  <div className="name">
+                    {r.name}
+                    <img src="/verified.svg" alt="Verified" style={{ height: '1em', width: '1em', marginLeft: 6, verticalAlign: '-0.15em' }} />
+                    {r.availability ? (
+                      <span style={{ marginLeft: 8, fontSize: 12, color: '#60a5fa', opacity: 0.9, fontWeight: 600 }}>
+                        {r.availability === 'full-time' ? 'Full-time' : (r.availability === 'part-time' ? 'Part-time' : r.availability)}
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="per-hour" style={{color:'var(--muted)', fontSize:14, marginTop:4}}>
+                    ${Number(r.hourly_rate ?? 0).toFixed(0)} per hour
+                  </div>
+                  <div className="skills" style={{marginTop:6}}>
+                    {(r.categories||[]).map((c) => (<span key={`cat-${c}`} className="skill">{c}</span>))}
+                    {(r.languages||[]).map((l) => (<span key={`lang-${l}`} className="skill">{l}</span>))}
+                    {(r.devices||[]).map((d) => (<span key={`dev-${d}`} className="skill">{d}</span>))}
                   </div>
                 </div>
                 <div className="listing-meta">
-                  <div className="price">${Number(r.hourly_rate ?? 0).toFixed(0)}<span style={{fontSize:14,color:'var(--muted)'}}>/hr</span></div>
+                  <div className="price">${Number(r.purchase_price ?? 99).toFixed(0)}</div>
                   <button className="btn-primary" type="button" style={{position:'relative', zIndex:6}} onClick={(e)=>{e.preventDefault(); e.stopPropagation(); addToCart(r);}}>Add to Cart</button>
                 </div>
               </article>

@@ -119,7 +119,6 @@ export default function ClientFAQ() {
                 <div className="toggle">+</div>
               </div>
               <div className="a">
-                <p className="badge">Middleman accepted: <strong>@marshal</strong></p>
                 <div className="policy-box">
                   <ul>
                     <li>If the hired VA does not respond within 72 hours, you may select a replacement.</li>

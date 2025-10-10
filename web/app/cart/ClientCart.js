@@ -225,6 +225,8 @@ export default function ClientCart() {
         .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
         .nav-container{position:relative}
         /* Use global default alignment; no per-item drift */
+        .cart-layout{display:flex;align-items:flex-start;gap:24px}
+        @media(max-width:768px){.cart-layout{flex-direction:column}}
       `}</style>
     </>
   );

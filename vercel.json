@@ -5,7 +5,6 @@
   "buildCommand": "cd web && npm run build",
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
-    { "source": "/cart", "destination": "/cart.html" },
     { "source": "/checkout", "destination": "/checkout.html" }
   ]
 }

@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "../components/ThemeToggle";
 
 export default function ClientShop({ initialListings = [] }) {
   const router = useRouter();
@@ -386,6 +387,7 @@ export default function ClientShop({ initialListings = [] }) {
           </div>
         </div>
       </main>
+      <ThemeToggle />
     </>
   );
 }

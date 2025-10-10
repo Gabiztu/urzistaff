@@ -60,7 +60,7 @@ export default function ClientFAQ() {
 
   return (
     <>
-      <div className="page-shell">
+      <div className="page-shell faq-page has-mobile-nav">
         <header className="site-header">
           <div className="container nav-container">
             <a href="/" className="nav-brand" aria-label="UrziStaff home">
@@ -201,38 +201,6 @@ export default function ClientFAQ() {
           <ThemeToggle />
         </div>
       </div>
-
-      <style jsx>{`
-        .page-shell{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
-        .page-shell>*{width:100%}
-
-        .hero{padding:64px 0 24px;text-align:center}
-        .hero h1{font-size:clamp(2rem,4vw,2.5rem);margin:0 0 12px}
-        .hero p{color:var(--muted);max-width:720px;margin:0 auto}
-
-        .faq{margin:24px auto 64px;display:flex;flex-direction:column;gap:12px;max-width:900px}
-        .qa{border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);overflow:hidden}
-        .q{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer}
-        .q h3{margin:0;font-size:18px}
-        .toggle{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--border);color:var(--muted);transition:all .2s var(--ease-out)}
-        .qa.open .toggle{border-color:var(--primary);background:var(--primary);color:#fff}
-        .a{display:none;padding:0 18px 18px;color:var(--muted);line-height:1.7}
-        .qa.open .a{display:block}
-
-        ul{margin:8px 0 0 18px}
-        li{margin:6px 0}
-        .policy-box{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:8px}
-        .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--pill);font-size:12px;border:1px solid var(--border);color:var(--muted);background:var(--surface)}
-
-        .menu-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;margin-left:auto;margin-right:10px}
-        @media(min-width:768px){.menu-btn{display:none}}
-        .mobile-nav{display:none;position:absolute;top:100%;left:12px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
-        .mobile-nav a{display:block;padding:10px 12px;color:var(--text);border-radius:8px;text-align:center;text-decoration:none}
-        .mobile-nav a:hover,.mobile-nav a.active{background:var(--elev)}
-        .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
-        .nav-container{position:relative}
-        .footer-push{margin-top:auto}
-      `}</style>
     </>
   );
 }

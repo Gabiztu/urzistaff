@@ -16,6 +16,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
     availability: "",
     location: "",
     hourly_rate: 0,
+    purchase_price: 99,
     is_active: true,
   }));
   const [saving, setSaving] = useState(false);
@@ -36,6 +37,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
         availability: initial.availability || "",
         location: initial.location || "",
         hourly_rate: Number(initial.hourly_rate || 0),
+        purchase_price: Number(initial.purchase_price || 99),
         is_active: Boolean(initial.is_active ?? true),
       });
     }
@@ -69,6 +71,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       availability: form.availability || null,
       location: form.location || null,
       hourly_rate: Number(form.hourly_rate || 0),
+      purchase_price: Number(form.purchase_price || 99),
       is_active: !!form.is_active,
     };
     try {
@@ -291,6 +294,17 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       </div>
       <div style={row}><label style={lbl}>Location</label><input style={inp} value={form.location} onChange={(e)=>set("location", e.target.value)} placeholder="Philippines" /></div>
       <div style={row}><label style={lbl}>Hourly rate ($/hr)</label><input style={inp} type="number" min="0" step="0.01" value={form.hourly_rate} onChange={(e)=>set("hourly_rate", e.target.value)} required /></div>
+      <div style={row}>
+        <label style={lbl}>Purchase Price</label>
+        <div className="lf-chipbar">
+          {[49,99].map((v)=> (
+            <label key={v} className="chip">
+              <input type="radio" name="purchasePrice" checked={Number(form.purchase_price)===v} onChange={()=>set("purchase_price", v)} />
+              <span>${'{'}v{'}'}</span>
+            </label>
+          ))}
+        </div>
+      </div>
       <div style={{display:'flex', alignItems:'center', gap:8}}>
         <input id="active" type="checkbox" checked={form.is_active} onChange={(e)=>set("is_active", e.target.checked)} />
         <label htmlFor="active">Active</label>

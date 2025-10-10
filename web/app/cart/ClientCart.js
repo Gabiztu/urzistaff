@@ -225,8 +225,11 @@ export default function ClientCart() {
         .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
         .nav-container{position:relative}
         /* Use global default alignment; no per-item drift */
-        .cart-layout{display:flex;align-items:flex-start;gap:24px}
-        @media(max-width:768px){.cart-layout{flex-direction:column}}
+        .cart-layout{display:flex;align-items:flex-start;gap:24px;flex-wrap:nowrap}
+        .cart-items{flex:1 1 auto;min-width:0}
+        .order-summary{flex:0 0 360px;max-width:360px;margin-left:auto}
+        @media(max-width:900px){.cart-layout{flex-direction:column}}
+        @media(max-width:900px){.order-summary{flex:1 1 auto;max-width:none;margin-left:0}}
       `}</style>
     </>
   );

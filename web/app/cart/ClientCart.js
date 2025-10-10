@@ -217,6 +217,13 @@ export default function ClientCart() {
         .page-shell{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
         .page-shell>*{width:100%}
         .footer-push{margin-top:auto}
+        .menu-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;margin-left:auto;margin-right:10px}
+        @media(min-width:768px){.menu-btn{display:none}}
+        .mobile-nav{display:none;position:absolute;top:100%;left:12px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+        .mobile-nav a{display:block;padding:10px 12px;color:var(--text);border-radius:8px;text-align:center;text-decoration:none}
+        .mobile-nav a:hover,.mobile-nav a.active{background:var(--elev)}
+        .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
+        .nav-container{position:relative}
       `}</style>
     </>
   );

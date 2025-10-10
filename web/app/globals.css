@@ -116,6 +116,18 @@ a:hover{text-decoration:underline}
 .support-page .btn-secondary{display:inline-block;text-align:center;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:10px;font-weight:600;padding:14px 22px;cursor:pointer;transition:transform .2s var(--ease-out);font-size:var(--text-md)}
 .support-page .btn-secondary:hover{transform:translateY(-1px);text-decoration:none}
 
+/* Cart page (move styles from styled-jsx to SSR global to avoid flash) */
+.cart-page .cart-layout{display:flex;align-items:flex-start;gap:24px;flex-wrap:nowrap}
+.cart-page .cart-items{flex:1 1 auto;min-width:0;max-width:560px}
+.cart-page .order-summary{flex:0 0 360px;max-width:360px;margin-left:auto}
+@media(max-width:900px){.cart-page .cart-layout{flex-direction:column}}
+@media(max-width:900px){.cart-page .order-summary{flex:1 1 auto;max-width:none;margin-left:0}}
+.cart-page .order-summary .form-group .input{flex:1 1 auto;min-width:0}
+.cart-page .order-summary .form-group .btn-primary.btn-sm{width:auto;min-width:auto;flex:0 0 auto;padding:8px 12px}
+
+/* Checkout page minor overrides */
+@media(max-width:900px){ .checkout-page .order-summary{ position:static; top:auto } }
+
 /* Checkout layout and form styles */
 .checkout-layout{display:grid;grid-template-columns:1.2fr 1fr;grid-template-areas:"form summary";gap:32px;align-items:start}
 .payment-form{grid-area:form}

@@ -167,7 +167,7 @@ export default function ClientCheckout() {
 
   return (
     <>
-      <div className="page-shell">
+      <div className="page-shell checkout-page has-mobile-nav">
         <header className="site-header">
           <div className="container nav-container">
             <a href="/" className="nav-brand" aria-label="UrziStaff home">
@@ -370,20 +370,7 @@ export default function ClientCheckout() {
         </div>
       </div>
 
-      <style jsx>{`
-        .page-shell{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
-        .page-shell>*{width:100%}
-        .footer-push{margin-top:auto}
-        .menu-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;margin-left:auto;margin-right:10px}
-        @media(min-width:768px){.menu-btn{display:none}}
-        .mobile-nav{display:none;position:absolute;top:100%;left:12px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
-        .mobile-nav a{display:block;padding:10px 12px;color:var(--text);border-radius:8px;text-align:center;text-decoration:none}
-        .mobile-nav a:hover,.mobile-nav a.active{background:var(--elev)}
-        .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
-        .nav-container{position:relative}
-        /* Let the order summary scroll away (not sticky) on mobile */
-        @media(max-width:900px){ .order-summary{ position:static; top:auto } }
-      `}</style>
+      
     </>
   );
 }

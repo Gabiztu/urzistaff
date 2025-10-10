@@ -129,6 +129,9 @@ label.pay-option:has(input:checked) .pay-check{border-color:var(--primary);backg
     .prologue-hero .highlight{display:inline-block;background:linear-gradient(45deg,#7F5AF0,#00C6CF);-webkit-background-clip:text;background-clip:text;color:transparent}
     .cta-group{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
     .cta-group .btn{min-width:180px;padding:12px 22px; animation:popInCenter 1.2s var(--ease-out) .85s both;will-change:transform,opacity}
+    /* Ensure hero CTAs are equal sized (height/typography) and not full-width */
+    .prologue-hero .cta-group .btn{font-size:var(--text-lg)}
+    .prologue-hero .cta-group .btn-primary{width:auto}
     #constellation{position:absolute;inset:0;z-index:1}
     .main-content{background:var(--bg);position:relative;z-index:20}
     .section{padding:clamp(60px,10vw,100px) 0} .section-title{font-family:"Space Grotesk",sans-serif;font-size:var(--text-xl);text-align:center;margin-bottom:clamp(24px, 5vw, 48px)}

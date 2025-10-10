@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ThemeToggle from "../components/ThemeToggle";
 
-const UNIT_PRICE = 99;
-
 export default function ClientCheckout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const btnRef = useRef(null);
@@ -110,7 +108,7 @@ export default function ClientCheckout() {
     try { tgRef.current?.setCustomValidity(ok ? "" : "Username must start with @, begin with a letter, and be 5–32 chars (letters, numbers, underscore)"); } catch {}
   };
 
-  const subtotal = useMemo(() => cart.length * UNIT_PRICE, [cart.length]);
+  const subtotal = useMemo(() => (cart || []).reduce((s, it) => s + Number(it.price || 0), 0), [cart]);
   const fees = 0;
   const total = subtotal + fees;
 
@@ -345,7 +343,7 @@ export default function ClientCheckout() {
                 {cart.map((it, idx) => (
                   <div className="item-row" key={(it.listing_id || it.id || idx)+"-row"}>
                     <div className="name">{it.name || 'Listing'}</div>
-                    <div className="price">{format(UNIT_PRICE)}</div>
+                    <div className="price">{format(it.price)}</div>
                   </div>
                 ))}
               </div>

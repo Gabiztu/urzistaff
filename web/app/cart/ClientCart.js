@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ThemeToggle from "../components/ThemeToggle";
 
-const UNIT_PRICE = 99;
-
 export default function ClientCart() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cart, setCart] = useState([]);
@@ -32,7 +30,7 @@ export default function ClientCart() {
     return { code: codeUp, amount: amt, pct };
   };
 
-  const subtotal = useMemo(() => cart.length * UNIT_PRICE, [cart.length]);
+  const subtotal = useMemo(() => (cart || []).reduce((s, it) => s + Number(it.price || 0), 0), [cart]);
   const { amount: discAmt } = discountFor(subtotal);
   const fees = 0;
   const total = Math.max(0, subtotal - discAmt + fees);
@@ -107,16 +105,7 @@ export default function ClientCart() {
   };
 
   // Build checkout URL using first item
-  const checkoutHref = useMemo(() => {
-    if (cart.length === 0) return undefined;
-    const first = cart[0];
-    const params = new URLSearchParams();
-    params.set('id', first.listing_id || first.id);
-    params.set('name', first.name || '');
-    params.set('headline', first.headline || '');
-    params.set('price', String(UNIT_PRICE));
-    return `/checkout?${params.toString()}`;
-  }, [cart]);
+  const checkoutHref = useMemo(() => (cart.length > 0 ? '/checkout' : undefined), [cart.length]);
 
   return (
     <>
@@ -174,7 +163,7 @@ export default function ClientCart() {
                       <div className="headline">{item.headline || ''}</div>
                     </div>
                     <div className="price">
-                      <div>{format(UNIT_PRICE)}</div>
+                      <div>{format(item.price)}</div>
                       <a href="#" className="remove-link" onClick={(e) => { e.preventDefault(); removeItem(item.listing_id || item.id); }}>Remove</a>
                     </div>
                   </div>

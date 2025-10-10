@@ -125,7 +125,7 @@ export default function ClientShop({ initialListings = [] }) {
   const addToCart = useCallback(async (item) => {
     try {
       await fetch('/api/cart', { method: 'POST' });
-      await fetch('/api/cart/items', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ listing_id:item.id, name:item.name, headline:item.headline||'', price: Number(item.hourly_rate||99) }) });
+      await fetch('/api/cart/items', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ listing_id:item.id, name:item.name, headline:item.headline||'' }) });
       const res = await fetch('/api/cart', { cache: 'no-store' });
       const json = await res.json();
       const n = Array.isArray(json?.cart?.items) ? json.cart.items.length : 0;

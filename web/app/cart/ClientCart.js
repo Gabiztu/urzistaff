@@ -226,7 +226,7 @@ export default function ClientCart() {
         .nav-container{position:relative}
         /* Use global default alignment; no per-item drift */
         .cart-layout{display:flex;align-items:flex-start;gap:24px;flex-wrap:nowrap}
-        .cart-items{flex:1 1 auto;min-width:0}
+        .cart-items{flex:1 1 auto;min-width:0;max-width:560px}
         .order-summary{flex:0 0 360px;max-width:360px;margin-left:auto}
         @media(max-width:900px){.cart-layout{flex-direction:column}}
         @media(max-width:900px){.order-summary{flex:1 1 auto;max-width:none;margin-left:0}}

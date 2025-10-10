@@ -224,6 +224,7 @@ export default function ClientCart() {
         .mobile-nav a:hover,.mobile-nav a.active{background:var(--elev)}
         .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
         .nav-container{position:relative}
+        @media(min-width:900px){.order-summary{margin-top:-6px}}
       `}</style>
     </>
   );

@@ -72,6 +72,50 @@ a:hover{text-decoration:underline}
 .theme-toggle-btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;border:1px solid var(--border);background:var(--elev);color:var(--text);padding:10px 14px;cursor:pointer;transition:transform .15s var(--ease-out)}
 .theme-toggle-btn:hover{transform:translateY(-1px)}
 
+/* Shared page shell and mobile navigation (prevents flash by SSR styling) */
+.page-shell{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
+.page-shell>*{width:100%}
+.footer-push{margin-top:auto}
+.has-mobile-nav .menu-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;margin-left:auto;margin-right:10px}
+@media(min-width:768px){.has-mobile-nav .menu-btn{display:none}}
+.has-mobile-nav .mobile-nav{display:none;position:absolute;top:100%;left:12px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+.has-mobile-nav .mobile-nav a{display:block;padding:10px 12px;color:var(--text);border-radius:8px;text-align:center;text-decoration:none}
+.has-mobile-nav .mobile-nav a:hover,.has-mobile-nav .mobile-nav a.active{background:var(--elev)}
+.has-mobile-nav .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
+.has-mobile-nav .nav-container{position:relative}
+
+/* FAQ page */
+.faq-page .hero{padding:64px 0 24px;text-align:center}
+.faq-page .hero h1{font-size:clamp(2rem,4vw,2.5rem);margin:0 0 12px}
+.faq-page .hero p{color:var(--muted);max-width:720px;margin:0 auto}
+.faq-page .faq{margin:24px auto 64px;display:flex;flex-direction:column;gap:12px;max-width:900px}
+.faq-page .qa{border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+.faq-page .q{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer}
+.faq-page .q h3{margin:0;font-size:18px}
+.faq-page .toggle{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--border);color:var(--muted);transition:all .2s var(--ease-out)}
+.faq-page .qa.open .toggle{border-color:var(--primary);background:var(--primary);color:#fff}
+.faq-page .a{display:none;padding:0 18px 18px;color:var(--muted);line-height:1.7}
+.faq-page .qa.open .a{display:block}
+.faq-page ul{margin:8px 0 0 18px}
+.faq-page li{margin:6px 0}
+.faq-page .policy-box{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:8px}
+.faq-page .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--pill);font-size:12px;border:1px solid var(--border);color:var(--muted);background:var(--surface)}
+
+/* Support page */
+.support-page .hero{padding:64px 0 32px;text-align:center}
+.support-page .hero h1{font-size:clamp(2rem,4vw,2.5rem);margin:0 0 12px}
+.support-page .hero p{color:var(--muted);max-width:700px;margin:0 auto}
+.support-page .grid{display:grid;grid-template-columns:1fr;gap:20px;margin:32px auto;max-width:900px;width:100%}
+@media(min-width:900px){.support-page .grid{grid-template-columns:1fr 1fr}}
+.support-page .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;display:flex;flex-direction:column;gap:14px;min-height:220px}
+.support-page .card h2{font-size:clamp(20px,2.2vw,24px);margin:0}
+.support-page .card p{color:var(--muted);margin:0;font-size:clamp(14px,1.5vw,16px)}
+.support-page .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.support-page .btn-primary{display:inline-block;text-align:center;background:var(--primary);border:1px solid var(--primary);color:#fff;border-radius:10px;font-weight:600;padding:14px 22px;cursor:pointer;transition:transform .2s var(--ease-out);font-size:var(--text-md)}
+.support-page .btn-primary:hover{transform:scale(1.03);text-decoration:none}
+.support-page .btn-secondary{display:inline-block;text-align:center;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:10px;font-weight:600;padding:14px 22px;cursor:pointer;transition:transform .2s var(--ease-out);font-size:var(--text-md)}
+.support-page .btn-secondary:hover{transform:translateY(-1px);text-decoration:none}
+
 /* Checkout layout and form styles */
 .checkout-layout{display:grid;grid-template-columns:1.2fr 1fr;grid-template-areas:"form summary";gap:32px;align-items:start}
 .payment-form{grid-area:form}

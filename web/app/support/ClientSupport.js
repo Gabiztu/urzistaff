@@ -51,7 +51,7 @@ export default function ClientSupport() {
 
   return (
     <>
-      <div className="page-shell">
+      <div className="page-shell support-page has-mobile-nav">
       <header className="site-header">
         <div className="container nav-container">
           <a href="/" className="nav-brand" aria-label="UrziStaff home">
@@ -119,39 +119,6 @@ export default function ClientSupport() {
 
       </div>
 
-      {/* Page-specific styles to match original support.html */}
-      <style jsx>{`
-        .page-shell{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
-        .page-shell>*{width:100%}
-        .hero{padding:64px 0 32px;text-align:center}
-        .hero h1{font-size:clamp(2rem,4vw,2.5rem);margin:0 0 12px}
-        .hero p{color:var(--muted);max-width:700px;margin:0 auto}
-
-        .grid{display:grid;grid-template-columns:1fr;gap:20px;margin:32px auto;max-width:900px;width:100%}
-        @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-
-        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;display:flex;flex-direction:column;gap:14px;min-height:220px}
-        .card h2{font-size:clamp(20px,2.2vw,24px);margin:0}
-        .card p{color:var(--muted);margin:0;font-size:clamp(14px,1.5vw,16px)}
-
-        .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
-
-        .btn-primary{display:inline-block;text-align:center;background:var(--primary);border:1px solid var(--primary);color:#fff;border-radius:10px;font-weight:600;padding:14px 22px;cursor:pointer;transition:transform .2s var(--ease-out);font-size:var(--text-md)}
-        .btn-primary:hover{transform:scale(1.03);text-decoration:none}
-
-        .btn-secondary{display:inline-block;text-align:center;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:10px;font-weight:600;padding:14px 22px;cursor:pointer;transition:transform .2s var(--ease-out);font-size:var(--text-md)}
-        .btn-secondary:hover{transform:translateY(-1px);text-decoration:none}
-
-        /* Mobile nav (page local) */
-        .menu-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;margin-left:auto;margin-right:10px}
-        @media(min-width:768px){.menu-btn{display:none}}
-        .mobile-nav{display:none;position:absolute;top:100%;left:12px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
-        .mobile-nav a{display:block;padding:10px 12px;color:var(--text);border-radius:8px;text-align:center;text-decoration:none}
-        .mobile-nav a:hover,.mobile-nav a.active{background:var(--elev)}
-        .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
-        .nav-container{position:relative}
-        .footer-push{margin-top:auto}
-      `}</style>
     </>
   );
 }

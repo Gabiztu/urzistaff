@@ -194,7 +194,7 @@ export default function ClientCart() {
                 <label htmlFor="discountCode" style={{display:'block',fontWeight:600,marginBottom:6,fontSize:14}}>Discount code</label>
                 <div style={{display:'flex',gap:8,alignItems:'center'}}>
                   <input id="discountCode" className="input" placeholder="Enter code" style={{flex:1,minHeight:40}} value={code} onChange={(e)=>setCode(e.target.value)} />
-                  <button className="btn-primary btn-sm" type="button" style={{minWidth:92}} onClick={applyDiscount}>Apply</button>
+                  <button className="btn-primary btn-sm" type="button" onClick={applyDiscount}>Apply</button>
                 </div>
                 {msg ? <p className="helper-text" style={{marginTop:6,color: msg==='Discount applied'?'var(--muted)':'var(--accent-2)'}}>{msg}</p> : null}
               </div>
@@ -230,6 +230,9 @@ export default function ClientCart() {
         .order-summary{flex:0 0 360px;max-width:360px;margin-left:auto}
         @media(max-width:900px){.cart-layout{flex-direction:column}}
         @media(max-width:900px){.order-summary{flex:1 1 auto;max-width:none;margin-left:0}}
+        /* Discount row: make input wider and Apply button compact */
+        .order-summary .form-group .input{flex:1 1 auto;min-width:0}
+        .order-summary .form-group .btn-primary.btn-sm{width:auto;min-width:auto;flex:0 0 auto;padding:8px 12px}
       `}</style>
     </>
   );

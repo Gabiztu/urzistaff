@@ -24,7 +24,7 @@ export default function AdminClients() {
       }
       setReady(true);
       try {
-        const res = await fetch('/api/admin/orders', { headers: { 'x-admin-email': session.user.email }, cache: 'no-store' });
+        const res = await fetch('/api/admin/orders?onlyPaidFailed=1', { headers: { 'x-admin-email': session.user.email }, cache: 'no-store' });
         const json = await res.json();
         if (!res.ok) throw new Error(json?.error || 'Failed to load orders');
         setRows(Array.isArray(json?.orders) ? json.orders : []);

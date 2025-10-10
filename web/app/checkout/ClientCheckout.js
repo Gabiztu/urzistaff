@@ -204,7 +204,7 @@ export default function ClientCheckout() {
         </header>
 
         <div className="container page">
-          <header style={{textAlign:'left', marginBottom:24}}>
+          <header style={{textAlign:'left', paddingTop:64, marginBottom:48}}>
             <h1><span className="gradient-text">Secure Checkout</span></h1>
             <p style={{color:"var(--muted)", fontSize:15, margin:0}}>You're one step away from boosting your productivity.</p>
           </header>

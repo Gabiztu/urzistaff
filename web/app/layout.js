@@ -25,11 +25,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      {/*
-        The className here applies the 'Inter' font to your whole page.
-        Next.js also makes sure the 'Space Grotesk' font is loaded, so your CSS can use it.
-      */}
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Prevent theme flash: set data-theme before paint based on saved preference or OS */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `!function(){try{var s=localStorage.getItem('theme');var t=s||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var d=document.documentElement;if(d.getAttribute('data-theme')!==t){d.setAttribute('data-theme',t)}}catch(e){}}();`,
+          }}
+        />
+        {/* Optional color-scheme hint for UA default widgets */}
+        <meta name="color-scheme" content="light dark" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );

@@ -110,11 +110,11 @@ export default function ListingProfile() {
     .mobile-nav.open{display:flex;flex-direction:column;gap:6px}
     .nav-actions .btn{padding:8px 16px}
     .back-btn { gap: 8px; }
-    .back-btn svg { width: 22px; height: 22px; }
+    .back-btn svg { width: 28px; height: 28px; }
     /* Small screens: icon-only circular back button */
     @media(max-width: 768px){
-      .back-btn { width:40px; height:40px; padding:0; border-radius:50%; }
-      .back-btn svg { width: 24px; height: 24px; }
+      .back-btn { width:48px; height:48px; padding:0; border-radius:50%; }
+      .back-btn svg { width: 34px; height: 34px; }
       .back-btn .back-text{ display:none; }
     }
     .cart-icon{width:24px;height:24px}
@@ -172,7 +172,7 @@ export default function ListingProfile() {
           </button>
           <div className="nav-actions">
             <a className="btn back-btn" href="/shop" aria-label="Back to listings">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M15 18l-6-6 6-6" />
               </svg>
               <span className="back-text">Back to Listings</span>

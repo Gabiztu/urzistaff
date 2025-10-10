@@ -21,7 +21,7 @@ export default function ClientShop({ initialListings = [] }) {
   const [sex, setSex] = useState("");
   const [availability, setAvailability] = useState("");
   const [location, setLocation] = useState("Select");
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = useState("Select");
   const [devices, setDevices] = useState(new Set());
   const [maxRate, setMaxRate] = useState(10);
   const [selectedCats, setSelectedCats] = useState(new Set());
@@ -93,7 +93,15 @@ export default function ClientShop({ initialListings = [] }) {
   const toggleAge = (v) => setAge(p => p === v ? "" : v);
   const toggleSex = (v) => setSex(p => p === v ? "" : v);
   const toggleAvailability = (v) => setAvailability(p => p === v ? "" : v);
-  const toggleLanguage = (v) => setLanguage(p => p === v ? "" : v);
+  const toggleLanguage = (v) => setLanguage(p => p === v ? "Select" : v);
+
+  const availableLanguages = useMemo(() => {
+    const s = new Set();
+    (listings || []).forEach(r => {
+      (r.languages || []).forEach(l => s.add(l));
+    });
+    return Array.from(s).sort();
+  }, [listings]);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -109,7 +117,7 @@ export default function ClientShop({ initialListings = [] }) {
       if (age && (r.age_range || '') !== age) return false;
       if (sex && (r.sex || '') !== sex) return false;
       if (availability && (r.availability || '') !== availability) return false;
-      if (language && !(r.languages||[]).includes(language)) return false;
+      if (language && language !== 'Select' && !(r.languages||[]).includes(language)) return false;
       if (location && location !== 'Select' && (r.location || '') !== location) return false;
       if (devices.size) {
         const devs = new Set((r.devices||[]).map((d)=>String(d).toLowerCase()));
@@ -334,21 +342,14 @@ export default function ClientShop({ initialListings = [] }) {
                 ))}
               </select>
             </div>
-            <fieldset className="filter-group">
-              <legend>Language</legend>
-              <div className="filter-options">
-                {['English','German','French','Italian','Spanish'].map((v) => (
-                  <label
-                    key={v}
-                    className="chip"
-                    onClick={(e)=>{ if (language===v) { e.preventDefault(); setLanguage(""); } }}
-                  >
-                    <input type="radio" name="language" value={v} checked={language===v} onChange={()=>setLanguage(v)} />
-                    <span>{v}</span>
-                  </label>
+            <div className="filter-group">
+              <div className="label">Language</div>
+              <select className="filter-select" name="language" aria-label="Language" value={language} onChange={(e)=>setLanguage(e.target.value)}>
+                {['Select', ...availableLanguages].map(v => (
+                  <option key={v} value={v}>{v}</option>
                 ))}
-              </div>
-            </fieldset>
+              </select>
+            </div>
             <div className="filter-group rate">
               <div className="label">Hourly Rate</div>
               <input type="range" min="1" max="10" step="1" id="rateRange" aria-label="Hourly Rate" value={maxRate} onChange={(e)=>setMaxRate(Number(e.target.value))} />

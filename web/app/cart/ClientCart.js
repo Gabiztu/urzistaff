@@ -157,7 +157,7 @@ export default function ClientCart() {
         </header>
 
         <div className="container page">
-          <header style={{textAlign:'center', paddingTop:24, marginBottom:48}}>
+          <header style={{textAlign:'center', paddingTop:64, marginBottom:48}}>
             <h1><span className="gradient-text">Review Your Cart</span></h1>
             <p><a href="/shop">← Or continue browsing</a></p>
           </header>

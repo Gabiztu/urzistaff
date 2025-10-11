@@ -31,11 +31,18 @@ export async function POST(request) {
     // Resolve authoritative price and details from listings to prevent client tampering
     const { data: listing, error: listingErr } = await supabase
       .from('listings')
-      .select('id, name, headline, purchase_price')
+      .select('id, name, headline, purchase_price, is_active, reserved_until, sold_by_order')
       .eq('id', listing_id)
       .maybeSingle();
     if (listingErr) return NextResponse.json({ error: listingErr.message }, { status: 400 });
     if (!listing) return NextResponse.json({ error: 'listing_not_found' }, { status: 404 });
+
+    // Prevent adding reserved or sold items
+    const now = new Date();
+    const reserved = listing.reserved_until && new Date(listing.reserved_until) > now;
+    if (listing.sold_by_order || reserved || listing.is_active === false) {
+      return NextResponse.json({ error: 'listing_unavailable' }, { status: 409 });
+    }
 
     // Upsert-like: ensure one entry per listing in this cart
     const { data: existing, error: exErr } = await supabase

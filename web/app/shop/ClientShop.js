@@ -66,6 +66,48 @@ export default function ClientShop({ initialListings = [] }) {
     };
     return map[t] || '';
   };
+  const languageFlag = (label) => {
+    const t = String(label || '').trim().toLowerCase();
+    const ccMap = {
+      english: 'gb',
+      spanish: 'es',
+      german: 'de',
+      french: 'fr',
+      italian: 'it',
+      portuguese: 'pt',
+      'brazilian portuguese': 'br',
+      dutch: 'nl',
+      polish: 'pl',
+      romanian: 'ro',
+      russian: 'ru',
+      ukrainian: 'ua',
+      turkish: 'tr',
+      arabic: 'sa',
+      filipino: 'ph',
+      tagalog: 'ph',
+      indonesian: 'id',
+      malay: 'my',
+      vietnamese: 'vn',
+      thai: 'th',
+      chinese: 'cn',
+      mandarin: 'cn',
+      japanese: 'jp',
+      korean: 'kr',
+      hindi: 'in',
+      bengali: 'bd',
+    };
+    const cc = ccMap[t];
+    if (!cc) return null;
+    return (
+      <img
+        src={`https://flagcdn.com/16x12/${cc}.png`}
+        alt={`${label} flag`}
+        width={16}
+        height={12}
+        style={{ marginRight: 6, verticalAlign: '-0.15em', borderRadius: 2 }}
+      />
+    );
+  };
   const [listings, setListings] = useState(initialListings);
   const [q, setQ] = useState("");
   const [typedQ, setTypedQ] = useState("");
@@ -445,9 +487,12 @@ export default function ClientShop({ initialListings = [] }) {
                     {(r.categories||[]).map((c) => (
                       <span key={`cat-${c}`} className="skill">{chipEmoji(c) ? `${chipEmoji(c)} ${c}` : c}</span>
                     ))}
-                    {(r.languages||[]).map((l) => (
-                      <span key={`lang-${l}`} className="skill">{chipEmoji(l) ? `${chipEmoji(l)} ${l}` : l}</span>
-                    ))}
+                    {(r.languages||[]).map((l) => {
+                      const flag = languageFlag(l);
+                      return (
+                        <span key={`lang-${l}`} className="skill">{flag ? <>{flag}{l}</> : (chipEmoji(l) ? `${chipEmoji(l)} ${l}` : l)}</span>
+                      );
+                    })}
                     {(r.devices||[]).map((d) => (
                       <span key={`dev-${d}`} className="skill">{chipEmoji(d) ? `${chipEmoji(d)} ${d}` : d}</span>
                     ))}

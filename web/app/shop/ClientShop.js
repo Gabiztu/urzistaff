@@ -484,9 +484,17 @@ export default function ClientShop({ initialListings = [] }) {
                     ${Number(r.hourly_rate ?? 0).toFixed(0)} per hour
                   </div>
                   <div className="skills" style={{marginTop:6}}>
-                    {(r.categories||[]).map((c) => (
-                      <span key={`cat-${c}`} className="skill">{chipEmoji(c) ? `${chipEmoji(c)} ${c}` : c}</span>
-                    ))}
+                    {(r.categories||[]).map((c) => {
+                      const logo = catLogos[c];
+                      return (
+                        <span key={`cat-${c}`} className="skill">
+                          {logo
+                            ? <img src={logo} alt={c} width={14} height={14} style={{ marginRight: 6, verticalAlign: '-0.2em', borderRadius: '50%' }} />
+                            : (chipEmoji(c) ? `${chipEmoji(c)} ` : '')}
+                          {c}
+                        </span>
+                      );
+                    })}
                     {(r.languages||[]).map((l) => {
                       const flag = languageFlag(l);
                       return (

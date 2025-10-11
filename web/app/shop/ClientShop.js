@@ -14,6 +14,100 @@ export default function ClientShop({ initialListings = [] }) {
     threads: "/threads.png",
     "chat support": "/chat_support.png",
   };
+  const chipEmoji = (label) => {
+    const t = String(label || '').trim().toLowerCase();
+    const map = {
+      // Categories / skills
+      'chatting': '💬',
+      'chat support': '💬',
+      'customer support': '💬',
+      'copywriting': '✍️',
+      'writing': '✍️',
+      'moderation': '🛡️',
+      'sales': '💼',
+      'marketing': '📈',
+      'data entry': '⌨️',
+      'design': '🎨',
+      'video editing': '🎬',
+
+      // Devices
+      'windows': '🖥️',
+      'macos': '💻',
+      'mac': '💻',
+
+      // Languages (common)
+      'english': '🇬🇧',
+      'spanish': '🇪🇸',
+      'german': '🇩🇪',
+      'french': '🇫🇷',
+      'italian': '🇮🇹',
+      'portuguese': '🇵🇹',
+      'brazilian portuguese': '🇧🇷',
+      'dutch': '🇳🇱',
+      'polish': '🇵🇱',
+      'romanian': '🇷🇴',
+      'russian': '🇷🇺',
+      'ukrainian': '🇺🇦',
+      'turkish': '🇹🇷',
+      'arabic': '🇸🇦',
+      'filipino': '🇵🇭',
+      'tagalog': '🇵🇭',
+      'indonesian': '🇮🇩',
+      'malay': '🇲🇾',
+      'vietnamese': '🇻🇳',
+      'thai': '🇹🇭',
+      'chinese': '🇨🇳',
+      'mandarin': '🇨🇳',
+      'japanese': '🇯🇵',
+      'korean': '🇰🇷',
+      'hindi': '🇮🇳',
+      'bengali': '🇧🇩',
+      'português': '🇵🇹',
+    };
+    return map[t] || '';
+  };
+  const languageFlag = (label) => {
+    const t = String(label || '').trim().toLowerCase();
+    const ccMap = {
+      english: 'gb',
+      spanish: 'es',
+      german: 'de',
+      french: 'fr',
+      italian: 'it',
+      portuguese: 'pt',
+      'brazilian portuguese': 'br',
+      dutch: 'nl',
+      polish: 'pl',
+      romanian: 'ro',
+      russian: 'ru',
+      ukrainian: 'ua',
+      turkish: 'tr',
+      arabic: 'sa',
+      filipino: 'ph',
+      tagalog: 'ph',
+      indonesian: 'id',
+      malay: 'my',
+      vietnamese: 'vn',
+      thai: 'th',
+      chinese: 'cn',
+      mandarin: 'cn',
+      japanese: 'jp',
+      korean: 'kr',
+      hindi: 'in',
+      bengali: 'bd',
+    };
+    const cc = ccMap[t];
+    if (!cc) return null;
+    return (
+      <img
+        src={`https://flagcdn.com/16x12/${cc}.png`}
+        alt={`${label} flag`}
+        width={16}
+        height={12}
+        style={{ marginRight: 6, verticalAlign: '-0.15em', borderRadius: 2 }}
+      />
+    );
+  };
   const [listings, setListings] = useState(initialListings);
   const [q, setQ] = useState("");
   const [typedQ, setTypedQ] = useState("");
@@ -390,9 +484,26 @@ export default function ClientShop({ initialListings = [] }) {
                     ${Number(r.hourly_rate ?? 0).toFixed(0)} per hour
                   </div>
                   <div className="skills" style={{marginTop:6}}>
-                    {(r.categories||[]).map((c) => (<span key={`cat-${c}`} className="skill">{c}</span>))}
-                    {(r.languages||[]).map((l) => (<span key={`lang-${l}`} className="skill">{l}</span>))}
-                    {(r.devices||[]).map((d) => (<span key={`dev-${d}`} className="skill">{d}</span>))}
+                    {(r.categories||[]).map((c) => {
+                      const logo = catLogos[c];
+                      return (
+                        <span key={`cat-${c}`} className="skill">
+                          {logo
+                            ? <img src={logo} alt={c} width={14} height={14} style={{ marginRight: 6, verticalAlign: '-0.2em', borderRadius: '50%' }} />
+                            : (chipEmoji(c) ? `${chipEmoji(c)} ` : '')}
+                          {c}
+                        </span>
+                      );
+                    })}
+                    {(r.languages||[]).map((l) => {
+                      const flag = languageFlag(l);
+                      return (
+                        <span key={`lang-${l}`} className="skill">{flag ? <>{flag}{l}</> : (chipEmoji(l) ? `${chipEmoji(l)} ${l}` : l)}</span>
+                      );
+                    })}
+                    {(r.devices||[]).map((d) => (
+                      <span key={`dev-${d}`} className="skill">{chipEmoji(d) ? `${chipEmoji(d)} ${d}` : d}</span>
+                    ))}
                   </div>
                 </div>
                 <div className="listing-meta">

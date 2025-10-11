@@ -111,6 +111,8 @@ export default function ClientShop({ initialListings = [] }) {
   const [listings, setListings] = useState(initialListings);
   const [q, setQ] = useState("");
   const [typedQ, setTypedQ] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [typedPlaceholder, setTypedPlaceholder] = useState("");
   const [age, setAge] = useState("");
   const [sex, setSex] = useState("");
   const [availability, setAvailability] = useState("");
@@ -129,6 +131,49 @@ export default function ClientShop({ initialListings = [] }) {
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
+
+  // Animated placeholder typing/deleting effect (runs only when input empty and not focused)
+  useEffect(() => {
+    const phrase = "Search assistants by role, skills, location...";
+    let t; // timeout id
+    // Shared state for this effect
+    const state = { idx: 0, dir: 1 }; // dir: 1 typing, -1 deleting
+    const step = () => {
+      // If user starts typing or focuses, stop the animation
+      if (isSearchFocused || (typedQ && typedQ.length > 0)) {
+        setTypedPlaceholder("");
+        return;
+      }
+      // Typing forward
+      if (state.dir > 0) {
+        if (state.idx < phrase.length) {
+          state.idx += 1;
+          setTypedPlaceholder(phrase.slice(0, state.idx));
+          t = setTimeout(step, 55);
+        } else {
+          // Hold full phrase, then start deleting
+          t = setTimeout(() => { state.dir = -1; step(); }, 900);
+        }
+      } else {
+        // Deleting backwards
+        if (state.idx > 0) {
+          state.idx -= 1;
+          setTypedPlaceholder(phrase.slice(0, state.idx));
+          t = setTimeout(step, 28);
+        } else {
+          // Small pause before typing again
+          t = setTimeout(() => { state.dir = 1; step(); }, 500);
+        }
+      }
+    };
+    // Start only if empty and not focused
+    if (!isSearchFocused && (!typedQ || typedQ.length === 0)) {
+      t = setTimeout(step, 300);
+    } else {
+      setTypedPlaceholder("");
+    }
+    return () => { if (t) clearTimeout(t); };
+  }, [typedQ, isSearchFocused]);
 
   useEffect(() => {
     let alive = true; let timer;
@@ -300,9 +345,11 @@ export default function ClientShop({ initialListings = [] }) {
                 name="q"
                 className="input"
                 type="text"
-                placeholder="Search assistants by role, skills, location..."
+                placeholder={typedPlaceholder || "Search assistants by role, skills, location..."}
                 value={typedQ}
                 onChange={(e)=>setTypedQ(e.target.value)}
+                onFocus={()=>setIsSearchFocused(true)}
+                onBlur={()=>setIsSearchFocused(false)}
               />
               {typedQ && (
                 <button

@@ -52,9 +52,28 @@ export async function POST(request) {
     const country = body?.country || undefined;
     const region = body?.region || undefined;
     const zip = body?.zip || undefined;
+    const discountCodeRaw = (body?.discountCode || '').trim();
 
     const subtotal = (items || []).reduce((s, it) => s + Number(it.price || 0), 0);
-    const total = subtotal; // no taxes/fees
+
+    // Validate discount code (fixed 10% off) if provided
+    let discount_code = null;
+    let discount_pct = 0;
+    let discount_amount = 0;
+    if (discountCodeRaw) {
+      const code = discountCodeRaw.toUpperCase();
+      const { data: dcode } = await supabase
+        .from('discount_codes')
+        .select('code, discount_pct')
+        .eq('code', code)
+        .maybeSingle();
+      if (dcode?.code) {
+        discount_code = dcode.code;
+        discount_pct = Number(dcode.discount_pct || 0.10);
+        discount_amount = Math.max(0, Math.round(subtotal * discount_pct * 100) / 100);
+      }
+    }
+    const total = Math.max(0, Math.round((subtotal - discount_amount) * 100) / 100);
 
     // Build absolute URLs
     const hdrs = headers();
@@ -93,6 +112,9 @@ export async function POST(request) {
         total,
         fiat_amount_usd: total,
         items: snapshotItems,
+        discount_code: discount_code,
+        discount_pct: discount_pct,
+        discount_amount: discount_amount,
         status: 'pending',
       })
       .select('id')

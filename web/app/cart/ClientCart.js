@@ -9,6 +9,9 @@ export default function ClientCart() {
   const [cartCount, setCartCount] = useState(0);
   const [code, setCode] = useState("");
   const [msg, setMsg] = useState("");
+  const [valid, setValid] = useState(false);
+  const [pct, setPct] = useState(0);
+  const [checking, setChecking] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
 
@@ -21,27 +24,34 @@ export default function ClientCart() {
 
   const avatar = (name) => `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name||'VA')}`;
 
-  const discountFor = (subtotal) => {
-    const codeUp = (code || "").trim().toUpperCase();
-    let pct = 0;
-    if (codeUp === "URZI10" || codeUp === "WELCOME10") pct = 0.10;
-    else if (codeUp === "URZI20") pct = 0.20;
-    const amt = +(subtotal * pct).toFixed(2);
-    return { code: codeUp, amount: amt, pct };
-  };
+  const codeUpper = (code || '').trim().toUpperCase();
 
   const subtotal = useMemo(() => (cart || []).reduce((s, it) => s + Number(it.price || 0), 0), [cart]);
-  const { amount: discAmt } = discountFor(subtotal);
+  const discAmt = valid ? +(subtotal * pct).toFixed(2) : 0;
   const fees = 0;
   const total = Math.max(0, subtotal - discAmt + fees);
 
   const format = (n) => `$${Number(n||0).toFixed(2)}`;
   const formatNeg = (n) => `-$${Number(Math.abs(n)||0).toFixed(2)}`;
 
-  // Load initial code from localStorage
+  // Load initial code from localStorage and validate
   useEffect(() => {
     try { setCode((localStorage.getItem('discount_code') || '').trim()); } catch {}
   }, []);
+  useEffect(() => {
+    const init = async () => {
+      const c = (code || '').trim();
+      if (!c) { setValid(false); setPct(0); return; }
+      try {
+        setChecking(true);
+        const res = await fetch(`/api/discount-codes/validate?code=${encodeURIComponent(c)}`, { cache: 'no-store' });
+        const json = await res.json();
+        if (json?.valid) { setValid(true); setPct(Number(json.pct || 0.10)); }
+        else { setValid(false); setPct(0); }
+      } finally { setChecking(false); }
+    };
+    init();
+  }, [code]);
 
   // Header cart count: hydrate from localStorage, then sync from API
   useEffect(() => {
@@ -96,12 +106,25 @@ export default function ClientCart() {
     }
   };
 
-  const applyDiscount = () => {
-    try { localStorage.setItem('discount_code', (code||'').trim()); } catch {}
-    const { pct } = discountFor(100);
-    if (code && pct > 0) setMsg('Discount applied');
-    else if (code) setMsg('Invalid code');
-    else setMsg('');
+  const applyDiscount = async () => {
+    const c = (code || '').trim();
+    if (!c) { setMsg(''); setValid(false); setPct(0); try { localStorage.removeItem('discount_code'); } catch {} return; }
+    try {
+      setChecking(true);
+      const res = await fetch(`/api/discount-codes/validate?code=${encodeURIComponent(c)}`, { cache: 'no-store' });
+      const json = await res.json();
+      if (json?.valid) {
+        setValid(true);
+        setPct(Number(json.pct || 0.10));
+        setMsg('Discount applied');
+        try { localStorage.setItem('discount_code', c); } catch {}
+      } else {
+        setValid(false);
+        setPct(0);
+        setMsg('Invalid code');
+        try { localStorage.removeItem('discount_code'); } catch {}
+      }
+    } finally { setChecking(false); }
   };
 
   // Build checkout URL using first item
@@ -175,7 +198,10 @@ export default function ClientCart() {
               <h2>Order Summary</h2>
               <div className="price-details">
                 <div className="price-row"><div className="label">Subtotal</div><div className="value">{format(subtotal)}</div></div>
-                <div className="price-row" style={{display: discAmt > 0 ? '' : 'none'}}><div className="label">Discount</div><div className="value">{formatNeg(discAmt)}</div></div>
+                <div className="price-row" style={{display: discAmt > 0 ? '' : 'none'}}>
+                  <div className="label">Discount{discAmt > 0 ? ` (${codeUpper} - ${Math.round((pct||0)*100)}%)` : ''}</div>
+                  <div className="value">{formatNeg(discAmt)}</div>
+                </div>
                 <div className="price-row"><div className="label">Taxes & Fees</div><div className="value">{format(fees)}</div></div>
                 <div className="price-row total"><div className="label">Total</div><div className="value">{format(total)}</div></div>
               </div>
@@ -183,7 +209,7 @@ export default function ClientCart() {
                 <label htmlFor="discountCode" style={{display:'block',fontWeight:600,marginBottom:6,fontSize:14}}>Discount code</label>
                 <div style={{display:'flex',gap:8,alignItems:'center'}}>
                   <input id="discountCode" className="input" placeholder="Enter code" style={{flex:1,minHeight:40}} value={code} onChange={(e)=>setCode(e.target.value)} />
-                  <button className="btn-primary btn-sm" type="button" onClick={applyDiscount}>Apply</button>
+                  <button className="btn-primary btn-sm" type="button" onClick={applyDiscount} disabled={checking}>{checking? '...' : 'Apply'}</button>
                 </div>
                 {msg ? <p className="helper-text" style={{marginTop:6,color: msg==='Discount applied'?'var(--muted)':'var(--accent-2)'}}>{msg}</p> : null}
               </div>

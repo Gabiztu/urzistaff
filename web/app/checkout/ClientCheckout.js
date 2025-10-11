@@ -10,6 +10,9 @@ export default function ClientCheckout() {
 
   const [cart, setCart] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const [code, setCode] = useState("");
+  const [valid, setValid] = useState(false);
+  const [pct, setPct] = useState(0);
 
   // Form state
   const [telegram, setTelegram] = useState("");
@@ -57,6 +60,26 @@ export default function ClientCheckout() {
     };
     load();
   }, []);
+
+  // Load discount code from localStorage and validate
+  useEffect(() => {
+    try { setCode((localStorage.getItem('discount_code') || '').trim()); } catch {}
+  }, []);
+  useEffect(() => {
+    const init = async () => {
+      const c = (code || '').trim();
+      if (!c) { setValid(false); setPct(0); return; }
+      try {
+        const res = await fetch(`/api/discount-codes/validate?code=${encodeURIComponent(c)}`, { cache: 'no-store' });
+        const json = await res.json();
+        if (json?.valid) { setValid(true); setPct(Number(json.pct || 0.10)); }
+        else { setValid(false); setPct(0); }
+      } catch {
+        setValid(false); setPct(0);
+      }
+    };
+    init();
+  }, [code]);
 
   // Mobile menu behaviors
   useEffect(() => {
@@ -109,8 +132,9 @@ export default function ClientCheckout() {
   };
 
   const subtotal = useMemo(() => (cart || []).reduce((s, it) => s + Number(it.price || 0), 0), [cart]);
+  const discAmt = valid ? +(subtotal * pct).toFixed(2) : 0;
   const fees = 0;
-  const total = subtotal + fees;
+  const total = Math.max(0, subtotal - discAmt + fees);
 
   const [orderDate, setOrderDate] = useState("—");
   useEffect(() => { setOrderDate(new Date().toLocaleString()); }, []);
@@ -144,6 +168,7 @@ export default function ClientCheckout() {
         region: region || undefined,
         zip: zip || undefined,
         note: addNote ? (note || "").trim() : undefined,
+        discountCode: valid ? code : undefined,
       };
       const res = await fetch('/api/checkout/nowpayments/create', {
         method: 'POST',
@@ -350,6 +375,7 @@ export default function ClientCheckout() {
               <div className="price-details">
                 <div className="price-row"><div className="label">Order Date</div><div id="orderDate" className="value">{orderDate}</div></div>
                 <div className="price-row"><div className="label">Subtotal</div><div id="subtotalVal" className="value">{format(subtotal)}</div></div>
+                <div className="price-row" style={{display: discAmt > 0 ? '' : 'none'}}><div className="label">Discount</div><div className="value">-{format(discAmt)}</div></div>
                 <div className="price-row"><div className="label">Taxes & Fees</div><div id="feesVal" className="value">{format(fees)}</div></div>
                 <div className="price-row total"><div className="label">Total</div><div id="totalVal" className="value">{format(total)}</div></div>
               </div>

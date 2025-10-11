@@ -22,7 +22,7 @@ export async function GET(req) {
 
     let query = supabase
       .from('orders')
-      .select('id, created_at, paid_at, status, ipn_status, full_name, telegram, address, city, country, region, zip, items')
+      .select('id, created_at, paid_at, status, ipn_status, full_name, telegram, address, city, country, region, zip, items, discount_code, discount_pct, discount_amount')
       .order('created_at', { ascending: false })
       .limit(200);
 

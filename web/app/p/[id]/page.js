@@ -17,6 +17,82 @@ export default function ListingProfile() {
   });
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Icons and emoji helpers to match Shop cards
+  const catLogos = {
+    reddit: "/reddit.png",
+    instagram: "/instagram.png",
+    x: "/x.png",
+    facebook: "/facebook.png",
+    tiktok: "/tiktok.png",
+    threads: "/threads.png",
+    "chat support": "/chat_support.png",
+  };
+  const chipEmoji = (label) => {
+    const t = String(label || '').trim().toLowerCase();
+    const map = {
+      // Skills
+      'chatting': '💬',
+      'chat support': '💬',
+      'customer support': '💬',
+      'copywriting': '✍️',
+      'writing': '✍️',
+      'moderation': '🛡️',
+      'sales': '💼',
+      'marketing': '📈',
+      'data entry': '⌨️',
+      'design': '🎨',
+      'video editing': '🎬',
+
+      // Devices
+      'windows': '🖥️',
+      'macos': '💻',
+      'mac': '💻',
+    };
+    return map[t] || '';
+  };
+  const languageFlag = (label) => {
+    const t = String(label || '').trim().toLowerCase();
+    const ccMap = {
+      english: 'gb',
+      spanish: 'es',
+      german: 'de',
+      french: 'fr',
+      italian: 'it',
+      portuguese: 'pt',
+      'brazilian portuguese': 'br',
+      dutch: 'nl',
+      polish: 'pl',
+      romanian: 'ro',
+      russian: 'ru',
+      ukrainian: 'ua',
+      turkish: 'tr',
+      arabic: 'sa',
+      filipino: 'ph',
+      tagalog: 'ph',
+      indonesian: 'id',
+      malay: 'my',
+      vietnamese: 'vn',
+      thai: 'th',
+      chinese: 'cn',
+      mandarin: 'cn',
+      japanese: 'jp',
+      korean: 'kr',
+      hindi: 'in',
+      bengali: 'bd',
+    };
+    const cc = ccMap[t];
+    if (!cc) return null;
+    return (
+      <img
+        src={`https://flagcdn.com/16x12/${cc}.png`}
+        alt={`${label} flag`}
+        width={16}
+        height={12}
+        style={{ marginRight: 6, verticalAlign: '-0.15em', borderRadius: 2 }}
+      />
+    );
+  };
+
   useEffect(() => {
     const load = async () => {
       console.debug("[ListingProfile] loading id:", id);
@@ -214,7 +290,21 @@ export default function ListingProfile() {
                 <section className="card reveal">
                   <h2 className="section-title">Categories</h2>
                   <ul className="tag-group">
-                    {data.categories.map(cat => <li key={cat} className="tag">{cat}</li>)}
+                    {data.categories.map((cat) => {
+                      const key = String(cat).toLowerCase();
+                      const logo = catLogos[key];
+                      const emoji = chipEmoji(cat);
+                      return (
+                        <li key={cat} className="tag">
+                          {logo ? (
+                            <img src={logo} alt={cat} width={14} height={14} style={{ marginRight: 6, verticalAlign: '-0.2em', borderRadius: '50%' }} />
+                          ) : (
+                            emoji ? <span style={{marginRight:6}}>{emoji}</span> : null
+                          )}
+                          {cat}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </section>
               )}
@@ -235,7 +325,16 @@ export default function ListingProfile() {
                         <div>
                             <h3 style={{margin: '0 0 12px', fontSize: '16px'}}>Languages</h3>
                             <ul className="tag-group">
-                                {data.languages.map(lang => <li key={lang} className="tag">{lang}</li>)}
+                              {data.languages.map((lang) => {
+                                const flag = languageFlag(lang);
+                                const emoji = flag ? null : chipEmoji(lang);
+                                return (
+                                  <li key={lang} className="tag">
+                                    {flag ? flag : (emoji ? <span style={{marginRight:6}}>{emoji}</span> : null)}
+                                    {lang}
+                                  </li>
+                                );
+                              })}
                             </ul>
                         </div>
                     )}
@@ -243,7 +342,15 @@ export default function ListingProfile() {
                         <div>
                             <h3 style={{margin: '0 0 12px', fontSize: '16px'}}>Devices</h3>
                             <ul className="tag-group">
-                                {data.devices.map(dev => <li key={dev} className="tag">{dev}</li>)}
+                              {data.devices.map((dev) => {
+                                const emoji = chipEmoji(dev);
+                                return (
+                                  <li key={dev} className="tag">
+                                    {emoji ? <span style={{marginRight:6}}>{emoji}</span> : null}
+                                    {dev}
+                                  </li>
+                                );
+                              })}
                             </ul>
                         </div>
                     )}

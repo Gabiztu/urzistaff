@@ -116,6 +116,7 @@ export default function AdminClients() {
                     <th>Region</th>
                     <th>ZIP</th>
                     <th>Country</th>
+                    <th>Discount Code</th>
                     <th>Listings</th>
                   </tr>
                 </thead>
@@ -134,6 +135,7 @@ export default function AdminClients() {
                         <td>{r.region || '—'}</td>
                         <td>{r.zip || '—'}</td>
                         <td>{r.country || '—'}</td>
+                        <td>{r.discount_code || '—'}</td>
                         <td style={{minWidth:220}}>{listingNames || '—'}</td>
                       </tr>
                     );
@@ -155,6 +157,7 @@ export default function AdminClients() {
                     <div className="kv"><span className="k">Region</span><span className="v">{r.region || '—'}</span></div>
                     <div className="kv"><span className="k">ZIP</span><span className="v">{r.zip || '—'}</span></div>
                     <div className="kv"><span className="k">Country</span><span className="v">{r.country || '—'}</span></div>
+                    <div className="kv"><span className="k">Discount Code</span><span className="v">{r.discount_code || '—'}</span></div>
                     <div className="kv"><span className="k">Listings</span>
                       <span className="v">
                         {list.length ? (

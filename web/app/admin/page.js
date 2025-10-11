@@ -13,6 +13,9 @@ export default function AdminHome() {
   const [loadingRows, setLoadingRows] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [codes, setCodes] = useState([]);
+  const [codeInput, setCodeInput] = useState("");
+  const [loadingCodes, setLoadingCodes] = useState(false);
 
   const PAGE_SIZE = 10;
   const [page, setPage] = useState(1);
@@ -56,9 +59,61 @@ export default function AdminHome() {
       }
       setReady(true);
       await fetchPage(1);
+      await loadCodes();
     };
     check();
   }, [router]);
+
+  const loadCodes = async () => {
+    try {
+      setLoadingCodes(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch('/api/admin/discount-codes', { headers: { 'x-admin-email': session.user.email }, cache: 'no-store' });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || 'Failed to load codes');
+      setCodes(Array.isArray(json?.codes) ? json.codes : []);
+    } catch (e) {
+      setError(e.message || String(e));
+    } finally {
+      setLoadingCodes(false);
+    }
+  };
+
+  const addCode = async () => {
+    const raw = (codeInput || '').trim();
+    if (!raw) return;
+    const code = raw.toUpperCase();
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/admin/discount-codes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-email': session.user.email },
+        body: JSON.stringify({ code }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || 'Failed to add code');
+      setCodeInput('');
+      await loadCodes();
+    } catch (e) {
+      setError(e.message || String(e));
+    }
+  };
+
+  const deleteCode = async (code) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(`/api/admin/discount-codes?code=${encodeURIComponent(code)}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-email': session.user.email },
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || 'Failed to delete code');
+      await loadCodes();
+    } catch (e) {
+      setError(e.message || String(e));
+    }
+  };
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -147,6 +202,46 @@ export default function AdminHome() {
         {error && <p className="muted" style={{marginTop:-8}}>{error}</p>}
 
         <div className="grid">
+          <section className="card">
+            <div className="section-head" style={{marginBottom:12}}>
+              <h2 style={{margin:0}}>Discount Codes</h2>
+              <span className="muted">Fixed 10% off. No expiry.</span>
+            </div>
+            <div style={{display:'flex', gap:8, marginBottom:12}}>
+              <input value={codeInput} onChange={e=>setCodeInput(e.target.value)} placeholder="NEWCODE10" style={{ padding:'10px 12px', border:'1px solid var(--border)', borderRadius:10, background:'var(--elev)', color:'var(--text)' }} />
+              <button className="btn" onClick={addCode}>Add</button>
+              <button className="btn" onClick={loadCodes} disabled={loadingCodes}>Refresh</button>
+            </div>
+            {loadingCodes ? (
+              <LoadingScreen full={false} label="Loading discount codes" />
+            ) : codes.length === 0 ? (
+              <p className="muted">No codes.</p>
+            ) : (
+              <div className="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Code</th>
+                      <th>Discount</th>
+                      <th>Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {codes.map(c => (
+                      <tr key={c.code}>
+                        <td>{c.code}</td>
+                        <td>{Math.round((Number(c.discount_pct ?? 0.10))*100)}%</td>
+                        <td className="muted">{c.created_at ? new Date(c.created_at).toLocaleString() : '—'}</td>
+                        <td><button className="btn" onClick={()=>deleteCode(c.code)}>Delete</button></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+
           <div className="stat-grid">
             <div className="card stat"><span className="label">Total Listings</span><span className="value">{total}</span></div>
             <div className="card stat"><span className="label">Active</span><span className="value">{active}</span></div>

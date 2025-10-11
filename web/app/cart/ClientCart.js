@@ -198,7 +198,10 @@ export default function ClientCart() {
               <h2>Order Summary</h2>
               <div className="price-details">
                 <div className="price-row"><div className="label">Subtotal</div><div className="value">{format(subtotal)}</div></div>
-                <div className="price-row" style={{display: discAmt > 0 ? '' : 'none'}}><div className="label">Discount</div><div className="value">{formatNeg(discAmt)}</div></div>
+                <div className="price-row" style={{display: discAmt > 0 ? '' : 'none'}}>
+                  <div className="label">Discount{discAmt > 0 ? ` (${codeUpper} - ${Math.round((pct||0)*100)}%)` : ''}</div>
+                  <div className="value">{formatNeg(discAmt)}</div>
+                </div>
                 <div className="price-row"><div className="label">Taxes & Fees</div><div className="value">{format(fees)}</div></div>
                 <div className="price-row total"><div className="label">Total</div><div className="value">{format(total)}</div></div>
               </div>

@@ -14,6 +14,58 @@ export default function ClientShop({ initialListings = [] }) {
     threads: "/threads.png",
     "chat support": "/chat_support.png",
   };
+  const chipEmoji = (label) => {
+    const t = String(label || '').trim().toLowerCase();
+    const map = {
+      // Categories / skills
+      'chatting': '💬',
+      'chat support': '💬',
+      'customer support': '💬',
+      'copywriting': '✍️',
+      'writing': '✍️',
+      'moderation': '🛡️',
+      'sales': '💼',
+      'marketing': '📈',
+      'data entry': '⌨️',
+      'design': '🎨',
+      'video editing': '🎬',
+
+      // Devices
+      'windows': '🖥️',
+      'macos': '💻',
+      'mac': '💻',
+
+      // Languages (common)
+      'english': '🇬🇧',
+      'spanish': '🇪🇸',
+      'german': '🇩🇪',
+      'french': '🇫🇷',
+      'italian': '🇮🇹',
+      'portuguese': '🇵🇹',
+      'brazilian portuguese': '🇧🇷',
+      'dutch': '🇳🇱',
+      'polish': '🇵🇱',
+      'romanian': '🇷🇴',
+      'russian': '🇷🇺',
+      'ukrainian': '🇺🇦',
+      'turkish': '🇹🇷',
+      'arabic': '🇸🇦',
+      'filipino': '🇵🇭',
+      'tagalog': '🇵🇭',
+      'indonesian': '🇮🇩',
+      'malay': '🇲🇾',
+      'vietnamese': '🇻🇳',
+      'thai': '🇹🇭',
+      'chinese': '🇨🇳',
+      'mandarin': '🇨🇳',
+      'japanese': '🇯🇵',
+      'korean': '🇰🇷',
+      'hindi': '🇮🇳',
+      'bengali': '🇧🇩',
+      'português': '🇵🇹',
+    };
+    return map[t] || '';
+  };
   const [listings, setListings] = useState(initialListings);
   const [q, setQ] = useState("");
   const [typedQ, setTypedQ] = useState("");
@@ -390,9 +442,15 @@ export default function ClientShop({ initialListings = [] }) {
                     ${Number(r.hourly_rate ?? 0).toFixed(0)} per hour
                   </div>
                   <div className="skills" style={{marginTop:6}}>
-                    {(r.categories||[]).map((c) => (<span key={`cat-${c}`} className="skill">{c}</span>))}
-                    {(r.languages||[]).map((l) => (<span key={`lang-${l}`} className="skill">{l}</span>))}
-                    {(r.devices||[]).map((d) => (<span key={`dev-${d}`} className="skill">{d}</span>))}
+                    {(r.categories||[]).map((c) => (
+                      <span key={`cat-${c}`} className="skill">{chipEmoji(c) ? `${chipEmoji(c)} ${c}` : c}</span>
+                    ))}
+                    {(r.languages||[]).map((l) => (
+                      <span key={`lang-${l}`} className="skill">{chipEmoji(l) ? `${chipEmoji(l)} ${l}` : l}</span>
+                    ))}
+                    {(r.devices||[]).map((d) => (
+                      <span key={`dev-${d}`} className="skill">{chipEmoji(d) ? `${chipEmoji(d)} ${d}` : d}</span>
+                    ))}
                   </div>
                 </div>
                 <div className="listing-meta">

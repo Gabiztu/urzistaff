@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { buildPersonalizedGuide } from '@/lib/pdf/guide';
+import { sendGuideEmail } from '@/lib/email/brevo';
 
 function verifySignature(rawBody, signature, secret) {
   if (!signature || !secret) return false;
@@ -91,6 +94,45 @@ export async function POST(req) {
           .update({ reserved_by_order: null, reserved_until: null })
           .eq('reserved_by_order', orderId)
           .is('sold_by_order', null);
+      }
+
+      // Send personalized guide email exactly once when paid
+      if (isPaid) {
+        // Atomically claim send by setting sent_at if null
+        const { data: claim } = await supabase
+          .from('orders')
+          .update({ guide_email_sent_at: new Date().toISOString() })
+          .eq('id', orderId)
+          .is('guide_email_sent_at', null)
+          .select('id, email, full_name, items')
+          .maybeSingle();
+
+        if (claim && claim.email) {
+          try {
+            const pdf = await buildPersonalizedGuide({ fullName: claim.full_name, orderId, items: claim.items });
+            const base64 = Buffer.from(pdf).toString('base64');
+            const subject = 'Your UrziStaff Welcome Guide';
+            const html = `<p>Hi ${claim.full_name || ''},</p><p>Thanks for your order. Your personalized guide is attached.</p>`;
+            const { messageId } = await sendGuideEmail({
+              toEmail: claim.email,
+              toName: claim.full_name || undefined,
+              subject,
+              html,
+              attachments: [{ name: 'UrziStaff-Guide.pdf', content: base64, contentType: 'application/pdf' }],
+            });
+            await supabase
+              .from('orders')
+              .update({ guide_email_message_id: messageId || null, guide_email_error: null })
+              .eq('id', orderId);
+          } catch (err) {
+            // Revert sent flag to allow retry on next IPN
+            await supabase
+              .from('orders')
+              .update({ guide_email_sent_at: null, guide_email_error: String(err?.message || err) })
+              .eq('id', orderId)
+              .is('guide_email_message_id', null);
+          }
+        }
       }
     }
 

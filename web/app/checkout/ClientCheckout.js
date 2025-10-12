@@ -16,6 +16,7 @@ export default function ClientCheckout() {
 
   // Form state
   const [telegram, setTelegram] = useState("");
+  const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
   const [country, setCountry] = useState("");
@@ -146,7 +147,7 @@ export default function ClientCheckout() {
         setFormValid(Boolean(formRef.current?.checkValidity()));
       } catch { setFormValid(false); }
     }, 0);
-  }, [telegram, fullName, address, country, region, city, zip, note, addNote]);
+  }, [telegram, email, fullName, address, country, region, city, zip, note, addNote]);
 
   const confirmDisabled = !(cart.length > 0 && formValid);
 
@@ -160,6 +161,7 @@ export default function ClientCheckout() {
     }
     try {
       const payload = {
+        email: (email || '').trim(),
         fullName: fullName || undefined,
         telegram: telegram || undefined,
         address: address || undefined,
@@ -238,6 +240,21 @@ export default function ClientCheckout() {
                 <div className="form-section">
                   <h2>Contact information</h2>
                   <p className="helper-text">We'll use this Telegram username to send you order details and updates.</p>
+                  <div className="form-group" style={{marginTop:10}}>
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="input"
+                      placeholder="you@example.com"
+                      required
+                      autoComplete="email"
+                      inputMode="email"
+                      value={email}
+                      onChange={(e)=>setEmail(e.target.value)}
+                    />
+                  </div>
                   <div className="form-group" style={{marginTop:10}}>
                     <label htmlFor="telegram">Telegram Username</label>
                     <input

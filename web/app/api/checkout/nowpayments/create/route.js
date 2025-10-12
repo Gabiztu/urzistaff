@@ -43,7 +43,7 @@ export async function POST(request) {
     if (qty === 0) return NextResponse.json({ error: 'cart_empty' }, { status: 400 });
 
     const body = await request.json().catch(() => ({}));
-    const email = body?.email || undefined;
+    const email = (body?.email || '').trim() || undefined;
     const telegram = body?.telegram || undefined;
     const note = body?.note || undefined;
     const fullName = body?.fullName || undefined;
@@ -100,6 +100,7 @@ export async function POST(request) {
       .from('orders')
       .insert({
         cart_id: cart.id,
+        email: email || null,
         full_name: fullName || null,
         telegram: telegram || null,
         note: note || null,

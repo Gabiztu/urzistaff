@@ -111,8 +111,38 @@ export async function POST(req) {
           try {
             const pdf = await buildPersonalizedGuide({ fullName: claim.full_name, orderId, items: claim.items });
             const base64 = Buffer.from(pdf).toString('base64');
-            const subject = 'Your UrziStaff Welcome Guide';
-            const html = `<p>Hi ${claim.full_name || ''},</p><p>Thanks for your order. Your personalized guide is attached.</p>`;
+            const itemsArr = Array.isArray(claim.items) ? claim.items : [];
+            const firstItem = itemsArr[0] || null;
+            const clientName = (claim.full_name || (claim.email?.split('@')[0] || '')).trim() || 'there';
+            const vaName = firstItem?.name || '—';
+            const vaTelegram = '—';
+            const vaEmail = '—';
+            const subject = 'Your UrziStaff order';
+            const html = `
+              <div>
+                <p>Hey ${clientName},</p>
+                <p>Your verified UrziStaff Virtual Assistant is officially assigned and ready to start.</p>
+                <p>Below you’ll find everything you need to get started:</p>
+                <p>🔗 <strong>Contact Info</strong><br/>
+                • Name: ${vaName}<br/>
+                • Telegram: ${vaTelegram}<br/>
+                • Email: ${vaEmail}</p>
+                <p>🛡 <strong>Warranty Coverage</strong><br/>
+                If the VA you bought:<br/>
+                • ❌ Doesn’t respond within 72 hours, or<br/>
+                • ❌ Becomes unavailable within the first 2 weeks after hiring,<br/>
+                👉 You’ll be able to choose another VA of the same value — or multiple VAs that match the original value.<br/>
+                We make sure you never lose time or money.</p>
+                <p>📩 <strong>What’s Next?</strong></p>
+                <ol>
+                  <li>Reach out to your VA and introduce your workflow.</li>
+                  <li>Share your main objectives or daily tasks.</li>
+                  <li>If you ever need assistance or a replacement, just message <a href="https://t.me/raegency">@raegency</a> on Telegram.</li>
+                </ol>
+                <p>Welcome to the UrziStaff network — where elite Virtual Assistants power your agency’s growth.</p>
+                <p>—<br/>UrziStaff Team<br/>Staffing Reinvented.<br/><a href="https://www.urzistaff.com">www.urzistaff.com</a></p>
+              </div>
+            `;
             const { messageId } = await sendGuideEmail({
               toEmail: claim.email,
               toName: claim.full_name || undefined,

@@ -138,7 +138,8 @@ export async function POST(request) {
       }
     }
 
-    const res = await fetch('https://api.nowpayments.io/v1/invoice', {
+    const INVOICE_URL = process.env.NOWPAYMENTS_INVOICE_URL || 'https://api.nowpayments.io/v1/invoice';
+    const res = await fetch(INVOICE_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -28,7 +28,7 @@ export default function AdminHome() {
     const to = from + PAGE_SIZE - 1;
     let qb = supabase
       .from("listings")
-      .select("id,name,hourly_rate,is_active,created_at", { count: "exact" })
+      .select("id,name,hourly_rate,is_active,created_at,reserved_until,sold_by_order", { count: "exact" })
       .order("created_at", { ascending: false });
     if (query && query.trim()) qb = qb.ilike("name", `%${query.trim()}%`);
     const { data, count, error } = await qb.range(from, to);
@@ -296,7 +296,15 @@ export default function AdminHome() {
                       <tr key={r.id}>
                         <td>{r.name}</td>
                         <td>${Number(r.hourly_rate ?? 0).toFixed(2)}/hr</td>
-                        <td>{r.is_active ? <span className="badge ok">Active</span> : <span className="badge muted">Inactive</span>}</td>
+                        <td>
+                          {(() => {
+                            const now = new Date();
+                            const reserved = r.reserved_until && new Date(r.reserved_until) > now;
+                            if (r.sold_by_order) return <span className="badge muted">Sold</span>;
+                            if (reserved) return <span className="badge muted">Reserved</span>;
+                            return r.is_active ? <span className="badge ok">Active</span> : <span className="badge muted">Inactive</span>;
+                          })()}
+                        </td>
                         <td className="muted">{new Date(r.created_at).toLocaleString()}</td>
                         <td>
                           <button className="btn" onClick={()=>{ setEditing(r); setShowForm(true); }}>Edit</button>

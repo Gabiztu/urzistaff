@@ -44,6 +44,7 @@ export async function POST() {
       name: it.name ?? null,
       price: Number(it.price || 0) || 0,
     }));
+    const subtotal = (snapshotItems || []).reduce((s, it) => s + Number(it.price || 0), 0);
     const listingIds = snapshotItems.map((it) => it.listing_id).filter(Boolean);
 
     // Reuse existing pending order for this cart if present, otherwise create a minimal pending order
@@ -65,12 +66,21 @@ export async function POST() {
           cart_id: cart.id,
           item_count: qty,
           items: snapshotItems,
+          total: subtotal,
+          fiat_amount_usd: subtotal,
           status: 'pending',
         })
         .select('id')
         .single();
       if (orderErr) return NextResponse.json({ error: orderErr.message }, { status: 400 });
       orderId = order.id;
+    } else {
+      // Ensure required NOT NULL fields are populated on existing pending orders
+      const { error: updErr } = await supabase
+        .from('orders')
+        .update({ item_count: qty, items: snapshotItems, total: subtotal, fiat_amount_usd: subtotal })
+        .eq('id', orderId);
+      if (updErr) return NextResponse.json({ error: updErr.message }, { status: 400 });
     }
 
     // Check listing availability vs this order

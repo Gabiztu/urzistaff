@@ -158,9 +158,20 @@ export async function POST(req) {
             const itemsArr = Array.isArray(claim.items) ? claim.items : [];
             const firstItem = itemsArr[0] || null;
             const clientName = (claim.full_name || (claim.email?.split('@')[0] || '')).trim() || 'there';
-            const vaName = firstItem?.name || '—';
-            const vaTelegram = '—';
-            const vaEmail = '—';
+            // Load VA contact from the primary listing (admin-only fields)
+            let vaName = firstItem?.name || '—';
+            let vaTelegram = '—';
+            let vaEmail = '—';
+            if (Array.isArray(listingIds) && listingIds.length > 0) {
+              const { data: mainListing } = await supabase
+                .from('listings')
+                .select('name, va_email, va_telegram')
+                .eq('id', listingIds[0])
+                .maybeSingle();
+              vaName = mainListing?.name || vaName;
+              vaTelegram = mainListing?.va_telegram || '—';
+              vaEmail = mainListing?.va_email || '—';
+            }
             const subject = 'Your UrziStaff order';
             const html = `
               <div>

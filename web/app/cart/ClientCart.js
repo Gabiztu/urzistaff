@@ -129,6 +129,22 @@ export default function ClientCart() {
 
   // Build checkout URL using first item
   const checkoutHref = useMemo(() => (cart.length > 0 ? '/checkout' : undefined), [cart.length]);
+  const [reserving, setReserving] = useState(false);
+  const goCheckout = async (e) => {
+    e.preventDefault();
+    if (!checkoutHref || reserving) return;
+    try {
+      setReserving(true);
+      const res = await fetch('/api/checkout/reserve', { method: 'POST' });
+      const json = await res.json().catch(()=>({}));
+      if (!res.ok) throw new Error(json?.error || 'Failed to reserve');
+      window.location.href = checkoutHref;
+    } catch (err) {
+      alert((err && err.message) || 'Items became unavailable. Please refresh your cart.');
+    } finally {
+      setReserving(false);
+    }
+  };
 
   return (
     <>
@@ -214,7 +230,7 @@ export default function ClientCart() {
                 {msg ? <p className="helper-text" style={{marginTop:6,color: msg==='Discount applied'?'var(--muted)':'var(--accent-2)'}}>{msg}</p> : null}
               </div>
               {checkoutHref ? (
-                <a className="btn-primary" href={checkoutHref} style={{marginTop:32}} aria-disabled="false">Proceed to Checkout</a>
+                <a className="btn-primary" href={checkoutHref} onClick={goCheckout} style={{marginTop:32}} aria-disabled={reserving?"true":undefined}>{reserving? 'Reserving…' : 'Proceed to Checkout'}</a>
               ) : (
                 <a className="btn-primary" style={{marginTop:32}} aria-disabled="true">Proceed to Checkout</a>
               )}

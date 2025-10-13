@@ -45,7 +45,7 @@ export default function AdminLogin() {
       return;
     }
     try { await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ stage:'report', email, success:true }) }); } catch {}
-    router.push("/admin");
+    router.push("/admin-9f7a3c2e4b1d");
   };
 
   return (

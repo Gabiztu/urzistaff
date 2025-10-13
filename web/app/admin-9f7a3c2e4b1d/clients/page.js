@@ -14,12 +14,12 @@ export default function AdminClients() {
   useEffect(() => {
     const load = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { router.replace("/admin/login"); return; }
+      if (!session) { router.replace("/admin-9f7a3c2e4b1d/login"); return; }
       const { data: profile } = await supabase.from("profiles").select("role").single();
       if (profile?.role !== "admin") {
         setError("Not an admin. Redirecting...");
         await supabase.auth.signOut();
-        router.replace("/admin/login");
+        router.replace("/admin-9f7a3c2e4b1d/login");
         return;
       }
       setReady(true);
@@ -39,7 +39,7 @@ export default function AdminClients() {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.replace("/admin/login");
+    router.replace("/admin-9f7a3c2e4b1d/login");
   };
 
   if (!ready) { return <LoadingScreen label="Loading admin" />; }
@@ -90,7 +90,7 @@ export default function AdminClients() {
             <h1>Clients</h1>
           </div>
           <div className="actions">
-            <a className="btn" href="/admin">← Back</a>
+            <a className="btn" href="/admin-9f7a3c2e4b1d">← Back</a>
             <button className="btn btn-primary" onClick={signOut}>Sign out</button>
           </div>
         </div>

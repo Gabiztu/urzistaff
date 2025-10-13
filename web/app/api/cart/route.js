@@ -35,7 +35,7 @@ async function createCartWithToken(token) {
 
 export async function GET() {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get(CART_COOKIE)?.value;
     if (!token) return NextResponse.json({ cart: null }, { status: 200 });
     const { data, error } = await getCartByToken(token);
@@ -58,7 +58,7 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     let token = cookieStore.get(CART_COOKIE)?.value;
 
     // If no existing cart, create one

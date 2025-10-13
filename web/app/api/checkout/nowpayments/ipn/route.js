@@ -7,10 +7,46 @@ import { sendGuideEmail } from '@/lib/email/brevo';
 
 function verifySignature(rawBody, signature, secret) {
   if (!signature || !secret) return false;
+  const normalized = String(signature).trim().toLowerCase().replace(/^sha512=/, '');
   const hmac = crypto.createHmac('sha512', secret);
   hmac.update(rawBody, 'utf8');
   const digest = hmac.digest('hex');
-  return digest.toLowerCase() === signature.toLowerCase();
+  return digest.toLowerCase() === normalized;
+}
+
+function parsePayloadFlexible(raw, contentType) {
+  let payload = {};
+  if (!raw) return payload;
+  const ct = String(contentType || '').toLowerCase();
+  // Try JSON first if content-type says json or body looks like JSON
+  if (ct.includes('application/json') || raw.trim().startsWith('{') || raw.trim().startsWith('[')) {
+    try { return JSON.parse(raw); } catch { /* fall through */ }
+  }
+  // Try URL-encoded (NOWPayments may send form)
+  if (ct.includes('application/x-www-form-urlencoded') || (raw.includes('=') && !raw.trim().startsWith('{'))) {
+    try {
+      const params = new URLSearchParams(raw);
+      params.forEach((v, k) => { payload[k] = v; });
+      return payload;
+    } catch { /* fall through */ }
+  }
+  // Fallback: very permissive parser for bodies like {order_id:xxx,payment_status:paid}
+  try {
+    const inner = raw.trim().replace(/^\{/, '').replace(/\}$/, '');
+    if (inner.includes(':')) {
+      const obj = {};
+      inner.split(',').forEach((pair) => {
+        const idx = pair.indexOf(':');
+        if (idx > -1) {
+          const k = pair.slice(0, idx).trim().replace(/^"|"$/g, '');
+          const v = pair.slice(idx + 1).trim().replace(/^"|"$/g, '');
+          obj[k] = v;
+        }
+      });
+      return obj;
+    }
+  } catch { /* ignore */ }
+  return payload;
 }
 
 export async function POST(req) {
@@ -19,11 +55,13 @@ export async function POST(req) {
     const sig = req.headers.get('x-nowpayments-sig');
     const raw = await req.text();
     const ok = verifySignature(raw, sig, secret || '');
-    if (!ok) return NextResponse.json({ ok: false, error: 'invalid_signature' }, { status: 400 });
+    if (!ok) {
+      return NextResponse.json({ ok: false, error: 'invalid_signature' }, { status: 400 });
+    }
 
     // Parse and persist order/payment status
-    let payload = {};
-    try { payload = JSON.parse(raw); } catch {}
+    const contentType = req.headers.get('content-type') || '';
+    const payload = parsePayloadFlexible(raw, contentType);
 
     const orderId = payload?.order_id || payload?.orderId || null;
     const paymentStatus = String(payload?.payment_status || payload?.status || '').toLowerCase();
@@ -40,7 +78,7 @@ export async function POST(req) {
       );
 
       // Load listing ids from order snapshot
-      const { data: orderRow } = await supabase
+      const { data: orderRow, error: orderFetchErr } = await supabase
         .from('orders')
         .select('id, items')
         .eq('id', orderId)
@@ -57,24 +95,27 @@ export async function POST(req) {
       } else if (failStatuses.has(paymentStatus)) {
         update.status = 'failed';
       }
-      await supabase
+      const { error: orderUpdateErr } = await supabase
         .from('orders')
         .update(update)
         .eq('id', orderId);
 
       // Extend hold if tx is in-flight
+      let extendErr = null;
       if (listingIds.length && extendStatuses.has(paymentStatus)) {
         const EXTEND_MIN = Number.parseInt(process.env.RESERVE_EXTEND_MINUTES || '20', 10);
-        await supabase.rpc('extend_hold', {
+        const { error } = await supabase.rpc('extend_hold', {
           p_order: orderId,
           p_listing_ids: listingIds,
           p_extend_minutes: EXTEND_MIN,
         });
+        extendErr = error || null;
       }
 
       // On paid: mark as sold and make permanently unavailable
+      let soldErr = null;
       if (listingIds.length && isPaid) {
-        await supabase
+        const { error } = await supabase
           .from('listings')
           .update({
             sold_by_order: orderId,
@@ -85,21 +126,24 @@ export async function POST(req) {
           })
           .in('id', listingIds)
           .is('sold_by_order', null);
+        soldErr = error || null;
       }
 
       // On failure: release holds
+      let releaseErr = null;
       if (failStatuses.has(paymentStatus)) {
-        await supabase
+        const { error } = await supabase
           .from('listings')
           .update({ reserved_by_order: null, reserved_until: null })
           .eq('reserved_by_order', orderId)
           .is('sold_by_order', null);
+        releaseErr = error || null;
       }
 
       // Send personalized guide email exactly once when paid
       if (isPaid) {
         // Atomically claim send by setting sent_at if null
-        const { data: claim } = await supabase
+        const { data: claim, error: claimErr } = await supabase
           .from('orders')
           .update({ guide_email_sent_at: new Date().toISOString() })
           .eq('id', orderId)
@@ -150,19 +194,20 @@ export async function POST(req) {
               html,
               attachments: [{ name: 'UrziStaff-Guide.pdf', content: base64, contentType: 'application/pdf' }],
             });
-            await supabase
+            const { error: emailSaveErr } = await supabase
               .from('orders')
               .update({ guide_email_message_id: messageId || null, guide_email_error: null })
               .eq('id', orderId);
           } catch (err) {
             // Revert sent flag to allow retry on next IPN
-            await supabase
+            const { error: emailRevertErr } = await supabase
               .from('orders')
               .update({ guide_email_sent_at: null, guide_email_error: String(err?.message || err) })
               .eq('id', orderId)
               .is('guide_email_message_id', null);
           }
         }
+        // no debug response in production
       }
     }
 

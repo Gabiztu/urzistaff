@@ -120,10 +120,31 @@ export default function AdminHome() {
     router.replace("/admin/login");
   };
 
+  const reactivateListing = async (id) => {
+    try {
+      setError("");
+      const { error } = await supabase
+        .from('listings')
+        .update({
+          is_active: true,
+          sold_by_order: null,
+          sold_at: null,
+          reserved_by_order: null,
+          reserved_until: null,
+        })
+        .eq('id', id);
+      if (error) throw error;
+      await fetchPage(page);
+    } catch (e) {
+      setError(e.message || String(e));
+    }
+  };
+
   if (!ready) { return <LoadingScreen label="Loading admin" />; }
 
   const total = totalCount;
-  const active = rows.filter(r => r.is_active).length;
+  const now = new Date();
+  const active = rows.filter(r => r.is_active && !r.sold_by_order && !(r.reserved_until && new Date(r.reserved_until) > now)).length;
   const inactive = total - active;
 
   return (
@@ -307,7 +328,12 @@ export default function AdminHome() {
                         </td>
                         <td className="muted">{new Date(r.created_at).toLocaleString()}</td>
                         <td>
-                          <button className="btn" onClick={()=>{ setEditing(r); setShowForm(true); }}>Edit</button>
+                          <div style={{display:'flex', gap:8, flexWrap:'wrap'}}>
+                            <button className="btn" onClick={()=>{ setEditing(r); setShowForm(true); }}>Edit</button>
+                            {r.sold_by_order && (
+                              <button className="btn" onClick={()=>reactivateListing(r.id)}>Reactivate</button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}

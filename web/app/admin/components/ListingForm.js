@@ -23,25 +23,44 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (initial) {
-      setForm({
-        name: initial.name || "",
-        headline: initial.headline || "",
-        description: initial.description || "",
-        categories: initial.categories || [], // Keep as array
-        languages: initial.languages || [], // Keep as array
-        skills: (initial.skills || []).join(", "),
-        age_range: initial.age_range || "",
-        sex: initial.sex || "",
-        devices: initial.devices || [], // Keep as array
-        availability: initial.availability || "",
-        location: initial.location || "",
-        hourly_rate: Number(initial.hourly_rate || 0),
-        purchase_price: Number(initial.purchase_price || 99),
-        is_active: Boolean(initial.is_active ?? true),
-      });
-    }
-  }, [initial]);
+    let cancelled = false;
+    const load = async () => {
+      if (!initial) return;
+      // If we only have a partial row, fetch full details by id
+      if (initial?.id) {
+        const { data, error } = await supabase
+          .from('listings')
+          .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,purchase_price,is_active')
+          .eq('id', initial.id)
+          .single();
+        const src = data || initial;
+        if (!cancelled) {
+          setForm({
+            name: src.name || "",
+            headline: src.headline || "",
+            description: src.description || "",
+            categories: src.categories || [],
+            languages: src.languages || [],
+            skills: Array.isArray(src.skills) ? src.skills.join(", ") : (src.skills || ""),
+            age_range: src.age_range || "",
+            sex: src.sex || "",
+            devices: src.devices || [],
+            availability: src.availability || "",
+            location: src.location || "",
+            hourly_rate: Number(src.hourly_rate || 0),
+            purchase_price: Number(src.purchase_price || 99),
+            is_active: Boolean(src.is_active ?? true),
+          });
+        }
+      } else {
+        if (!cancelled) {
+          setForm((f)=>({ ...f }));
+        }
+      }
+    };
+    load();
+    return () => { cancelled = true; };
+  }, [initial?.id]);
 
   const toArray = (s) =>
     String(s || "")

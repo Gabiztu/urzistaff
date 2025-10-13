@@ -23,7 +23,7 @@ export async function POST(request) {
   try {
     const { listing_id, name, headline } = await request.json();
     if (!listing_id) return NextResponse.json({ error: 'listing_id required' }, { status: 400 });
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get(CART_COOKIE)?.value;
     const { data: cart } = await getCartByToken(token);
     if (!cart) return NextResponse.json({ error: 'cart_not_found' }, { status: 404 });
@@ -79,7 +79,8 @@ export async function DELETE(request) {
     const { searchParams } = new URL(request.url);
     const listing_id = searchParams.get('listing_id');
     if (!listing_id) return NextResponse.json({ error: 'listing_id required' }, { status: 400 });
-    const token = cookies().get(CART_COOKIE)?.value;
+    const store = await cookies();
+    const token = store.get(CART_COOKIE)?.value;
     const { data: cart } = await getCartByToken(token);
     if (!cart) return NextResponse.json({ error: 'cart_not_found' }, { status: 404 });
     const { error } = await supabase

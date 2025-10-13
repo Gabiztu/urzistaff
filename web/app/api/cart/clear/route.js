@@ -21,7 +21,8 @@ async function getCartByToken(token) {
 
 export async function POST() {
   try {
-    const token = cookies().get(CART_COOKIE)?.value;
+    const store = await cookies();
+    const token = store.get(CART_COOKIE)?.value;
     const { data: cart } = await getCartByToken(token);
     if (!cart) return NextResponse.json({ ok: true }); // Nothing to clear
 

@@ -17,6 +17,8 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
     location: "",
     hourly_rate: 0,
     purchase_price: 99,
+    va_email: "",
+    va_telegram: "",
     is_active: true,
   }));
   const [saving, setSaving] = useState(false);
@@ -30,7 +32,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       if (initial?.id) {
         const { data, error } = await supabase
           .from('listings')
-          .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,purchase_price,is_active')
+          .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,purchase_price,va_email,va_telegram,is_active')
           .eq('id', initial.id)
           .single();
         const src = data || initial;
@@ -49,6 +51,8 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
             location: src.location || "",
             hourly_rate: Number(src.hourly_rate || 0),
             purchase_price: Number(src.purchase_price || 99),
+            va_email: src.va_email || "",
+            va_telegram: src.va_telegram || "",
             is_active: Boolean(src.is_active ?? true),
           });
         }
@@ -91,6 +95,8 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       location: form.location || null,
       hourly_rate: Number(form.hourly_rate || 0),
       purchase_price: Number(form.purchase_price || 99),
+      va_email: (form.va_email || null),
+      va_telegram: (form.va_telegram || null),
       is_active: !!form.is_active,
     };
     try {
@@ -367,6 +373,16 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
           <option>Egypt</option>
           <option>United Arab Emirates</option>
         </select>
+      </div>
+      
+      {/* VA Contact (admin-only, not public) */}
+      <div style={{...row, marginTop: 4}}>
+        <label style={lbl}>VA Contact (admin only; not public)</label>
+        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8}}>
+          <input style={inp} type="email" placeholder="VA Email" value={form.va_email} onChange={(e)=>set("va_email", e.target.value)} />
+          <input style={inp} type="text" placeholder="VA Telegram (e.g. @username)" value={form.va_telegram} onChange={(e)=>set("va_telegram", e.target.value)} />
+        </div>
+        <div className="muted" style={{fontSize:12}}>These fields are stored with the listing and used only in client emails. They are not shown publicly.</div>
       </div>
       <div style={row}><label style={lbl}>Hourly rate ($/hr)</label><input style={inp} type="number" min="0" step="0.01" value={form.hourly_rate} onChange={(e)=>set("hourly_rate", e.target.value)} required /></div>
       <div style={row}>

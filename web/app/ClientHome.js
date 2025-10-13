@@ -258,9 +258,8 @@ export default function ClientHome() {
           <section className="cta-section" id="contact">
             <div className="container">
               <h2 className="reveal">Ready to reclaim your time?</h2>
-              <p className="reveal">We only accept a limited number of new clients each month to ensure quality.</p>
               <div className="reveal">
-                <a href="https://t.me/raegency" target="_blank" rel="noopener noreferrer" className="btn btn-primary">Write @raegency to get your VAs today</a>
+                <a href="https://t.me/raegency" target="_blank" rel="noopener noreferrer" className="btn btn-primary">Write @raegency(Telegram) to get your VAs today</a>
               </div>
             </div>
           </section>

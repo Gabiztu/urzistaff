@@ -43,7 +43,7 @@ export async function POST(request) {
     if (qty === 0) return NextResponse.json({ error: 'cart_empty' }, { status: 400 });
 
     const body = await request.json().catch(() => ({}));
-    const email = body?.email || undefined;
+    const email = (body?.email || '').trim() || undefined;
     const telegram = body?.telegram || undefined;
     const note = body?.note || undefined;
     const fullName = body?.fullName || undefined;
@@ -100,6 +100,7 @@ export async function POST(request) {
       .from('orders')
       .insert({
         cart_id: cart.id,
+        email: email || null,
         full_name: fullName || null,
         telegram: telegram || null,
         note: note || null,
@@ -121,7 +122,24 @@ export async function POST(request) {
       .single();
     if (orderErr) return NextResponse.json({ error: orderErr.message }, { status: 400 });
 
-    const res = await fetch('https://api.nowpayments.io/v1/invoice', {
+    // Reserve all listings atomically for this order (hold ~10 minutes by default)
+    const HOLD_MINUTES = Number.parseInt(process.env.RESERVE_HOLD_MINUTES || '10', 10);
+    const listingIds = snapshotItems.map((it) => it.listing_id).filter(Boolean);
+    if (listingIds.length > 0) {
+      const { error: reserveErr } = await supabase.rpc('reserve_listings', {
+        p_order: order.id,
+        p_listing_ids: listingIds,
+        p_hold_minutes: HOLD_MINUTES,
+      });
+      if (reserveErr) {
+        // Clean up the created order and fail with conflict
+        await supabase.from('orders').delete().eq('id', order.id);
+        return NextResponse.json({ error: 'items_unavailable' }, { status: 409 });
+      }
+    }
+
+    const INVOICE_URL = process.env.NOWPAYMENTS_INVOICE_URL || 'https://api.nowpayments.io/v1/invoice';
+    const res = await fetch(INVOICE_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

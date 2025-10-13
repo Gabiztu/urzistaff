@@ -15,12 +15,13 @@ export async function GET(_req, context) {
 
     const { data, error } = await supabase
       .from('listings')
-      .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,rating,reviews_count,is_active,created_at')
+      .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,rating,reviews_count,is_active,created_at,reserved_until,sold_by_order')
       .eq('id', id)
       .single();
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-    if (!data || data.is_active === false) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    // Not found if explicitly inactive or sold. Reserved stays visible but disabled on UI.
+    if (!data || data.is_active === false || data.sold_by_order) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
     return NextResponse.json({ data }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (e) {

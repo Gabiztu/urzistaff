@@ -15,14 +15,20 @@ export async function GET(request) {
 
     let query = supabase
       .from('listings')
-      .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,purchase_price,rating,reviews_count,is_active,created_at');
+      .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,purchase_price,rating,reviews_count,is_active,created_at,reserved_until,sold_by_order');
 
     if (id) {
       // For a direct profile view, allow fetching by id regardless of is_active status
       query = query.eq('id', id).limit(1);
     } else {
-      // Shop view shows only active listings
-      query = query.eq('is_active', true).order('created_at', { ascending: false }).limit(limit);
+      // Shop view shows only active and not-reserved/sold listings
+      const nowIso = new Date().toISOString();
+      query = query
+        .eq('is_active', true)
+        .is('sold_by_order', null)
+        .or(`reserved_until.is.null,reserved_until.lte.${nowIso}`)
+        .order('created_at', { ascending: false })
+        .limit(limit);
     }
 
     const { data, error } = await query;

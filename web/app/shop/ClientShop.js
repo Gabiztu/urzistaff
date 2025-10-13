@@ -122,6 +122,7 @@ export default function ClientShop({ initialListings = [] }) {
   const [maxRate, setMaxRate] = useState(10);
   const [selectedCats, setSelectedCats] = useState(new Set());
   const [cartCount, setCartCount] = useState(null);
+  const [inCart, setInCart] = useState(new Set());
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -213,8 +214,10 @@ export default function ClientShop({ initialListings = [] }) {
       try {
         const res = await fetch('/api/cart', { cache: 'no-store' });
         const json = await res.json();
-        const n = Array.isArray(json?.cart?.items) ? json.cart.items.length : 0;
+        const items = Array.isArray(json?.cart?.items) ? json.cart.items : [];
+        const n = items.length;
         setCartCount(n);
+        setInCart(new Set(items.map((it) => String(it.listing_id))));
         try { localStorage.setItem('cart_count', String(n)); } catch {}
       } catch {}
     };
@@ -275,8 +278,10 @@ export default function ClientShop({ initialListings = [] }) {
       await fetch('/api/cart/items', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ listing_id:item.id, name:item.name, headline:item.headline||'' }) });
       const res = await fetch('/api/cart', { cache: 'no-store' });
       const json = await res.json();
-      const n = Array.isArray(json?.cart?.items) ? json.cart.items.length : 0;
+      const items = Array.isArray(json?.cart?.items) ? json.cart.items : [];
+      const n = items.length;
       setCartCount(n);
+      setInCart(new Set(items.map((it) => String(it.listing_id))));
       try { localStorage.setItem('cart_count', String(n)); } catch {}
     } catch {}
   }, []);
@@ -555,7 +560,16 @@ export default function ClientShop({ initialListings = [] }) {
                 </div>
                 <div className="listing-meta">
                   <div className="price">${Number(r.purchase_price ?? 99).toFixed(0)}</div>
-                  <button className="btn-primary" type="button" style={{position:'relative', zIndex:6}} onClick={(e)=>{e.preventDefault(); e.stopPropagation(); addToCart(r);}}>Add to Cart</button>
+                  <button
+                    className="btn-primary"
+                    type="button"
+                    style={{position:'relative', zIndex:6}}
+                    disabled={inCart.has(String(r.id))}
+                    aria-disabled={inCart.has(String(r.id)) ? 'true' : 'false'}
+                    onClick={(e)=>{e.preventDefault(); e.stopPropagation(); if (!inCart.has(String(r.id))) addToCart(r); }}
+                  >
+                    {inCart.has(String(r.id)) ? 'Added to Cart' : 'Add to Cart'}
+                  </button>
                 </div>
               </article>
             ))}

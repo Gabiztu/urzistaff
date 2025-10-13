@@ -16,6 +16,7 @@ export default function ListingProfile() {
     return null;
   });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [added, setAdded] = useState(false);
 
   // Icons and emoji helpers to match Shop cards
   const catLogos = {
@@ -124,7 +125,27 @@ export default function ListingProfile() {
     if (id) load();
   }, [id]);
 
+  // Check if this listing is already in cart to persist "Added to Cart"
+  useEffect(() => {
+    const check = async () => {
+      try {
+        if (!id) return;
+        const res = await fetch('/api/cart', { cache: 'no-store' });
+        const json = await res.json();
+        const items = Array.isArray(json?.cart?.items) ? json.cart.items : [];
+        const has = items.some((it) => String(it.listing_id) === String(id));
+        setAdded(has);
+        const n = items.length;
+        setCartCount(n);
+        try { window.localStorage?.setItem('cart_count', String(n)); } catch {}
+      } catch {}
+    };
+    check();
+  }, [id]);
+
   const handleAddToCart = async () => {
+    if (added) return; // prevent multiple adds when already in cart
+    if (!availableNow) return; // align behavior with /shop
     try {
       await fetch('/api/cart', { method: 'POST' });
       await fetch('/api/cart/items', {
@@ -137,12 +158,20 @@ export default function ListingProfile() {
       const n = Array.isArray(json?.cart?.items) ? json.cart.items.length : 0;
       setCartCount(n);
       try { window.localStorage?.setItem('cart_count', String(n)); } catch {}
+      setAdded(true);
     } catch (e) {
       console.error("Failed to add to cart:", e);
     }
   };
 
-  const availableNow = data?.is_active;
+  const availableNow = (() => {
+    if (!data?.is_active) return false;
+    if (data?.sold_by_order) return false;
+    if (data?.reserved_until) {
+      try { if (new Date(data.reserved_until) > new Date()) return false; } catch {}
+    }
+    return true;
+  })();
   const displayRate = typeof data?.hourly_rate === 'number' ? data.hourly_rate : null;
 
   if (loading) return <main style={{padding:24}}><p>Loading profile...</p></main>;
@@ -369,8 +398,8 @@ export default function ListingProfile() {
                 {displayRate != null && (
                   <div className="price">${displayRate}<span style={{fontSize: '16px', color: 'var(--muted)'}}>/hr</span></div>
                 )}
-                <button className="btn btn-primary" onClick={handleAddToCart} disabled={!availableNow}>
-                  {availableNow ? 'Add to Cart' : 'Currently Unavailable'}
+                <button className="btn btn-primary" type="button" onClick={handleAddToCart} disabled={!availableNow || added} aria-disabled={!availableNow || added ? 'true' : 'false'}>
+                  {availableNow ? (added ? 'Added to Cart' : 'Add to Cart') : 'Currently Unavailable'}
                 </button>
               </div>
             </aside>

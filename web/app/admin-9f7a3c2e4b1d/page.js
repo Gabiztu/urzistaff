@@ -47,14 +47,14 @@ export default function AdminHome() {
     const check = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        router.replace("/admin/login");
+        router.replace("/admin-9f7a3c2e4b1d/login");
         return;
       }
       const { data: profile } = await supabase.from("profiles").select("role").single();
       if (profile?.role !== "admin") {
         setError("Not an admin. Redirecting...");
         await supabase.auth.signOut();
-        router.replace("/admin/login");
+        router.replace("/admin-9f7a3c2e4b1d/login");
         return;
       }
       setReady(true);
@@ -117,7 +117,7 @@ export default function AdminHome() {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.replace("/admin/login");
+    router.replace("/admin-9f7a3c2e4b1d/login");
   };
 
   const reactivateListing = async (id) => {
@@ -214,7 +214,7 @@ export default function AdminHome() {
             <h1>Urzistaff Admin</h1>
           </div>
           <div className="actions">
-            <a className="btn" href="/admin/clients">Clients</a>
+            <a className="btn" href="/admin-9f7a3c2e4b1d/clients">Clients</a>
             <button className="btn" onClick={()=>{ setEditing(null); setShowForm(true); }}>New Listing</button>
             <button className="btn btn-primary" onClick={signOut}>Sign out</button>
           </div>

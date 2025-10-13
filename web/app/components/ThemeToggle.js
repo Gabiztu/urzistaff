@@ -25,7 +25,7 @@ export default function ThemeToggle() {
     setTheme(next);
   };
 
-  const isAdminSection = typeof pathname === 'string' && pathname.startsWith('/admin');
+  const isAdminSection = typeof pathname === 'string' && /^\/admin(?:-|$)/.test(pathname);
   const isCheckoutButtonOnly = typeof pathname === 'string' && (pathname === '/checkout/cancel' || pathname === '/checkout/success');
 
   if (isAdminSection || isCheckoutButtonOnly) {

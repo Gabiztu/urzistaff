@@ -43,6 +43,7 @@ export default function SuccessPage(){
         </div>
         <h1 className="ck-title">Payment successful</h1>
         <p className="ck-text">Thank you! Your payment was received. A confirmation will be sent shortly.</p>
+        <p className="ck-text" style={{marginTop:6,fontStyle:'italic'}}>If you can't find our email in your Inbox, please check your Spam/Junk folder.</p>
         <div className="ck-status">
           {status === 'clearing' && (<span style={{color:'var(--muted)'}}>Finalizing your order… clearing the cart.</span>)}
           {status === 'cleared' && (<span style={{color:'var(--muted)'}}>Your cart has been cleared.</span>)}

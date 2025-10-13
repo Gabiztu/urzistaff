@@ -20,8 +20,8 @@ function keyFor(ip, email) {
   return `${ip || 'unknown'}:${(email || '').toLowerCase()}`;
 }
 
-function getIp() {
-  const h = headers();
+async function getIp() {
+  const h = await headers();
   const xff = h.get('x-forwarded-for');
   if (xff) return xff.split(',')[0].trim();
   return h.get('x-real-ip') || 'local';
@@ -82,7 +82,7 @@ async function alertLockout(ip, email, count, backoffMs) {
 export async function POST(req) {
   try {
     const { stage = 'precheck', email = '', totpCode = '' } = await req.json().catch(() => ({}));
-    const ip = getIp();
+    const ip = await getIp();
     const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase();
 
     if (!adminEmail) {

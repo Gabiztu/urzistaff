@@ -10,7 +10,7 @@ const supabase = createClient(
 export async function GET(req) {
   try {
     const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase();
-    const h = headers();
+    const h = await headers();
     const reqEmail = (h.get('x-admin-email') || '').toLowerCase();
     if (adminEmail && reqEmail !== adminEmail) {
       return NextResponse.json({ error: 'forbidden' }, { status: 403 });

@@ -7,16 +7,16 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-function isAdmin() {
+async function isAdmin() {
   const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase();
-  const h = headers();
+  const h = await headers();
   const reqEmail = (h.get('x-admin-email') || '').toLowerCase();
   return !adminEmail || (reqEmail && reqEmail === adminEmail);
 }
 
 export async function GET() {
   try {
-    if (!isAdmin()) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+    if (!(await isAdmin())) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
     const { data, error } = await supabase
       .from('discount_codes')
       .select('code, discount_pct, created_at')
@@ -31,7 +31,7 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    if (!isAdmin()) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+    if (!(await isAdmin())) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
     const body = await request.json().catch(() => ({}));
     let code = String(body?.code || '').trim();
     if (!code) return NextResponse.json({ error: 'code_required' }, { status: 400 });
@@ -53,7 +53,7 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   try {
-    if (!isAdmin()) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+    if (!(await isAdmin())) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
     const url = new URL(request.url);
     let code = url.searchParams.get('code') || '';
     if (!code) {

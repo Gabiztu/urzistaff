@@ -1,5 +1,21 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
+// pdf-lib StandardFonts use WinAnsi encoding and cannot render certain Unicode
+// characters (e.g. Romanian ş/ţ with comma below U+0219/U+021B). Sanitize
+// strings by mapping known problem code points and stripping diacritics.
+function sanitizeText(s) {
+  const str = String(s ?? '');
+  const map = {
+    '\u0219': 's', // ș
+    '\u0218': 'S', // Ș
+    '\u021B': 't', // ț
+    '\u021A': 'T', // Ț
+  };
+  const replaced = str.replace(/[\u0219\u0218\u021B\u021A]/g, (ch) => map[ch] || ch);
+  // Remove other diacritics by decomposing and stripping combining marks
+  return replaced.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 export async function buildPersonalizedGuide({ fullName, orderId, items }) {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595.28, 841.89]); // A4
@@ -8,7 +24,7 @@ export async function buildPersonalizedGuide({ fullName, orderId, items }) {
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
   const drawText = (text, x, y, size = 12, bold = false) => {
-    page.drawText(String(text || ''), {
+    page.drawText(sanitizeText(text), {
       x, y, size,
       font: bold ? fontBold : font,
       color: rgb(0, 0, 0),

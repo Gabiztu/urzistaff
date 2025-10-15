@@ -59,8 +59,8 @@ export async function POST(request) {
 
     const finalName = name || listing.name || null;
     const finalHeadline = headline || listing.headline || null;
-    // TEMP: Force price to $5 for live test
-    const finalPrice = 5;
+    // Use authoritative price from listing
+    const finalPrice = Number(listing.purchase_price || 0);
     const payload = { cart_id: cart.id, listing_id, name: finalName, headline: finalHeadline, price: finalPrice };
     const { data: item, error } = await supabase
       .from('cart_items')

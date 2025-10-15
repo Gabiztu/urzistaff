@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
-import { buildPersonalizedGuide } from '@/lib/pdf/guide';
 import { sendGuideEmail } from '@/lib/email/brevo';
 
 function verifySignature(rawBody, signature, secret) {
@@ -153,8 +152,6 @@ export async function POST(req) {
 
         if (claim && claim.email) {
           try {
-            const pdf = await buildPersonalizedGuide({ fullName: claim.full_name, orderId, items: claim.items });
-            const base64 = Buffer.from(pdf).toString('base64');
             const itemsArr = Array.isArray(claim.items) ? claim.items : [];
             const firstItem = itemsArr[0] || null;
             const clientName = (claim.full_name || (claim.email?.split('@')[0] || '')).trim() || 'there';
@@ -162,15 +159,17 @@ export async function POST(req) {
             let vaName = firstItem?.name || '—';
             let vaTelegram = '—';
             let vaEmail = '—';
+            let vaWhatsapp = '—';
             if (Array.isArray(listingIds) && listingIds.length > 0) {
               const { data: mainListing } = await supabase
                 .from('listings')
-                .select('name, va_email, va_telegram')
+                .select('name, va_email, va_telegram, va_whatsapp')
                 .eq('id', listingIds[0])
                 .maybeSingle();
               vaName = mainListing?.name || vaName;
               vaTelegram = mainListing?.va_telegram || '—';
               vaEmail = mainListing?.va_email || '—';
+              vaWhatsapp = mainListing?.va_whatsapp || '—';
             }
             const subject = 'Your UrziStaff order';
             const html = `
@@ -181,7 +180,8 @@ export async function POST(req) {
                 <p>🔗 <strong>Contact Info</strong><br/>
                 • Name: ${vaName}<br/>
                 • Telegram: ${vaTelegram}<br/>
-                • Email: ${vaEmail}</p>
+                • Email: ${vaEmail}<br/>
+                • WhatsApp: ${vaWhatsapp}</p>
                 <p>🛡 <strong>Warranty Coverage</strong><br/>
                 If the VA you bought:<br/>
                 • ❌ Doesn’t respond within 72 hours, or<br/>
@@ -203,7 +203,6 @@ export async function POST(req) {
               toName: claim.full_name || undefined,
               subject,
               html,
-              attachments: [{ name: 'UrziStaff-Guide.pdf', content: base64, contentType: 'application/pdf' }],
             });
             const { error: emailSaveErr } = await supabase
               .from('orders')

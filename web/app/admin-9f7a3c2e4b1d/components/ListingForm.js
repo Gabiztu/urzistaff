@@ -19,6 +19,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
     purchase_price: 99,
     va_email: "",
     va_telegram: "",
+    va_whatsapp: "",
     is_active: true,
   }));
   const [saving, setSaving] = useState(false);
@@ -32,7 +33,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       if (initial?.id) {
         const { data, error } = await supabase
           .from('listings')
-          .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,purchase_price,va_email,va_telegram,is_active')
+          .select('id,name,headline,description,categories,languages,skills,age_range,sex,devices,availability,location,hourly_rate,purchase_price,va_email,va_telegram,va_whatsapp,is_active')
           .eq('id', initial.id)
           .single();
         const src = data || initial;
@@ -53,6 +54,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
             purchase_price: Number(src.purchase_price || 99),
             va_email: src.va_email || "",
             va_telegram: src.va_telegram || "",
+            va_whatsapp: src.va_whatsapp || "",
             is_active: Boolean(src.is_active ?? true),
           });
         }
@@ -97,6 +99,7 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       purchase_price: Number(form.purchase_price || 99),
       va_email: (form.va_email || null),
       va_telegram: (form.va_telegram || null),
+      va_whatsapp: (form.va_whatsapp || null),
       is_active: !!form.is_active,
     };
     try {
@@ -378,9 +381,10 @@ export default function ListingForm({ initial, onCancel, onSaved }) {
       {/* VA Contact (admin-only, not public) */}
       <div style={{...row, marginTop: 4}}>
         <label style={lbl}>VA Contact (admin only; not public)</label>
-        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8}}>
+        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8}}>
           <input style={inp} type="email" placeholder="VA Email" value={form.va_email} onChange={(e)=>set("va_email", e.target.value)} />
           <input style={inp} type="text" placeholder="VA Telegram (e.g. @username)" value={form.va_telegram} onChange={(e)=>set("va_telegram", e.target.value)} />
+          <input style={inp} type="text" placeholder="VA WhatsApp (e.g. +407xxxxxxxx)" value={form.va_whatsapp} onChange={(e)=>set("va_whatsapp", e.target.value)} />
         </div>
         <div className="muted" style={{fontSize:12}}>These fields are stored with the listing and used only in client emails. They are not shown publicly.</div>
       </div>

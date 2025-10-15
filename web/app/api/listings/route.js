@@ -37,14 +37,9 @@ export async function GET(request) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    // TEMP: Force listing purchase price to $5 for live test
-    const forcedData = Array.isArray(data)
-      ? data.map((r) => ({ ...r, purchase_price: 5 }))
-      : (data ? { ...data, purchase_price: 5 } : data);
-
     const cacheHeader = 'public, s-maxage=60, stale-while-revalidate=300';
     return NextResponse.json(
-      { data: forcedData },
+      { data },
       {
         headers: {
           'Cache-Control': cacheHeader,

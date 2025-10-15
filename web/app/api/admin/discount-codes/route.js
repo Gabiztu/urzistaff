@@ -30,14 +30,15 @@ export async function GET() {
       const codeList = codes.map((c) => c.code);
       const { data: uses, error: usesErr } = await supabase
         .from('orders')
-        .select('discount_code')
+        .select('discount_code, items')
         .eq('status', 'paid')
         .in('discount_code', codeList);
       if (!usesErr && Array.isArray(uses)) {
         for (const row of uses) {
           const k = row?.discount_code;
           if (!k) continue;
-          usageMap[k] = (usageMap[k] || 0) + 1;
+          const count = Array.isArray(row?.items) ? row.items.length : 0;
+          usageMap[k] = (usageMap[k] || 0) + count;
         }
       }
     }

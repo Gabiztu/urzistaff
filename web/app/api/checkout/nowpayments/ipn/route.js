@@ -227,3 +227,12 @@ export async function POST(req) {
     return NextResponse.json({ ok: false, error: e.message || String(e) }, { status: 500 });
   }
 }
+
+// Allow NowPayments link checkers (GET/HEAD) to return 200 so they don't treat the endpoint as down.
+export async function GET() {
+  return NextResponse.json({ ok: true });
+}
+
+export async function HEAD() {
+  return new Response(null, { status: 200 });
+}

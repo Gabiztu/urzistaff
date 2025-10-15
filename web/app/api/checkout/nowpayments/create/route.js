@@ -205,6 +205,8 @@ export async function POST(request) {
         order_description: orderDescription,
         success_url: successUrl,
         cancel_url: cancelUrl,
+        // Ensure NowPayments uses the correct production callback URL
+        ipn_callback_url: `${base}/api/checkout/nowpayments/ipn`,
         ...(email ? { customer_email: email } : {}),
       }),
       cache: 'no-store',

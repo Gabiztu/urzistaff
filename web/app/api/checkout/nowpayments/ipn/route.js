@@ -159,15 +159,17 @@ export async function POST(req) {
             let vaName = firstItem?.name || '—';
             let vaTelegram = '—';
             let vaEmail = '—';
+            let vaWhatsapp = '—';
             if (Array.isArray(listingIds) && listingIds.length > 0) {
               const { data: mainListing } = await supabase
                 .from('listings')
-                .select('name, va_email, va_telegram')
+                .select('name, va_email, va_telegram, va_whatsapp')
                 .eq('id', listingIds[0])
                 .maybeSingle();
               vaName = mainListing?.name || vaName;
               vaTelegram = mainListing?.va_telegram || '—';
               vaEmail = mainListing?.va_email || '—';
+              vaWhatsapp = mainListing?.va_whatsapp || '—';
             }
             const subject = 'Your UrziStaff order';
             const html = `
@@ -178,7 +180,8 @@ export async function POST(req) {
                 <p>🔗 <strong>Contact Info</strong><br/>
                 • Name: ${vaName}<br/>
                 • Telegram: ${vaTelegram}<br/>
-                • Email: ${vaEmail}</p>
+                • Email: ${vaEmail}<br/>
+                • WhatsApp: ${vaWhatsapp}</p>
                 <p>🛡 <strong>Warranty Coverage</strong><br/>
                 If the VA you bought:<br/>
                 • ❌ Doesn’t respond within 72 hours, or<br/>

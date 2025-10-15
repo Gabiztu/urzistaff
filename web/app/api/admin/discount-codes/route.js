@@ -23,7 +23,26 @@ export async function GET() {
       .order('created_at', { ascending: false })
       .limit(500);
     if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-    return NextResponse.json({ codes: data || [] }, { headers: { 'Cache-Control': 'no-store' } });
+    const codes = data || [];
+    // Compute successful usage count per code (orders with status = 'paid')
+    let usageMap = {};
+    if (codes.length) {
+      const codeList = codes.map((c) => c.code);
+      const { data: uses, error: usesErr } = await supabase
+        .from('orders')
+        .select('discount_code')
+        .eq('status', 'paid')
+        .in('discount_code', codeList);
+      if (!usesErr && Array.isArray(uses)) {
+        for (const row of uses) {
+          const k = row?.discount_code;
+          if (!k) continue;
+          usageMap[k] = (usageMap[k] || 0) + 1;
+        }
+      }
+    }
+    const enriched = codes.map((c) => ({ ...c, used_count: usageMap[c.code] || 0 }));
+    return NextResponse.json({ codes: enriched }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (e) {
     return NextResponse.json({ error: e.message || String(e) }, { status: 500 });
   }

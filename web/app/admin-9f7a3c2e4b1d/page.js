@@ -244,6 +244,7 @@ export default function AdminHome() {
                     <tr>
                       <th>Code</th>
                       <th>Discount</th>
+                      <th>Used</th>
                       <th>Created</th>
                       <th>Actions</th>
                     </tr>
@@ -253,6 +254,7 @@ export default function AdminHome() {
                       <tr key={c.code}>
                         <td>{c.code}</td>
                         <td>{Math.round((Number(c.discount_pct ?? 0.10))*100)}%</td>
+                        <td>{Number(c.used_count || 0)}</td>
                         <td className="muted">{c.created_at ? new Date(c.created_at).toLocaleString() : '—'}</td>
                         <td><button className="btn" onClick={()=>deleteCode(c.code)}>Delete</button></td>
                       </tr>

@@ -119,7 +119,6 @@ export default function ClientHome() {
         <article class="card reveal">
           <div class="card-top">
             <div style="display:flex;gap:10px;align-items:center">
-              <div class="avatar">${esc(initials(r.name))}</div>
               <div>
                 <h3 style="margin:0">${esc(r.name||'—')}${r.availability ? ` <span style="margin-left:8px;font-size:12px;color:#60a5fa;opacity:.9;font-weight:600">${esc(r.availability==='full-time'?'Full-time':(r.availability==='part-time'?'Part-time':String(r.availability)))}</span>` : ''}</h3>
                 ${r.rating ? `<span class=\"badge\" style=\"margin-top:4px\">⭐ ${esc(Number(r.rating).toFixed(1))}${r.reviews_count ? ` (${esc(r.reviews_count)} reviews)` : ''}</span>` : ''}

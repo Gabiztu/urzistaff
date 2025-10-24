@@ -303,7 +303,6 @@ export default function ListingProfile() {
           <div className="profile-grid">
             <div className="profile-main">
               <div className="profile-header reveal">
-                <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(data.name||'VA')}`} alt={data.name} className="avatar" />
                 <div className="info">
                   <h1 className="name">{data.name}</h1>
                   {data.headline && <p className="headline">{data.headline}</p>}

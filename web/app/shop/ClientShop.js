@@ -521,7 +521,6 @@ export default function ClientShop({ initialListings = [] }) {
                 onClick={() => router.push(`/p/${r.id}`)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push(`/p/${r.id}`); } }}
               >
-                <img loading="lazy" src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(r.name||'VA')}`} alt={r.name} className="avatar" />
                 <div className="listing-info">
                   <div className="name">
                     {r.name}

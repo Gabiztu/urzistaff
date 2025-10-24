@@ -235,7 +235,7 @@ export default function ListingProfile() {
     .tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top:16px; padding:0; list-style:none; }
     .tag { background: var(--elev); border: 1px solid var(--border); padding: 6px 14px; border-radius: var(--pill); font-size: 14px; font-weight: 500; transition: transform .2s var(--ease-out), box-shadow .2s var(--ease-out), border-color .2s var(--ease-out);} 
     .tag:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.35); border-color: #444; }
-    .description p { color: var(--muted); line-height: 1.7; margin: 0; }
+    .description p { color: var(--muted); line-height: 1.7; margin: 0; white-space: pre-wrap; }
     .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
     .info-item .label { font-size: 14px; color: var(--muted); margin-bottom: 4px; display: block; }
     .info-item .value { font-weight: 600; font-size: 16px; }
@@ -303,7 +303,6 @@ export default function ListingProfile() {
           <div className="profile-grid">
             <div className="profile-main">
               <div className="profile-header reveal">
-                <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(data.name||'VA')}`} alt={data.name} className="avatar" />
                 <div className="info">
                   <h1 className="name">{data.name}</h1>
                   {data.headline && <p className="headline">{data.headline}</p>}

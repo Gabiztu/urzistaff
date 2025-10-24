@@ -155,33 +155,72 @@ export async function POST(req) {
             const itemsArr = Array.isArray(claim.items) ? claim.items : [];
             const firstItem = itemsArr[0] || null;
             const clientName = (claim.full_name || (claim.email?.split('@')[0] || '')).trim() || 'there';
-            // Load VA contact from the primary listing (admin-only fields)
-            let vaName = firstItem?.name || '—';
-            let vaTelegram = '—';
-            let vaEmail = '—';
-            let vaWhatsapp = '—';
-            if (Array.isArray(listingIds) && listingIds.length > 0) {
-              const { data: mainListing } = await supabase
+            // Load VA contacts for ALL purchased listings
+            const orderedIds = (Array.isArray(itemsArr) ? itemsArr.map(i => i?.listing_id).filter(Boolean) : []).slice(0, 20);
+            let details = [];
+            if (orderedIds.length) {
+              const { data: listingsAll } = await supabase
                 .from('listings')
-                .select('name, va_email, va_telegram, va_whatsapp')
-                .eq('id', listingIds[0])
-                .maybeSingle();
-              vaName = mainListing?.name || vaName;
-              vaTelegram = mainListing?.va_telegram || '—';
-              vaEmail = mainListing?.va_email || '—';
-              vaWhatsapp = mainListing?.va_whatsapp || '—';
+                .select('id, name, va_email, va_telegram, va_whatsapp')
+                .in('id', orderedIds);
+              const byId = Object.create(null);
+              for (const l of (listingsAll || [])) byId[l.id] = l;
+              details = orderedIds.map((id) => byId[id] || { id, name: '—', va_email: '—', va_telegram: '—', va_whatsapp: '—' });
             }
+
+            const esc = (s) => String(s ?? '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+            const fmtHandle = (h) => {
+              const raw = String(h || '').trim();
+              if (!raw) return '—';
+              const handle = raw.replace(/^@+/, '');
+              const url = `https://t.me/${encodeURIComponent(handle)}`;
+              return `<a href="${url}" target="_blank" rel="noopener noreferrer">@${esc(handle)}</a>`;
+            };
+            const fmtWa = (w) => {
+              const raw = String(w || '').trim();
+              if (!raw) return '—';
+              const digits = raw.replace(/[^0-9+]/g, '');
+              const link = digits.replace(/^\+/, '');
+              const url = `https://wa.me/${encodeURIComponent(link)}`;
+              return `<a href="${url}" target="_blank" rel="noopener noreferrer">${esc(raw)}</a>`;
+            };
+
+            // Build a fixed-layout table; when more than 6 VAs, wrap into multiple row blocks (6 columns per row)
+            const contactTable = details.length ? `
+              <div>
+                <p>🔗 <strong>Contact Info</strong></p>
+                <table style="width:100%;border-collapse:collapse;table-layout:fixed">
+                  ${(() => {
+                    const COLS_PER_ROW = 6;
+                    const chunks = [];
+                    for (let i = 0; i < details.length; i += COLS_PER_ROW) chunks.push(details.slice(i, i + COLS_PER_ROW));
+                    return chunks.map(chunk => `
+                      <tbody>
+                        <tr>
+                          ${chunk.map(d => `<th style="text-align:left;padding:8px;border-bottom:1px solid #e5e7eb">${esc(d.name || '—')}</th>`).join('')}
+                        </tr>
+                        <tr>
+                          ${chunk.map(d => `<td style="padding:8px;vertical-align:top"><strong>Telegram:</strong> ${fmtHandle(d.va_telegram)}</td>`).join('')}
+                        </tr>
+                        <tr>
+                          ${chunk.map(d => `<td style="padding:8px;vertical-align:top"><strong>Email:</strong> ${esc(d.va_email || '—')}</td>`).join('')}
+                        </tr>
+                        <tr>
+                          ${chunk.map(d => `<td style="padding:8px;vertical-align:top"><strong>WhatsApp:</strong> ${fmtWa(d.va_whatsapp)}</td>`).join('')}
+                        </tr>
+                      </tbody>
+                    `).join('');
+                  })()}
+                </table>
+              </div>
+            ` : '';
+
             const subject = 'Your UrziStaff order';
             const html = `
               <div>
                 <p>Hey ${clientName},</p>
-                <p>Your verified UrziStaff Virtual Assistant is officially assigned and ready to start.</p>
-                <p>Below you’ll find everything you need to get started:</p>
-                <p>🔗 <strong>Contact Info</strong><br/>
-                • Name: ${vaName}<br/>
-                • Telegram: ${vaTelegram}<br/>
-                • Email: ${vaEmail}<br/>
-                • WhatsApp: ${vaWhatsapp}</p>
+                <p>Your verified UrziStaff Virtual Assistant${details.length>1?'s are':' is'} officially assigned and ready to start.</p>
+                ${contactTable}
                 <p>🛡 <strong>Warranty Coverage</strong><br/>
                 If the VA you bought:<br/>
                 • ❌ Doesn’t respond within 72 hours, or<br/>
